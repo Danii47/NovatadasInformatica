@@ -1,0 +1,7 @@
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "dni": "12345678D",
+  "password": "admin4"
+}
