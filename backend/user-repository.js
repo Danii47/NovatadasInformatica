@@ -12,7 +12,7 @@ const User = Schema('User', {
   dni: { type: String, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
-  points: { type: Number, required: true, default: 0 },
+  auraPoints: { type: Number, required: true, default: 0 },
   isAdmin: { type: Boolean, required: true, default: false }
 })
 
@@ -23,7 +23,7 @@ export class UserRepository {
     Validation.password(password)
 
     const user = User.findOne({ dni })
-    if (user) throw new Error('user already exists')
+    if (user) throw new Error('El usuario ya existe.')
 
     const id = crypto.randomUUID()
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
@@ -44,28 +44,30 @@ export class UserRepository {
     Validation.password(password)
 
     const user = User.findOne({ dni })
-    if (!user) throw new Error('user not found')
+    if (!user) throw new Error('El usuario o la contraseña son incorrectos.')
 
     const isValid = await bcrypt.compare(password, user.password)
-    if (!isValid) throw new Error('invalid password')
+    if (!isValid) throw new Error('El usuario o la contraseña son incorrectos.')
 
     return {
       name: user.name,
-      points: user.points
+      auraPoints: user.auraPoints,
+      isAdmin: user.isAdmin
     }
   }
 }
 
 class Validation {
   static name (name) {
-    if (typeof name !== 'string') throw new Error('name must be a string')
+    if (typeof name !== 'string') throw new Error('El nombre debe ser una cadena de texto.')
   }
 
   static dni (dni) {
-    if (typeof dni !== 'string') throw new Error('dni must be a string')
+    if (typeof dni !== 'string') throw new Error('El DNI debe ser una cadena de texto.')
+    if (!/^\d{8}[A-Z]$/.test(dni)) throw new Error('El DNI no tiene un formato válido.')
   }
 
   static password (password) {
-    if (typeof password !== 'string') throw new Error('password must be a string')
+    if (typeof password !== 'string') throw new Error('La contraseña debe ser una cadena de texto.')
   }
 }

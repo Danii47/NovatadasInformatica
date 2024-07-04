@@ -1,33 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [userData, setUserData] = useState("")
+  const [error, setError] = useState("")
+
+  const handleLogIn = (event) => {
+    event.preventDefault()
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+
+    if (!username || !password) return setError('Por favor, rellena todos los campos')
+
+    fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        dni: username.toUpperCase(),
+        password
+      })
+    })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.err) {
+          setError(data.err)
+        } else {
+          setUserData(data)
+        }
+      })
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form method="post">
+          <div className="input-group">
+            <label htmlFor="username">Nombre de Usuario</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Contraseña</label>
+            <input type="password" id="password" name="password" required />
+            </div>
+          <p className="loginError">{error}</p>
+        
+          <button type="submit" onClick={handleLogIn}>Iniciar Sesión</button>
+          </form>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {
+        userData && (
+          <div className="user-info">
+            <h2>Bienvenido, {userData.name}</h2>
+            <p>Tienes {userData.auraPoints} puntos de aura</p>
+          </div>
+        )
+      }
     </>
   )
 }

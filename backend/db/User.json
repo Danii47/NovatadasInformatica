@@ -1,23 +1,26 @@
 [
   {
     "_id": "7a247907-cdaa-4fbc-ba87-12004fbab67c",
-    "dni": "12345678C",
-    "name": "admin",
+    "dni": "12474427D",
+    "name": "Daniel Fdez",
     "password": "$2b$10$0v1OXeK2NQvgRmv4PV4bIOMmdCBbj35alWz2f.v3eYvJ/tXB3Xhfq",
-    "isAdmin": false
+    "isAdmin": false,
+    "auraPoints": 666
   },
   {
     "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
-    "dni": "12345678B",
-    "name": "admin",
+    "dni": "71960285R",
+    "name": "Sanjo",
     "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
-    "isAdmin": false
+    "isAdmin": false,
+    "auraPoints": 777
   },
   {
     "_id": "2d67ec42-ef41-4ebc-b161-92381934985d",
     "dni": "12345678A",
     "name": "admin",
     "password": "$2b$10$r0jHIeSDE5Vi89GU0z2Ryuprens/xmlY9op3fv.U2Rn6cZ4nrE0i.",
-    "isAdmin": false
+    "isAdmin": false,
+    "auraPoints": 140
   }
 ]

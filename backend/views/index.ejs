@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+    rel="stylesheet">
+
+  <title>Document</title>
+  <style>
+    :root {
+      line-height: 1.5;
+      font-weight: 400;
+
+      color-scheme: light dark;
+      color: #333;
+      background-color: #1B1B1B;
+
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    * {
+      font-family: "DM Sans", Helvetica, Inter, system-ui, Avenir, Arial, sans-serif;
+      box-sizing: border-box;
+    }
+
+    #root {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+    }
+
+    .login-container {
+      width: 22rem;
+      background-color: #ececec;
+      padding: 2.5rem 3rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+      text-align: center;
+    }
+
+    .login-container h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: #20211d;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #20211d;
+    }
+
+    .input-group input {
+      font-size: 1.05rem;
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #b5b5b5;
+      color: #20211d;
+      border-radius: 5px;
+      background-color: #fafafa;
+    }
+
+    .input-group input:focus {
+      outline: 1.5px solid #484848;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #20211d;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #ff8800;
+      color: black;
+      font-weight: 600;
+    }
+
+    button:active {
+      background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+    }
+
+    .loginError {
+      text-align: left;
+      color: #ff0f0f;
+      font-size: .9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form id="login-form">
+      <div class="input-group">
+        <label for="username">Nombre de Usuario</label>
+        <input type="text" id="username" name="username" />
+      </div>
+      <div class="input-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" />
+      </div>
+      <p class="loginError"></p>
+      <button type="submit">Iniciar sesión</button>
+    </form>
+  </div>
+  <script>
+
+    const $ = (selector) => document.querySelector(selector)
+
+    const loginForm = $('#login-form')
+    const errorText = $('.loginError')
+
+    loginForm?.addEventListener('submit', (event) => {
+      event.preventDefault()
+      const username = $('#username').value
+      const password = $('#password').value
+
+      if (!username || !password) return errorText.textContent = 'Por favor, rellena todos los campos.'
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          dni: username.toUpperCase(),
+          password
+        })
+      })
+        .then(res => res.json())
+        .then((data) => {
+          console.log(data)
+          if (data.err) {
+            errorText.textContent = data.err
+          } else {
+            window.location.href = '/dashboard'
+          }
+        })
+    })
+
+  </script>
+</body>
+
+</html>
