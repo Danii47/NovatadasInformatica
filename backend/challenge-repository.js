@@ -31,7 +31,7 @@ export class ChallengeRepository {
     const challenges = Challenge.find()
 
     if (sorted) {
-      challenges.sort((a, b) => a.auraPoints - b.auraPoints)
+      challenges.sort((a, b) => b.auraPoints - a.auraPoints)
     }
 
     if (maxCharacters) {

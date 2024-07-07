@@ -81,7 +81,7 @@ class Validation {
     const validLetters = 'TRWAGMYFPDXBNJZSQVHLCKE'
     const calculatedLetter = validLetters.charAt(parseInt(dniNumbers, 10) % 23)
 
-    // if (calculatedLetter !== letter) throw new Error('La letra del DNI no es correcta.')
+    if (calculatedLetter !== letter) throw new Error('La letra del DNI no es correcta.')
   }
 
   static password (password) {

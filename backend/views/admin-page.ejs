@@ -172,9 +172,43 @@
 
   <h1>Administración</h1>
   <div class="admin-utils-container">
+    <div class="create-container user">
+      <h2>Crear usuario</h2>
+      <form class="create-form" id="create-user-form">
+        <div>
+          <label for="user-dni" class="input-label">
+            <i class="fa-solid fa-id-card"></i>
+            DNI del usuario
+          </label>
+          <input type="text" id="user-dni" name="user-dni">
+        </div>
+        <div>
+          <label for="user-name" class="input-label">
+            <i class="fa-solid fa-user"></i>
+            Nombre del usuario
+          </label>
+          <input type="text" id="user-name" name="user-name">
+        </div>
+        <div>
+          <label for="user-password" class="input-label">
+            <i class="fa-solid fa-key"></i>
+            Contraseña del usuario
+          </label>
+          <div class="password-container">
+            <input type="password" id="user-password" name="user-password">
+            <button class="hide-password" type="button">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="create-button-container">
+          <button type="submit">Crear usuario</button>
+        </div>
+      </form>
+    </div>
     <div class="create-container">
       <h2>Crear reto</h2>
-      <form id="create-challenge" class="create-form">
+      <form id="create-challenge-form" class="create-form">
         <div>
           <label for="challenge-name" class="input-label">
             <i class="fa-solid fa-input-text"></i>
@@ -198,40 +232,6 @@
         </div>
       </form>
     </div>
-    <div class="create-container user">
-      <h2>Crear usuario</h2>
-      <form class="create-form" id="create-user-form">
-        <div>
-          <label for="userDNI" class="input-label">
-            <i class="fa-solid fa-id-card"></i>
-            DNI del usuario
-          </label>
-          <input type="text" id="userDNI" name="userDNI">
-        </div>
-        <div>
-          <label for="userName" class="input-label">
-            <i class="fa-solid fa-user"></i>
-            Nombre del usuario
-          </label>
-          <input type="text" id="userName" name="userName">
-        </div>
-        <div>
-          <label for="userPassword" class="input-label">
-            <i class="fa-solid fa-key"></i>
-            Contraseña del usuario
-          </label>
-          <div class="password-container">
-            <input type="password" id="userPassword" name="userPassword">
-            <button class="hide-password" type="button">
-              <i class="fa-regular fa-eye"></i>
-            </button>
-          </div>
-        </div>
-        <div class="create-button-container">
-          <button type="submit">Crear usuario</button>
-        </div>
-      </form>
-    </div>
     <div class="create-container challenge">
       <h2>Añadir puntos</h2>
       <form class="create-form" id="create-user-form">
@@ -240,9 +240,10 @@
             <i class="fa-solid fa-user"></i>
             Usuario
           </label>
-          <select type="text" id="username" name="username">
+          <input type="text" id="searchUsers" placeholder="Buscar Usuario">
+          <select type="text" id="users" name="users">
             <% allUsers.forEach((user)=> { %>
-              <option>
+              <option title="<%= user.name %>">
                 <%= user.name %> - <%= user.dni %>
               </option>
               <% }) %>
@@ -253,9 +254,11 @@
             <i class="fa-duotone fa-camera-retro"></i>
             Reto
           </label>
-          <select type="text" id="username" name="username">
+
+          <input type="text" id="searchChallenge" placeholder="Buscar reto">
+          <select type="text" id="challenge" name="challenge">
             <% allChallenges.forEach((challenge)=> { %>
-              <option>
+              <option title="<%= challenge.description%>">
                 <%= challenge.title %> - <%= challenge.auraPoints %>
               </option>
               <% }) %>
@@ -272,11 +275,69 @@
     const $ = (selector) => document.querySelector(selector)
     const createUserFrom = $('#create-user-form')
 
+    let allChallenges = []
+    let allUsers = []
+
+    window.addEventListener("load", () => {
+      fetch('/get-admin-data', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => res.json())
+        .then((data) => {
+          allChallenges = data.challenges
+          allUsers = data.users
+        })
+    })
+
+    $("#searchChallenge").addEventListener("change", (event) => {
+      filterChallenges(event.target.value)
+    })
+
+    $("#searchUsers").addEventListener("change", (event) => {
+      filterUsers(event.target.value)
+    })
+
+    function filterChallenges(inputText) {
+      const filtered = !inputText ? allChallenges : allChallenges.filter(challenge => challenge.title.toLowerCase().includes(inputText.toLowerCase()))
+
+      $("#challenge").innerHTML = `
+        ${filtered
+          .map(challenge => `
+            <option title="${challenge.description}">
+              ${challenge.title} - ${challenge.auraPoints}
+            </option>
+          `)
+          .join('')
+        }
+      `
+    }
+
+    function filterUsers(inputText) {
+      let filtered
+      if (!inputText) {
+        filtered = allUsers
+      } else {
+
+        filtered = allUsers.filter(user => {
+          const concatText = `${user.name} - ${user.dni}`
+          return concatText.toLowerCase().includes(inputText.toLowerCase())
+        })
+      }
+
+      $("#users").innerHTML = `
+        ${filtered.map(user => `<option>${user.name} - ${user.dni}</option>`).join('')}
+      `
+    }
+
+
     createUserFrom.addEventListener('submit', async (e) => {
       e.preventDefault()
-      const userDNI = $('#userDNI').value
-      const userName = $('#userName').value
-      const userPassword = $('#userPassword').value
+      const userDNI = $('#user-dni').value
+      const userName = $('#user-name').value
+      const userPassword = $('#user-password').value
 
       if (!userDNI || !userName || !userPassword) return notify('Por favor, rellena todos los campos.', 1000)
 
@@ -296,17 +357,17 @@
           if (data.err) {
             notify(data.err, 1000)
           } else {
-            $('#userDNI').value = ''
-            $('#userName').value = ''
-            $('#userPassword').value = ''
+            $('#user-dni').value = ''
+            $('#user-name').value = ''
+            $('#user-password').value = ''
 
-            $('#userDNI').focus()
+            $('#user-dni').focus()
             notify(`${userDNI} - Usuario creado correctamente.`, 1000, "success")
           }
         })
     })
 
-    const challengeForm = $('#create-challenge')
+    const challengeForm = $('#create-challenge-form')
 
     challengeForm.addEventListener('submit', async (e) => {
       e.preventDefault()
@@ -375,9 +436,11 @@
       const notifyText = $('.notify-text')
       const notifyIcon = $('#notify-icon')
 
+      container.style.animation = ''
+      container.style.opacity = 0
+
       clearTimeout(notifyTimeoutId)
       clearTimeout(notifyTimeoutId2)
-
 
       notifyIcon.classList.remove("fa-solid", "fa-triangle-exclamation", "fa-beat")
       notifyIcon.classList.remove("fa-solid", "fa-check-circle")

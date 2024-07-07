@@ -59,6 +59,9 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
   const { name, dni, password } = req.body
 
   try {
@@ -111,6 +114,16 @@ app.post('/create-challenge', async (req, res) => {
   } catch (error) {
     res.status(400).send({ err: error.message })
   }
+})
+
+app.get('/get-admin-data', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
+  const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+
+  res.send({ challenges, users })
 })
 
 app.use((req, res) => {
