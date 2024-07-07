@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración - Novatadas Informática</title>
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
+  <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <link href="/styles/notify.css" rel="stylesheet" type="text/css">
+  <link href="/styles/password.css" rel="stylesheet" type="text/css">
+
+  <style>
+    h1 {
+      text-align: center;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    .admin-utils-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .admin-utils-container h2 {
+      text-align: center;
+      border-bottom: 1px solid #3331;
+      padding-bottom: .5rem;
+      margin-bottom: 1rem;
+    }
+
+    .create-container {
+      width: 600px;
+      background-color: #ececec;
+      padding: 1.2rem;
+      margin: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #333;
+    }
+
+    .create-container.user {
+      width: 300px;
+    }
+
+    .create-container.challenge {
+      width: 300px;
+    }
+
+    .create-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .create-form div {
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+
+    .create-form textarea {
+      height: 45px;
+      field-sizing: content;
+      min-height: 40px;
+      max-height: 100px;
+      resize: vertical;
+    }
+
+    .create-form input,
+    .create-form textarea,
+    .create-form select {
+      font-size: 1.05rem;
+      width: 100%;
+      padding: 0.5rem 0.3rem;
+      border: 1px solid #b5b5b5;
+      color: #20211d;
+      border-radius: 5px;
+      background-color: #fafafa;
+      outline: 0;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    .create-form input::-webkit-outer-spin-button,
+    .create-form input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    .create-form input[type=number] {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    .create-form input:focus,
+    .create-form textarea:focus {
+      border: 1px solid #357aa8;
+    }
+
+    .create-button-container button {
+      width: 150px;
+      color: black;
+      padding: .5rem;
+      border-radius: 5px;
+      border: 1px solid #333;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .create-button-container button:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    .create-button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .input-label {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: .5rem;
+      color: #474747;
+      padding-bottom: .5rem;
+    }
+
+    @media (max-width: 740px) {
+      .admin-utils-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .create-container {
+        width: 300px;
+        margin: 1rem;
+      }
+
+      .create-container.user {
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        padding: 0;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="notify-container">
+    <i id="notify-icon" class="fa-solid fa-triangle-exclamation fa-beat"></i>
+    <div class="notify-text"></div>
+  </div>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/challenges">Retos</a></li>
+        <li><a href="/scoreboard">Marcador</a></li>
+        <li><a href="/admin-page" id="a-selected">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <h1>Administración</h1>
+  <div class="admin-utils-container">
+    <div class="create-container">
+      <h2>Crear reto</h2>
+      <form id="create-challenge" class="create-form">
+        <div>
+          <label for="challenge-name" class="input-label">
+            <i class="fa-solid fa-input-text"></i>
+            Nombre del reto
+          </label>
+          <input type="text" id="challenge-name" name="challenge-name">
+        </div>
+        <div>
+          <label for="challenge-description" class="input-label">
+            <i class="fa-regular fa-subtitles"></i>
+            Descripción del reto
+          </label>
+          <textarea id="challenge-description" name="challenge-description"></textarea>
+        </div>
+        <div>
+          <label for="challenge-points">Puntos del reto</label>
+          <input type="number" min="1" id="challenge-points" name="challenge-points">
+        </div>
+        <div class="create-button-container">
+          <button type="submit">Crear reto</button>
+        </div>
+      </form>
+    </div>
+    <div class="create-container user">
+      <h2>Crear usuario</h2>
+      <form class="create-form" id="create-user-form">
+        <div>
+          <label for="userDNI" class="input-label">
+            <i class="fa-solid fa-id-card"></i>
+            DNI del usuario
+          </label>
+          <input type="text" id="userDNI" name="userDNI">
+        </div>
+        <div>
+          <label for="userName" class="input-label">
+            <i class="fa-solid fa-user"></i>
+            Nombre del usuario
+          </label>
+          <input type="text" id="userName" name="userName">
+        </div>
+        <div>
+          <label for="userPassword" class="input-label">
+            <i class="fa-solid fa-key"></i>
+            Contraseña del usuario
+          </label>
+          <div class="password-container">
+            <input type="password" id="userPassword" name="userPassword">
+            <button class="hide-password" type="button">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="create-button-container">
+          <button type="submit">Crear usuario</button>
+        </div>
+      </form>
+    </div>
+    <div class="create-container challenge">
+      <h2>Añadir puntos</h2>
+      <form class="create-form" id="create-user-form">
+        <div>
+          <label for="username" class="input-label">
+            <i class="fa-solid fa-user"></i>
+            Usuario
+          </label>
+          <select type="text" id="username" name="username">
+            <% allUsers.forEach((user)=> { %>
+              <option>
+                <%= user.name %> - <%= user.dni %>
+              </option>
+              <% }) %>
+          </select>
+        </div>
+        <div>
+          <label for="challenge" class="input-label">
+            <i class="fa-duotone fa-camera-retro"></i>
+            Reto
+          </label>
+          <select type="text" id="username" name="username">
+            <% allChallenges.forEach((challenge)=> { %>
+              <option>
+                <%= challenge.title %> - <%= challenge.auraPoints %>
+              </option>
+              <% }) %>
+          </select>
+        </div>
+        <div class="create-button-container">
+          <button type="submit">Añadir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+
+    const $ = (selector) => document.querySelector(selector)
+    const createUserFrom = $('#create-user-form')
+
+    createUserFrom.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const userDNI = $('#userDNI').value
+      const userName = $('#userName').value
+      const userPassword = $('#userPassword').value
+
+      if (!userDNI || !userName || !userPassword) return notify('Por favor, rellena todos los campos.', 1000)
+
+      fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          dni: userDNI,
+          name: userName,
+          password: userPassword
+        })
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('#userDNI').value = ''
+            $('#userName').value = ''
+            $('#userPassword').value = ''
+
+            $('#userDNI').focus()
+            notify(`${userDNI} - Usuario creado correctamente.`, 1000, "success")
+          }
+        })
+    })
+
+    const challengeForm = $('#create-challenge')
+
+    challengeForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const challengeName = $('#challenge-name').value
+      const challengeDescription = $('#challenge-description').value
+      const challengePoints = $('#challenge-points').value
+
+      if (!challengeName || !challengeDescription || !challengePoints) return notify('Por favor, rellena todos los campos.', 1000)
+
+      fetch('/create-challenge', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: challengeName,
+          description: challengeDescription,
+          auraPoints: challengePoints
+        })
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('#challenge-name').value = ''
+            $('#challenge-description').value = ''
+            $('#challenge-points').value = ''
+
+            $('#challenge-name').focus()
+            notify(`${challengeName} - Reto creado correctamente.`, 1000, "success")
+          }
+        })
+    })
+
+    const hidePassBtn = $('.hide-password')
+    const passwordInput = $('#userPassword')
+
+    let hidePass = false
+
+    hidePassBtn.addEventListener("click", (event) => {
+      event.preventDefault()
+
+      hidePass = !hidePass
+
+      if (hidePass) {
+        $('.hide-password i').classList.remove('fa-eye')
+        $('.hide-password i').classList.add('fa-eye-slash')
+
+        passwordInput.type = "text"
+      } else {
+        $('.hide-password i').classList.remove('fa-eye-slash')
+        $('.hide-password i').classList.add('fa-eye')
+
+        passwordInput.type = "password"
+      }
+    })
+
+    let notifyTimeoutId
+    let notifyTimeoutId2
+
+    function notify(msg, time, type = "error") {
+      const $ = (element) => document.querySelector(element)
+
+      const container = $('.notify-container')
+      const notifyText = $('.notify-text')
+      const notifyIcon = $('#notify-icon')
+
+      clearTimeout(notifyTimeoutId)
+      clearTimeout(notifyTimeoutId2)
+
+
+      notifyIcon.classList.remove("fa-solid", "fa-triangle-exclamation", "fa-beat")
+      notifyIcon.classList.remove("fa-solid", "fa-check-circle")
+      notifyIcon.classList.add(...(type === "error" ? ["fa-solid", "fa-triangle-exclamation", "fa-beat"] : ["fa-solid", "fa-check-circle"]))
+
+      notifyText.textContent = msg
+      container.classList.remove("success")
+      container.classList.remove("error")
+
+      container.classList.add(type)
+
+      container.style.animation = 'showNotify .5s'
+
+      notifyTimeoutId = setTimeout(() => {
+        container.style.animation = ''
+        container.style.opacity = 1
+      }, 500)
+
+      notifyTimeoutId2 = setTimeout(() => {
+        container.style.animation = 'hideNotify .5s'
+        setTimeout(() => {
+          container.style.animation = ''
+          container.style.opacity = 0
+        }, 500)
+      }, time + 500)
+    }
+
+  </script>
+</body>
+
+</html>

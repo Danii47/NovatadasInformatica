@@ -50,10 +50,20 @@ export class UserRepository {
     if (!isValid) throw new Error('El usuario o la contraseña son incorrectos.')
 
     return {
+      _id: user._id,
       name: user.name,
       auraPoints: user.auraPoints,
       isAdmin: user.isAdmin
     }
+  }
+
+  static async getAllUsers ({ sorted = false, catchDNI = false } = {}) {
+    const users = await User.find()
+
+    return users
+      .filter(user => !user.isAdmin)
+      .sort((a, b) => sorted ? b.auraPoints - a.auraPoints : 0)
+      .map(({ _id, name, auraPoints, dni }) => ({ _id, name, auraPoints, dni: catchDNI ? dni : undefined }))
   }
 }
 
@@ -65,6 +75,13 @@ class Validation {
   static dni (dni) {
     if (typeof dni !== 'string') throw new Error('El DNI debe ser una cadena de texto.')
     if (!/^\d{8}[A-Z]$/.test(dni)) throw new Error('El DNI no tiene un formato válido.')
+
+    const dniNumbers = dni.substring(0, 8)
+    const letter = dni.charAt(8)
+    const validLetters = 'TRWAGMYFPDXBNJZSQVHLCKE'
+    const calculatedLetter = validLetters.charAt(parseInt(dniNumbers, 10) % 23)
+
+    // if (calculatedLetter !== letter) throw new Error('La letra del DNI no es correcta.')
   }
 
   static password (password) {

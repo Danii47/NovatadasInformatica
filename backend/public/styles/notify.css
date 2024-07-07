@@ -1,0 +1,54 @@
+.notify-container {
+  position: absolute;
+  top: 1rem;
+  right: 10px;
+
+  border-radius: 7px;
+
+  display: flex;
+  opacity: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+
+  padding: 0.7rem;
+  background: rgba(0 0 0 / .76);
+  font-weight: bold;
+  font-size: 1rem;
+  max-width: 500px;
+}
+
+.notify-container.error {
+  border: solid 2px rgb(245, 97, 97);
+  color: rgb(245, 97, 97);
+}
+
+.notify-container.success {
+  border: solid 2px rgb(148, 245, 148);
+  color: rgb(148, 245, 148);
+}
+
+@keyframes showNotify {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes hideNotify {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}

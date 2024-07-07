@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marcador - Novatadas Informática</title>
+  <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <style>
+    .scoreboard-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      border-radius: 8px;
+      border: 1px solid #333;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      padding: 0;
+      max-height: 60vh;
+      /* Ajusta este valor según tus necesidades */
+      overflow-y: auto;
+      /* Muestra barras de desplazamiento si es necesario */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      /* Para eliminar cualquier espacio extra entre celdas */
+      text-align: center;
+      padding: .25rem;
+      margin: 0;
+      border-spacing: 0;
+
+    }
+
+    @media (max-width: 600px) {
+      table {
+        font-size: .6rem;
+      }
+
+      .scoreboard-container {
+        max-width: 300px;
+        padding: 0;
+      }
+
+      table th,
+      table td {
+        padding: .2rem;
+
+      }
+    }
+
+    table thead {
+      background: linear-gradient(60deg, #7678b5, #6999b9, #7678b5, #6999b9, #7678b5, #6999b9);
+      color: white;
+    }
+
+    table th {
+      position: sticky;
+      top: 0;
+
+      z-index: 2;
+      padding: .5rem;
+      border-bottom: 1px solid #333;
+      border-right: 1px solid #333;
+    }
+
+
+    table td {
+      padding: .5rem;
+      border-bottom: 1px solid #333;
+      border-right: 1px solid #333;
+    }
+
+    table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table td:last-child,
+    table th:last-child {
+      border-right: none;
+    }
+
+    .logged-user-row {
+      background-color: #35a850;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/challenges">Retos</a></li>
+        <li><a href="/scoreboard" id="a-selected">Marcador</a></li>
+        <% if (loggedUser.isAdmin) { %>
+          <li><a href="/admin-page">Admin</a></li>
+        <% } %> 
+      </ul>
+    </nav>
+  </header>
+  <h1>Bienvenido <%= loggedUser.name %>, <%= loggedUser.isAdmin ? "" : "no" %> eres admin</h1>
+  <div class="scoreboard-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Posición</th>
+          <th>Nombre</th>
+          <th>Puntuación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% allUsers.forEach((user, index)=> { %>
+          <tr class="<%= user._id === loggedUser.id ? 'logged-user-row' : '' %>">
+            <td>
+              <%= index + 1 %>
+            </td>
+            <td>
+              <%= user.name %>
+            </td>
+            <td>
+              <%= user.auraPoints %>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

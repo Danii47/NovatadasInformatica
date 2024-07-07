@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marcador - Novatadas Informática</title>
+  <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+
+  <style>
+
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/challenges" id="a-selected">Retos</a></li>
+        <li><a href="/scoreboard">Marcador</a></li>
+        <% if (loggedUser.isAdmin) { %>
+          <li><a href="/admin-page">Admin</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+  <h1>Bienvenido <%= loggedUser.name %>, tienes <%= loggedUser.auraPoints %> puntos!</h1>
+  <div>
+  </div>
+</body>
+
+</html>
