@@ -5,17 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marcador - Novatadas Informática</title>
+  <link
+    href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
+    rel='stylesheet'>
   <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
   <style>
     .scoreboard-container {
       width: 100%;
       max-width: 600px;
-      margin: 0 auto;
+      margin: 3rem auto;
       border-radius: 8px;
       border: 1px solid #333;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       padding: 0;
-      max-height: 60vh;
+      max-height: 70vh;
       /* Ajusta este valor según tus necesidades */
       overflow-y: auto;
       /* Muestra barras de desplazamiento si es necesario */
@@ -30,6 +33,30 @@
       margin: 0;
       border-spacing: 0;
 
+    }
+
+    tbody tr {
+      transition: background-color .1s;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: rgb(255 255 255 / .7);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgb(255 255 255 / .8);
+    }
+
+    tbody tr:nth-child(odd):hover {
+      background-color: rgb(230 230 230 / .7);
+    }
+
+    tbody tr:nth-child(even):hover {
+      background: rgb(230 230 230 / .8);
+    }
+
+    tbody tr {
+      cursor: pointer;
     }
 
     @media (max-width: 600px) {
@@ -49,15 +76,11 @@
       }
     }
 
-    table thead {
-      background: linear-gradient(60deg, #7678b5, #6999b9, #7678b5, #6999b9, #7678b5, #6999b9);
-      color: white;
-    }
-
     table th {
+      color: white;
+      background: #2c6a94;
       position: sticky;
       top: 0;
-
       z-index: 2;
       padding: .5rem;
       border-bottom: 1px solid #333;
@@ -98,11 +121,11 @@
         <li><a href="/scoreboard" id="a-selected">Marcador</a></li>
         <% if (loggedUser.isAdmin) { %>
           <li><a href="/admin-page">Admin</a></li>
-        <% } %> 
+        <% } %>
       </ul>
     </nav>
   </header>
-  <h1>Bienvenido <%= loggedUser.name %>, <%= loggedUser.isAdmin ? "" : "no" %> eres admin</h1>
+
   <div class="scoreboard-container">
     <table>
       <thead>
@@ -110,11 +133,12 @@
           <th>Posición</th>
           <th>Nombre</th>
           <th>Puntuación</th>
+          <th>Retos realizados</th>
         </tr>
       </thead>
       <tbody>
         <% allUsers.forEach((user, index)=> { %>
-          <tr class="<%= user._id === loggedUser.id ? 'logged-user-row' : '' %>">
+          <tr id="<%= user._id %>" class="<%= user._id === loggedUser.id ? 'logged-user-row' : '' %>">
             <td>
               <%= index + 1 %>
             </td>
@@ -124,11 +148,26 @@
             <td>
               <%= user.auraPoints %>
             </td>
+            <td>
+              <%= user.challenges.length %>
+            </td>
           </tr>
           <% }) %>
       </tbody>
     </table>
   </div>
+  <script>
+    const $ = (selector) => document.querySelector(selector)
+    const $$ = (selector) => document.querySelectorAll(selector)
+
+    const tableRows = $$('tbody tr')
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        window.location.href = `/user/${row.id}`
+      })
+    })
+  </script>
 </body>
 
 </html>
