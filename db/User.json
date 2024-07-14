@@ -1,42 +1,196 @@
 [
   {
-    "_id": "54ef0d0e-53c8-4f72-9993-49f270970a5d",
-    "dni": "49993536T",
-    "name": "arià",
-    "password": "$2b$10$ULyic17BxqzWD3afSpMFkOJMy6dVhM6M9T/cidxZHn4sQQQcrWtre",
-    "auraPoints": 0,
-    "isAdmin": false
-  },
-  {
-    "_id": "c300e40b-c1e4-452f-a297-a96aac8d4b56",
-    "dni": "12345678U",
-    "name": "ivan_44",
-    "password": "$2b$10$Nm9nDE7SGVwA0lB568E/AOoxztqhzsPAO0K7tPLaInnuZ9OiMA63S",
-    "auraPoints": 189981,
-    "isAdmin": false
-  },
-  {
     "_id": "7a247907-cdaa-4fbc-ba87-12004fbab67c",
     "dni": "12474427D",
     "name": "Dani Fdez",
     "password": "$2b$10$0v1OXeK2NQvgRmv4PV4bIOMmdCBbj35alWz2f.v3eYvJ/tXB3Xhfq",
+    "challenges": [],
     "isAdmin": true,
     "auraPoints": 666
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555863",
+    "dni": "71960285R",
+    "name": "Daniel Fernández Varona",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
   },
   {
     "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
     "dni": "71960285R",
     "name": "Sanjo",
     "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
-    "isAdmin": false,
-    "auraPoints": 777
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
   },
   {
-    "_id": "2d67ec42-ef41-4ebc-b161-92381934985d",
-    "dni": "12345678A",
-    "name": "admin",
-    "password": "$2b$10$r0jHIeSDE5Vi89GU0z2Ryuprens/xmlY9op3fv.U2Rn6cZ4nrE0i.",
-    "isAdmin": false,
-    "auraPoints": 140
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },{
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
+  },{
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "auraPoints": 3,
+    "isAdmin": false
   }
 ]
