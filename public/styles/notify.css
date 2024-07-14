@@ -1,5 +1,5 @@
 .notify-container {
-  position: absolute;
+  position: fixed;
   top: 1rem;
   right: 10px;
 
@@ -12,6 +12,7 @@
   justify-content: center;
   gap: 0.65rem;
 
+  z-index: 10;
   padding: 0.7rem;
   background: rgba(0 0 0 / .76);
   font-weight: bold;
