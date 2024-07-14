@@ -104,6 +104,21 @@ app.get('/admin-page', async (req, res) => {
   res.render('admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
 })
 
+app.get('/user/:id', async (req, res) => {
+  const { user } = req.session
+  if (!user) return res.status(403).redirect('/')
+
+  const { id } = req.params
+
+  try {
+    const userToShow = await UserRepository.getUserById({ id })
+
+    res.render('user', { userToShow })
+  } catch (error) {
+    res.status(404).send('Usuario no encontrado.')
+  }
+})
+
 app.post('/add-points', async (req, res) => {
   const { user } = req.session
   if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
@@ -111,10 +126,9 @@ app.post('/add-points', async (req, res) => {
   const { userId, challengeId } = req.body
 
   try {
-    const challenge = await ChallengeRepository.getChallengeById({ id: challengeId })
-    await UserRepository.addPoints({ userId, points: challenge.auraPoints })
+    const newPoints = await UserRepository.addPoints({ userId, challengeId })
 
-    res.send({ points: challenge.auraPoints })
+    res.send({ points: newPoints })
   } catch (error) {
     res.status(400).send({ err: error.message })
   }
