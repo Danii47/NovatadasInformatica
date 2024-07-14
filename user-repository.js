@@ -4,6 +4,7 @@ import DBLocal from 'db-local'
 import bcrypt from 'bcrypt'
 
 import { SALT_ROUNDS } from './config.js'
+import { ChallengeRepository } from './challenge-repository.js'
 
 const { Schema } = new DBLocal({ path: './db' })
 
@@ -12,6 +13,7 @@ const User = Schema('User', {
   dni: { type: String, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
+  challenges: { type: Array, required: true, default: [] },
   auraPoints: { type: Number, required: true, default: 0 },
   isAdmin: { type: Boolean, required: true, default: false }
 })
@@ -53,6 +55,7 @@ export class UserRepository {
       _id: user._id,
       name: user.name,
       auraPoints: user.auraPoints,
+      challenges: user.challenges,
       isAdmin: user.isAdmin
     }
   }
@@ -62,19 +65,40 @@ export class UserRepository {
 
     return users
       .sort((a, b) => sorted ? b.auraPoints - a.auraPoints : 0)
-      .map(({ _id, name, auraPoints, dni }) => ({ _id, name, auraPoints, dni: catchDNI ? dni : undefined }))
+      .map(({ _id, name, challenges, auraPoints, dni }) => ({ _id, name, challenges, auraPoints, dni: catchDNI ? dni : undefined }))
   }
 
-  static async addPoints ({ userId, points }) {
+  static async getUserById ({ id }) {
+    const user = User.findOne({ _id: id })
+
+    if (!user) throw new Error('El usuario no existe.')
+
+    return {
+      _id: user._id,
+      name: user.name,
+      auraPoints: user.auraPoints,
+      challenges: user.challenges,
+      isAdmin: user.isAdmin
+    }
+  }
+
+  static async addPoints ({ userId, challengeId }) {
     const user = User.findOne({ _id: userId })
 
     if (!user) throw new Error('El usuario no existe.')
 
-    user
-      .update({ auraPoints: user.auraPoints + points })
+    if (user.challenges.includes(challengeId)) throw new Error('El usuario ya ha completado este reto.')
+
+    const challenge = await ChallengeRepository.getChallengeById({ id: challengeId })
+
+    await user
+      .update({
+        auraPoints: user.auraPoints + challenge.auraPoints,
+        challenges: [...user.challenges, challengeId]
+      })
       .save()
 
-    return user.auraPoints
+    return challenge.auraPoints
   }
 }
 
