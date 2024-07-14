@@ -27,9 +27,10 @@
 }
 
 body {
-  height: 100vh;
-  margin: 0;
+  min-height: 100vh;
   background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 nav {

@@ -57,13 +57,24 @@ export class UserRepository {
     }
   }
 
-  static async getAllUsers ({ sorted = false, catchDNI = false } = {}) {
-    const users = await User.find()
+  static async getAllUsers ({ sorted = false, catchDNI = false, showAdmins = false } = {}) {
+    const users = await User.find(!showAdmins ? { isAdmin: showAdmins } : {})
 
     return users
-      .filter(user => !user.isAdmin)
       .sort((a, b) => sorted ? b.auraPoints - a.auraPoints : 0)
       .map(({ _id, name, auraPoints, dni }) => ({ _id, name, auraPoints, dni: catchDNI ? dni : undefined }))
+  }
+
+  static async addPoints ({ userId, points }) {
+    const user = User.findOne({ _id: userId })
+
+    if (!user) throw new Error('El usuario no existe.')
+
+    user
+      .update({ auraPoints: user.auraPoints + points })
+      .save()
+
+    return user.auraPoints
   }
 }
 

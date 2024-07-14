@@ -9,6 +9,7 @@
   <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
   <link href="/styles/notify.css" rel="stylesheet" type="text/css">
   <link href="/styles/password.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="/js/notify.js"></script>
 
   <style>
     h1 {
@@ -46,7 +47,7 @@
       width: 300px;
     }
 
-    .create-container.challenge {
+    .create-container.add-points {
       width: 300px;
     }
 
@@ -206,7 +207,7 @@
         </div>
       </form>
     </div>
-    <div class="create-container">
+    <div class="create-container challenge">
       <h2>Crear reto</h2>
       <form id="create-challenge-form" class="create-form">
         <div>
@@ -232,18 +233,19 @@
         </div>
       </form>
     </div>
-    <div class="create-container challenge">
+    <div class="create-container add-points">
       <h2>Añadir puntos</h2>
-      <form class="create-form" id="create-user-form">
+      <form class="create-form" id="add-points-form">
         <div>
           <label for="username" class="input-label">
             <i class="fa-solid fa-user"></i>
             Usuario
           </label>
-          <input type="text" id="searchUsers" placeholder="Buscar Usuario">
+          <input type="text" id="search-users" placeholder="Buscar usuario">
           <select type="text" id="users" name="users">
+            <option hidden disabled selected value>Selecciona un usuario</option>
             <% allUsers.forEach((user)=> { %>
-              <option title="<%= user.name %>">
+              <option title="<%= user.name %>" value="<%= user._id %>">
                 <%= user.name %> - <%= user.dni %>
               </option>
               <% }) %>
@@ -255,10 +257,11 @@
             Reto
           </label>
 
-          <input type="text" id="searchChallenge" placeholder="Buscar reto">
-          <select type="text" id="challenge" name="challenge">
+          <input type="text" id="search-challenge" placeholder="Buscar reto">
+          <select type="text" id="challenges" name="challenge">
+            <option hidden disabled selected value>Selecciona un reto</option>
             <% allChallenges.forEach((challenge)=> { %>
-              <option title="<%= challenge.description%>">
+              <option title="<%= challenge.description %>" value="<%= challenge._id %>">
                 <%= challenge.title %> - <%= challenge.auraPoints %>
               </option>
               <% }) %>
@@ -273,13 +276,12 @@
   <script>
 
     const $ = (selector) => document.querySelector(selector)
-    const createUserFrom = $('#create-user-form')
 
     let allChallenges = []
     let allUsers = []
 
     window.addEventListener("load", () => {
-      fetch('/get-admin-data', {
+      fetch('/get-db-data', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -292,21 +294,28 @@
         })
     })
 
-    $("#searchChallenge").addEventListener("change", (event) => {
+    $("#search-challenge").addEventListener("change", (event) => {
+      event.preventDefault()
       filterChallenges(event.target.value)
     })
 
-    $("#searchUsers").addEventListener("change", (event) => {
+    $("#search-users").addEventListener("change", (event) => {
+      event.preventDefault()
       filterUsers(event.target.value)
     })
 
     function filterChallenges(inputText) {
-      const filtered = !inputText ? allChallenges : allChallenges.filter(challenge => challenge.title.toLowerCase().includes(inputText.toLowerCase()))
+      const filtered = !inputText ?
+        allChallenges :
+        allChallenges.filter(challenge => {
+          const concatText = `${challenge.title} - ${challenge.auraPoints}`
+          return concatText.toLowerCase().includes(inputText.toLowerCase())
+        })
 
-      $("#challenge").innerHTML = `
+      $("#challenges").innerHTML = `
         ${filtered
           .map(challenge => `
-            <option title="${challenge.description}">
+            <option title="${challenge.description}" value="${challenge._id}">
               ${challenge.title} - ${challenge.auraPoints}
             </option>
           `)
@@ -316,22 +325,27 @@
     }
 
     function filterUsers(inputText) {
-      let filtered
-      if (!inputText) {
-        filtered = allUsers
-      } else {
-
-        filtered = allUsers.filter(user => {
+      let filtered = !inputText ?
+        allUsers :
+        allUsers.filter(user => {
           const concatText = `${user.name} - ${user.dni}`
           return concatText.toLowerCase().includes(inputText.toLowerCase())
         })
-      }
 
+      value = "${challenge._id}"
       $("#users").innerHTML = `
-        ${filtered.map(user => `<option>${user.name} - ${user.dni}</option>`).join('')}
+        ${filtered
+          .map(user => `
+            <option title="${user.name}" value="${user._id}">
+              ${user.name} - ${user.dni}
+            </option>
+          `)
+          .join('')
+        }
       `
     }
 
+    const createUserFrom = $('#create-user-form')
 
     createUserFrom.addEventListener('submit', async (e) => {
       e.preventDefault()
@@ -367,9 +381,10 @@
         })
     })
 
-    const challengeForm = $('#create-challenge-form')
 
-    challengeForm.addEventListener('submit', async (e) => {
+    const createChallengeForm = $('#create-challenge-form')
+
+    createChallengeForm.addEventListener('submit', async (e) => {
       e.preventDefault()
       const challengeName = $('#challenge-name').value
       const challengeDescription = $('#challenge-description').value
@@ -403,6 +418,39 @@
         })
     })
 
+
+    const addPointsForm = $('#add-points-form')
+
+    addPointsForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const userId = $('#users').value
+      const challengeId = $('#challenges').value
+
+      if (!userId || !challengeId) return notify('Por favor, rellena todos los campos.', 1000)
+      fetch('/add-points', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId,
+          challengeId
+        })
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('#users').value = ''
+            $('#challenges').value = ''
+
+            $('#search-users').focus()
+            notify(`${data.points} Puntos añadidos correctamente.`, 1000, "success")
+          }
+        })
+    })
+
     const hidePassBtn = $('.hide-password')
     const passwordInput = $('#userPassword')
 
@@ -425,49 +473,6 @@
         passwordInput.type = "password"
       }
     })
-
-    let notifyTimeoutId
-    let notifyTimeoutId2
-
-    function notify(msg, time, type = "error") {
-      const $ = (element) => document.querySelector(element)
-
-      const container = $('.notify-container')
-      const notifyText = $('.notify-text')
-      const notifyIcon = $('#notify-icon')
-
-      container.style.animation = ''
-      container.style.opacity = 0
-
-      clearTimeout(notifyTimeoutId)
-      clearTimeout(notifyTimeoutId2)
-
-      notifyIcon.classList.remove("fa-solid", "fa-triangle-exclamation", "fa-beat")
-      notifyIcon.classList.remove("fa-solid", "fa-check-circle")
-      notifyIcon.classList.add(...(type === "error" ? ["fa-solid", "fa-triangle-exclamation", "fa-beat"] : ["fa-solid", "fa-check-circle"]))
-
-      notifyText.textContent = msg
-      container.classList.remove("success")
-      container.classList.remove("error")
-
-      container.classList.add(type)
-
-      container.style.animation = 'showNotify .5s'
-
-      notifyTimeoutId = setTimeout(() => {
-        container.style.animation = ''
-        container.style.opacity = 1
-      }, 500)
-
-      notifyTimeoutId2 = setTimeout(() => {
-        container.style.animation = 'hideNotify .5s'
-        setTimeout(() => {
-          container.style.animation = ''
-          container.style.opacity = 0
-        }, 500)
-      }, time + 500)
-    }
-
   </script>
 </body>
 

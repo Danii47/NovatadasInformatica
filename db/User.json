@@ -1,10 +1,18 @@
 [
   {
+    "_id": "54ef0d0e-53c8-4f72-9993-49f270970a5d",
+    "dni": "49993536T",
+    "name": "arià",
+    "password": "$2b$10$ULyic17BxqzWD3afSpMFkOJMy6dVhM6M9T/cidxZHn4sQQQcrWtre",
+    "auraPoints": 0,
+    "isAdmin": false
+  },
+  {
     "_id": "c300e40b-c1e4-452f-a297-a96aac8d4b56",
     "dni": "12345678U",
     "name": "ivan_44",
     "password": "$2b$10$Nm9nDE7SGVwA0lB568E/AOoxztqhzsPAO0K7tPLaInnuZ9OiMA63S",
-    "auraPoints": 0,
+    "auraPoints": 189981,
     "isAdmin": false
   },
   {

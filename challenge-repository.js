@@ -44,6 +44,14 @@ export class ChallengeRepository {
     return challenges
   }
 
+  static async getChallengeById ({ id }) {
+    const challenge = Challenge.findOne({ _id: id })
+
+    if (!challenge) throw new Error('El reto no existe.')
+
+    return challenge
+  }
+
   static async deleteChallenge (id) {
     const challenge = Challenge.findOne({ _id: id })
 

@@ -39,14 +39,14 @@ app.post('/login', async (req, res) => {
   const { dni, password } = req.body
   try {
     const user = await UserRepository.login({ dni, password })
-    const token = jwt.sign({ id: user._id, name: user.name, auraPoints: user.auraPoints, isAdmin: user.isAdmin }, SECRET_JWT_KEY,
+    const accessToken = jwt.sign({ id: user._id, name: user.name, auraPoints: user.auraPoints, isAdmin: user.isAdmin }, SECRET_JWT_KEY,
       {
         expiresIn: '1h'
       }
     )
 
     res
-      .cookie('access_token', token, {
+      .cookie('access_token', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
@@ -85,11 +85,13 @@ app.get('/scoreboard', async (req, res) => {
   res.render('scoreboard', { loggedUser: user, allUsers: users })
 })
 
-app.get('/challenges', (req, res) => {
+app.get('/challenges', async (req, res) => {
   const { user } = req.session
   if (!user) return res.status(403).redirect('/')
 
-  res.render('challenges', { loggedUser: user })
+  const challenges = await ChallengeRepository.getAllChallenges({ sorted: true })
+
+  res.render('challenges', { loggedUser: user, allChallenges: challenges })
 })
 
 app.get('/admin-page', async (req, res) => {
@@ -100,6 +102,22 @@ app.get('/admin-page', async (req, res) => {
   const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
 
   res.render('admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
+})
+
+app.post('/add-points', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const { userId, challengeId } = req.body
+
+  try {
+    const challenge = await ChallengeRepository.getChallengeById({ id: challengeId })
+    await UserRepository.addPoints({ userId, points: challenge.auraPoints })
+
+    res.send({ points: challenge.auraPoints })
+  } catch (error) {
+    res.status(400).send({ err: error.message })
+  }
 })
 
 app.post('/create-challenge', async (req, res) => {
@@ -116,7 +134,7 @@ app.post('/create-challenge', async (req, res) => {
   }
 })
 
-app.get('/get-admin-data', async (req, res) => {
+app.get('/get-db-data', async (req, res) => {
   const { user } = req.session
   if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
 
@@ -127,7 +145,7 @@ app.get('/get-admin-data', async (req, res) => {
 })
 
 app.use((req, res) => {
-  res.status(404).send('Not found')
+  res.status(404).send('Página no encontrada.')
 })
 
 app.listen(PORT, () => {
