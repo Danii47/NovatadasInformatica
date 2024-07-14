@@ -45,7 +45,7 @@ export class ChallengeRepository {
   }
 
   static async getChallengeById ({ id }) {
-    const challenge = Challenge.findOne({ _id: id })
+    const challenge = await Challenge.findOne({ _id: id })
 
     if (!challenge) throw new Error('El reto no existe.')
 
