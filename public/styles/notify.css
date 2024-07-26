@@ -18,6 +18,7 @@
   font-weight: bold;
   font-size: 1rem;
   max-width: 500px;
+  animation: none;
 }
 
 .notify-container.error {
@@ -31,24 +32,24 @@
 }
 
 @keyframes showNotify {
-  0% {
+  from {
     transform: translateY(-100%);
     opacity: 0;
   }
 
-  100% {
+  to {
     transform: translateY(0%);
     opacity: 1;
   }
 }
 
 @keyframes hideNotify {
-  0% {
+  from {
     transform: translateY(0%);
     opacity: 1;
   }
 
-  100% {
+  to {
     transform: translateY(-100%);
     opacity: 0;
   }

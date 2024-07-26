@@ -9,9 +9,6 @@ function notify (msg, time, type = 'error') {
   container.style.animation = ''
   container.style.opacity = 0
 
-  // clearTimeout(notifyTimeoutId)
-  // clearTimeout(notifyTimeoutId2)
-
   notifyIcon.classList.remove('fa-solid', 'fa-triangle-exclamation', 'fa-beat')
   notifyIcon.classList.remove('fa-solid', 'fa-check-circle')
   notifyIcon.classList.add(...(type === 'error' ? ['fa-solid', 'fa-triangle-exclamation', 'fa-beat'] : ['fa-solid', 'fa-check-circle']))
