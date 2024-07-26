@@ -52,6 +52,10 @@ export class ChallengeRepository {
     return challenge
   }
 
+  static async getCompletedChallenges ({ challengesIds }) {
+    return Challenge.find({ _id: { $in: challengesIds } })
+  }
+
   static async deleteChallenge (id) {
     const challenge = Challenge.findOne({ _id: id })
 
