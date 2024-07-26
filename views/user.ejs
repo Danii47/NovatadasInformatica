@@ -4,19 +4,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= userToShow.name %></title>
+  <title>
+    <%= userToShow.name %>
+  </title>
   <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <link href="/styles/table.css" rel="stylesheet" type="text/css">
   <style>
     h1 {
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    h1 div {
+      
+      width: max-content;
+      padding: .5rem 1rem;
+      border-radius: 8px;
+      background-color: #f1f1f1;
+      border: 1px solid #9a9a9a;
+    }
+
+    h2 {
       text-align: center;
+      margin: 1rem 0;
     }
   </style>
 </head>
 
 <body>
   <h1>
-    <%= userToShow.name %>
+    <div>
+      <%= userToShow.name %>
+    </div>
   </h1>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Reto</th>
+          <th>Puntos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% completedChalleges.forEach((challenge, index)=> { %>
+          <tr>
+            <td>
+              <%= challenge.title %>
+            </td>
+            <td>
+              <%= challenge.auraPoints %>
+            </td>
+          </tr>
+          <% }) %>
+      </tbody>
+    </table>
+  </div>
 </body>
 
 </html>

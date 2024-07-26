@@ -113,7 +113,9 @@ app.get('/user/:id', async (req, res) => {
   try {
     const userToShow = await UserRepository.getUserById({ id })
 
-    res.render('user', { userToShow })
+    const completedChalleges = await ChallengeRepository.getCompletedChallenges({ challengesIds: userToShow.challenges })
+
+    res.render('user', { userToShow, completedChalleges })
   } catch (error) {
     res.status(404).send('Usuario no encontrado.')
   }
