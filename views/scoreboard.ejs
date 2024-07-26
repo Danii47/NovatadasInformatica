@@ -9,98 +9,14 @@
     href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
     rel='stylesheet'>
   <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <link href="/styles/table.css" rel="stylesheet" type="text/css">
   <style>
-    .scoreboard-container {
-      width: 100%;
-      max-width: 600px;
-      margin: 3rem auto;
-      border-radius: 8px;
-      border: 1px solid #333;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      padding: 0;
-      max-height: 70vh;
-      /* Ajusta este valor según tus necesidades */
-      overflow-y: auto;
-      /* Muestra barras de desplazamiento si es necesario */
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      /* Para eliminar cualquier espacio extra entre celdas */
-      text-align: center;
-      padding: .25rem;
-      margin: 0;
-      border-spacing: 0;
-
-    }
-
-    tbody tr {
-      transition: background-color .1s;
-    }
-
-    tbody tr:nth-child(odd) {
-      background-color: rgb(255 255 255 / .7);
-    }
-
-    tbody tr:nth-child(even) {
-      background: rgb(255 255 255 / .8);
-    }
-
     tbody tr:nth-child(odd):hover {
       background-color: rgb(230 230 230 / .7);
     }
 
     tbody tr:nth-child(even):hover {
       background: rgb(230 230 230 / .8);
-    }
-
-    tbody tr {
-      cursor: pointer;
-    }
-
-    @media (max-width: 600px) {
-      table {
-        font-size: .6rem;
-      }
-
-      .scoreboard-container {
-        max-width: 300px;
-        padding: 0;
-      }
-
-      table th,
-      table td {
-        padding: .2rem;
-
-      }
-    }
-
-    table th {
-      color: white;
-      background: #2c6a94;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      padding: .5rem;
-      border-bottom: 1px solid #333;
-      border-right: 1px solid #333;
-    }
-
-
-    table td {
-      padding: .5rem;
-      border-bottom: 1px solid #333;
-      border-right: 1px solid #333;
-    }
-
-    table tr:last-child td {
-      border-bottom: none;
-    }
-
-    table td:last-child,
-    table th:last-child {
-      border-right: none;
     }
 
     .logged-user-row {
@@ -121,12 +37,12 @@
         <li><a href="/scoreboard" id="a-selected">Marcador</a></li>
         <% if (loggedUser.isAdmin) { %>
           <li><a href="/admin-page">Admin</a></li>
-        <% } %>
+          <% } %>
       </ul>
     </nav>
   </header>
 
-  <div class="scoreboard-container">
+  <div class="table-container">
     <table>
       <thead>
         <tr>

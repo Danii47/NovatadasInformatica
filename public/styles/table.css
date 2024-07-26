@@ -1,0 +1,84 @@
+.table-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 3rem auto;
+  border-radius: 8px;
+  border: 1px solid #333;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  max-height: 70vh;
+  /* Ajusta este valor según tus necesidades */
+  overflow-y: auto;
+  /* Muestra barras de desplazamiento si es necesario */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  /* Para eliminar cualquier espacio extra entre celdas */
+  text-align: center;
+  padding: .25rem;
+  margin: 0;
+  border-spacing: 0;
+
+}
+
+tbody tr {
+  transition: background-color .1s;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: rgb(255 255 255 / .7);
+}
+
+tbody tr:nth-child(even) {
+  background: rgb(255 255 255 / .8);
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  table {
+    font-size: .6rem;
+  }
+
+  .table-container {
+    max-width: 300px;
+    padding: 0;
+  }
+
+  table th,
+  table td {
+    padding: .2rem;
+
+  }
+}
+
+table th {
+  color: white;
+  background: #2c6a94;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: .5rem;
+  border-bottom: 1px solid #333;
+  border-right: 1px solid #333;
+}
+
+
+table td {
+  padding: .5rem;
+  border-bottom: 1px solid #333;
+  border-right: 1px solid #333;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+table td:last-child,
+table th:last-child {
+  border-right: none;
+}
