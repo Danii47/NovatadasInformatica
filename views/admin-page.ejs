@@ -136,7 +136,7 @@
       padding-bottom: .5rem;
     }
 
-    @media (max-width: 740px) {
+    @media (max-width: 800px) {
       .admin-utils-container {
         flex-direction: column;
         gap: 1rem;
@@ -222,13 +222,16 @@
         </div>
         <div>
           <label for="challenge-description" class="input-label">
-            <i class="fa-regular fa-subtitles"></i>
+            <i class="fa-solid fa-message-captions"></i>
             Descripción del reto
           </label>
           <textarea id="challenge-description" name="challenge-description"></textarea>
         </div>
         <div>
-          <label for="challenge-points">Puntos del reto</label>
+          <label for="challenge-points">
+            <i class="fa-solid fa-hundred-points"></i>
+            Puntos del reto
+          </label>
           <input type="number" min="1" id="challenge-points" name="challenge-points">
         </div>
         <div class="create-button-container">
@@ -455,7 +458,7 @@
     })
 
     const hidePassBtn = $('.hide-password')
-    const passwordInput = $('#userPassword')
+    const passwordInput = $('#user-password')
 
     let hidePass = false
 
@@ -467,13 +470,13 @@
       if (hidePass) {
         $('.hide-password i').classList.remove('fa-eye')
         $('.hide-password i').classList.add('fa-eye-slash')
-
         passwordInput.type = "text"
+
       } else {
         $('.hide-password i').classList.remove('fa-eye-slash')
         $('.hide-password i').classList.add('fa-eye')
-
         passwordInput.type = "password"
+
       }
     })
   </script>
