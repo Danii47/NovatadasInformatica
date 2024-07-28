@@ -8,14 +8,165 @@
   <link
     href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
     rel='stylesheet'>
-  <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <link rel='stylesheet' href='https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css'>
 
+  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
+  <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="/js/notify.js"></script>
   <style>
+    .challenges {
+      padding: 2rem;
+      display: flex;
 
+      flex-wrap: wrap;
+
+      gap: 1.3rem;
+      justify-content: center;
+
+    }
+
+    .challenge-card {
+      padding: .85rem;
+      background-color: #f1f1f1;
+
+      max-width: 500px;
+      /* 650px para 2 columnas */
+      scale: 1;
+      border: 1px solid #7d7d7d;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
+      transition: box-shadow .2s ease, background-color .2s ease, scale .15s ease;
+    }
+
+    .challenge-card.pending {
+      background-color: #b3a6a6;
+      scale: 0.99;
+    }
+
+    .challenge-card.completed {
+      background-color: #c8dcc7;
+      scale: 0.99;
+    }
+
+    .challenge-card:hover:not(.pending):not(.completed) {
+      scale: 1.02;
+      box-shadow: 3px 3px 20px rgba(0, 0, 0, .4);
+    }
+
+    .challenge-card div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .5rem;
+      user-select: none;
+    }
+
+    .challenge-card>p {
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+
+    .challenge-card h2 {
+      max-width: 80%;
+    }
+
+    .challenge-card button {
+      background-color: #35a850;
+      color: white;
+      padding: .5rem 1rem;
+      border: 1px solid #2e7c3e;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color .2s ease;
+    }
+
+    .challenge-card:not(.pending):not(.completed) button:hover {
+      background-color: #2e7c3e;
+    }
+
+    .challenge-card button.pending {
+      background-color: #8b2c2c;
+      border: none;
+      cursor: not-allowed;
+    }
+
+    .challenge-card button.completed {
+      background-color: #367142;
+      border: none;
+      cursor: not-allowed;
+    }
+
+    .challenge-card form {
+      display: flex;
+      justify-content: center;
+      margin-top: auto;
+    }
+
+    .points {
+      position: relative;
+      background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+      color: white;
+      padding: .25rem .6rem;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
+      overflow: hidden;
+    }
+
+    .points::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+      transform: rotate(45deg);
+      transition: opacity .2s ease-in-out;
+      opacity: 0;
+      filter: blur(10px);
+    }
+
+    .challenge-card:hover:not(.completed):not(.pending) .points::before {
+      animation: points-reflection 2s ease-in-out forwards;
+      opacity: 1;
+    }
+
+    @keyframes points-reflection {
+      0% {
+        transform: rotate(45deg) translateX(-100%);
+      }
+
+      50% {
+        transform: rotate(45deg) translateX(100%);
+      }
+
+      100% {
+        transform: rotate(45deg) translateX(-100%);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .challenges {
+        padding: 1rem;
+      }
+
+      .challenge-card {
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class='notify-container'>
+    <i id='notify-icon'></i>
+    <div class='notify-text'></div>
+  </div>
 
   <header>
     <nav>
@@ -24,29 +175,123 @@
         <li><a href="/scoreboard">Marcador</a></li>
         <% if (loggedUser.isAdmin) { %>
           <li><a href="/admin-page">Admin</a></li>
-        <% } %>
+          <% } %>
       </ul>
     </nav>
   </header>
-  <h1>Bienvenido <%= loggedUser.name %>, tienes <%= loggedUser.auraPoints %> puntos!</h1>
 
-  <div>
+  <div class="challenges">
     <% allChallenges.forEach((challenge, index)=> { %>
-      <h2>
-        <%= challenge.title %>
-      </h2>
-      <p>
-        <%= challenge.description %>
-      </p>
-      <p>
-        <%= challenge.points %> puntos
-      </p>
-      <form action="/challenges" method="POST">
-        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-        <input type="submit" value="Completar">
-      </form>
-      <% }) %>
+      <% if (completedChallenges.includes(challenge._id)) { %>
+        <div class="challenge-card completed">
+          <div>
+            <h2>
+              <%= challenge.title %>
+            </h2>
+            <p class="points">
+              <%= challenge.points %> aura
+            </p>
+          </div>
+          <p>
+            <%= challenge.description %>
+          </p>
+
+          <form class="request-completed-challenge-form">
+            <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+            <button type="submit" class="completed" disabled>
+              Completado
+            </button>
+          </form>
+
+        </div>
+        <% } else if (pendingChallenges.includes(challenge._id)) { %>
+          <div class="challenge-card pending">
+            <div>
+              <h2>
+                <%= challenge.title %>
+              </h2>
+              <p class="points">
+                <%= challenge.points %> aura
+              </p>
+            </div>
+            <p>
+              <%= challenge.description %>
+            </p>
+
+            <form class="request-completed-challenge-form">
+              <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+              <button type="submit" class="pending" disabled>
+                Ya solicitado
+              </button>
+            </form>
+
+          </div>
+          <% } else { %>
+            <div id="challenge-card-<%= challenge._id %>" class="challenge-card">
+              <div>
+                <h2>
+                  <%= challenge.title %>
+                </h2>
+                <p class="points">
+                  <%= challenge.points %> aura
+                </p>
+              </div>
+              <p>
+                <%= challenge.description %>
+              </p>
+
+              <form class="request-completed-challenge-form">
+                <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+                <button type="submit">
+                  Solicitar
+                </button>
+              </form>
+
+            </div>
+            <% } %>
+              <% }) %>
   </div>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector)
+    const $$ = (selector) => document.querySelectorAll(selector)
+
+    const requestCompletedChallengeForms = $$('.request-completed-challenge-form')
+
+    requestCompletedChallengeForms.forEach((requestCompletedChallengeForm) => {
+
+      requestCompletedChallengeForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+        const challengeId = requestCompletedChallengeForm.querySelector('input[name="challengeId"]').value
+
+        fetch(`/challenges/request-complete-challenge`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            challengeId
+          })
+        }).then((res) => res.json())
+          .then((data) => {
+            if (data.err) {
+              notify(data.err, 1000)
+            } else {
+              $(`#challenge-card-${challengeId}`).classList.add('pending')
+
+              requestCompletedChallengeForm.querySelector('button').textContent = 'Ya solicitado'
+
+              requestCompletedChallengeForm.querySelector('button').classList.add('pending')
+              requestCompletedChallengeForm.querySelector('button').disabled = true
+
+              notify('Reto solicitado correctamente.', 1000, 'success')
+            }
+          })
+
+      })
+    })
+
+  </script>
 </body>
 
 </html>
