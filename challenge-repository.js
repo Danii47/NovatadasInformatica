@@ -6,12 +6,12 @@ const Challenge = Schema('Challenge', {
   _id: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  auraPoints: { type: Number, required: true }
+  points: { type: Number, required: true }
 })
 
 export class ChallengeRepository {
-  static async create ({ title, description, auraPoints }) {
-    const auraPointsNumber = Number(auraPoints)
+  static async create ({ title, description, points }) {
+    const auraPointsNumber = Number(points)
 
     if (auraPointsNumber < 0) throw new Error('Los puntos de aura deben ser positivos.')
 
@@ -21,7 +21,7 @@ export class ChallengeRepository {
       _id: id,
       title,
       description,
-      auraPoints: auraPointsNumber
+      points: auraPointsNumber
     }).save()
 
     return id
@@ -31,7 +31,7 @@ export class ChallengeRepository {
     const challenges = Challenge.find()
 
     if (sorted) {
-      challenges.sort((a, b) => b.auraPoints - a.auraPoints)
+      challenges.sort((a, b) => b.points - a.points)
     }
 
     if (maxCharacters) {
