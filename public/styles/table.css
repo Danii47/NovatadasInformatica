@@ -1,12 +1,12 @@
 .table-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin: 3rem auto;
   border-radius: 8px;
   border: 1px solid #333;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 0;
-  max-height: 70vh;
+  max-height: 80vh;
   /* Ajusta este valor según tus necesidades */
   overflow-y: auto;
   /* Muestra barras de desplazamiento si es necesario */
@@ -39,13 +39,13 @@ tbody tr {
   cursor: pointer;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   table {
     font-size: .6rem;
   }
 
   .table-container {
-    max-width: 300px;
+    max-width: 380px;
     padding: 0;
   }
 
