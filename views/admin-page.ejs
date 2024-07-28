@@ -9,7 +9,7 @@
     href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
     rel='stylesheet'>
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
-  <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
   <link href="/styles/notify.css" rel="stylesheet" type="text/css">
   <link href="/styles/password.css" rel="stylesheet" type="text/css">
   <script type="text/javascript" src="/js/notify.js"></script>
@@ -164,6 +164,7 @@
     <i id="notify-icon" class="fa-solid fa-triangle-exclamation fa-beat"></i>
     <div class="notify-text"></div>
   </div>
+
   <header>
     <nav>
       <ul>
@@ -268,7 +269,7 @@
             <option hidden disabled selected value>Selecciona un reto</option>
             <% allChallenges.forEach((challenge)=> { %>
               <option title="<%= challenge.description %>" value="<%= challenge._id %>">
-                <%= challenge.title %> - <%= challenge.auraPoints %>
+                <%= challenge.title %> - <%= challenge.points %>
               </option>
               <% }) %>
           </select>
@@ -314,7 +315,7 @@
       const filtered = !inputText ?
         allChallenges :
         allChallenges.filter(challenge => {
-          const concatText = `${challenge.title} - ${challenge.auraPoints}`
+          const concatText = `${challenge.title} - ${challenge.points}`
           return concatText.toLowerCase().includes(inputText.toLowerCase())
         })
 
@@ -322,7 +323,7 @@
         ${filtered
           .map(challenge => `
             <option title="${challenge.description}" value="${challenge._id}">
-              ${challenge.title} - ${challenge.auraPoints}
+              ${challenge.title} - ${challenge.points}
             </option>
           `)
           .join('')
@@ -406,7 +407,7 @@
         body: JSON.stringify({
           title: challengeName,
           description: challengeDescription,
-          auraPoints: challengePoints
+          points: challengePoints
         })
       })
         .then(res => res.json())
