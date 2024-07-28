@@ -7,7 +7,7 @@
   <title>
     <%= userToShow.name %>
   </title>
-  <link href="/styles/navLayout.css" rel="stylesheet" type="text/css">
+  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
   <link href="/styles/table.css" rel="stylesheet" type="text/css">
   <style>
     h1 {
@@ -17,7 +17,6 @@
     }
 
     h1 div {
-      
       width: max-content;
       padding: .5rem 1rem;
       border-radius: 8px;
@@ -54,7 +53,7 @@
               <%= challenge.title %>
             </td>
             <td>
-              <%= challenge.auraPoints %>
+              <%= challenge.points %>
             </td>
           </tr>
           <% }) %>
