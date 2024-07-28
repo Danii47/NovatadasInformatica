@@ -3,132 +3,132 @@
     "_id": "8e4e4c81-d0a5-4146-bde5-6222a11528f7",
     "title": "QUE CARIÑOSO",
     "description": "Pide a un desconocido darle un abrazo y logra que acepte, ¡hoy estas de buen humor!",
-    "auraPoints": 1
+    "points": 1600
   },
   {
     "_id": "e670bf9a-2776-4164-8546-8ab8e819aed8",
     "title": "NO ME LLORES",
     "description": "Acércate a un desconocido y cuéntale tus penas con dramatismo. ¡Mantén el personaje y no te rías!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "cc7a751c-1280-4802-ae5c-d75982c5da4f",
     "title": "VAYA CUADRO",
     "description": "Trae una camiseta blanca y deja que cualquiera te pinte. ¡Lleva un recuerdo único y colorido de este día especial!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "c95b5f73-5264-4d94-a09f-b1f20b8eb3ff",
     "title": "NI PUTO CASO",
     "description": "Pregunta a alguien sobre como ir a algún lugar y pidiendo indicaciones. Luego ve en la dirección opuesta.",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "915325e9-9b2a-420d-a0ac-64d6439635d2",
     "title": "GIRAR Y CARRERA",
     "description": "Decidios 10 personas y girad 10 veces sobre vosotros mismos, luego, corred hasta la meta. ¡Preparaos para manteneros en pie!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "5ecc4cd9-ae14-411d-873d-5e7e011a9d64",
     "title": "CUCHARADA DE SAL",
     "description": "Debes tomar una cucharada de sal. No tengas miedo, ¡seguro que no será para tanto!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "9e254fcf-104e-45bd-8318-479ec96dca80",
     "title": "CUCHARADA TABASCO",
     "description": "Debes tomar una cuchara de de tabasco. ¡Demuestra tu valentía y resistencia ante el picante!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "acc31aa4-63ce-4d6d-8f4f-f0fc2d67bb3c",
     "title": "ICE BUCKET CHALLENGE",
     "description": "Vierte un cubo de agua helada sobre tu cabeza. Intenta aguantar el frio sin ninguna queja.",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "04823d67-b67c-40d2-996a-e2024f854e95",
     "title": "LA ERA DE HIELO",
     "description": "Sujeta un hielo en la mano el mayor tiempo posible. ¡El que lo aguante más tiempo sin soltarlo, gana!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "3dbeae2e-dcc7-462d-a4a0-308795f24836",
     "title": "DEJARSE PINTAR ALGO EN LA CARA",
     "description": "Deja que alguien te dibuje lo que quiera en la cara. ¡Prepárate para lucir una obra de arte única!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "aa272b65-a791-4719-b0ea-b6521a07034c",
     "title": "CUIDAR / PASARSE HUEVOS",
     "description": "Lleva un huevo contigo todo el día sin romperlo. Si ves a otro novato, pásale el huevo sin que se rompa. ¡El que termine con el huevo intacto, gana!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "069f80ae-ee16-4969-b4df-341b3094ccda",
-    "title": "PONERSE A HABLAR CON EL PRIMER VIEJO QUE PASE",
+    "title": "¿QUIÉN ERES?",
     "description": "Acércate al primer señor mayor que veas y empieza una conversación. ¡Pregúntale sobre su vida, cuéntale algo divertido! Deberás estar mínimo 2 minutos.",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "90bf27e8-a2a6-421b-8924-3e0b50b7daf7",
     "title": "CUBATA RANDOM",
     "description": "Deja que el azar decida tu bebida. El resto elegirá los ingredientes de tu cubata y deberás atreverte a probar el cubata más loco de tu vida. ¡Salud!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "5f26def0-b2f3-4fcd-9523-e527cddbee32",
     "title": "BATALLA DE GALLOS",
     "description": "Demuestra tu habilidad para improvisar rimas en una batalla de gallos. ¡El que tenga las mejores rimas, gana!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "82c6ee7e-3065-4025-b776-30f5c227b25e",
     "title": "TIRAR UN HUEVO A OTRO",
     "description": "Encuentra a otro novato y lánzale un huevo (no lo mates). Ten cuidado, si te lo esquiva él ganará la puntuación del reto.",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "fb8e548f-df3d-464e-a0cd-bf24db66d5f8",
     "title": "TEÑIRSE COLOR AL AZAR",
     "description": "Gira una ruleta con un color al azar y tiñe tu pelo de ese color. ¡La suerte decide tu nuevo look!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "7e043d49-c0d1-4f1f-8623-5f402b8be4de",
     "title": "SALIR EN LA PRESENTACIÓN DE FOE",
     "description": "En la presentación de FOE, la primera clase, deberéis salir mínimo 10 personas de la clase, se permite en cualquier momento de las 2 horas. Ya lo entenderéis...",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "7d9480fc-3267-4d83-b0f1-7d43f146520a",
     "title": "METERSE LAGO",
     "description": "Lánzate al lago del campus sin pensarlo dos veces. ¿Serás capaz de soportar el agua fría y salir con una sonrisa?",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "5672c4bd-b3fd-41c2-9597-f06203b7d94e",
     "title": "HIDALGO",
     "description": "Graba un video bebiéndote un cubata de una sentada. ¡Demuestra tu valentía y resistencia! Debes hacerlo con estilo y sin derramar ni una gota.",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "3fdab7fe-8a88-4e7b-9054-f3a8065f5912",
     "title": "PELEA DE TORTAZOS",
     "description": "Desafía a un amigo a una pelea de tortazos. ¡El primero retirarse pierde! Prepara la cara.",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "4ca0576b-9d36-49b8-9083-a936f59d6de4",
     "title": "NAZARIO",
     "description": "Atrévete a lucir el legendario corte de Nazario. ¡Ese estilo tan característico que solo los valientes se atreven a llevar!",
-    "auraPoints": 1
+    "points": 1
   },
   {
     "_id": "ea81e1fc-fb55-43bf-9f61-23da15adc6e8",
     "title": "RULETA DE CORTES",
     "description": "¡Haz girar la ruleta! Cada sección tiene un corte de pelo. Si te atreves, acepta el corte que te toque y luce un look totalmente nuevo.",
-    "auraPoints": 1
+    "points": 1
   }
 ]
