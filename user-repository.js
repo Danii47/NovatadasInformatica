@@ -13,8 +13,9 @@ const User = Schema('User', {
   dni: { type: String, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
+  pendingChallenges: { type: Array, required: true, default: [] },
   challenges: { type: Array, required: true, default: [] },
-  auraPoints: { type: Number, required: true, default: 0 },
+  points: { type: Number, required: true, default: 0 },
   isAdmin: { type: Boolean, required: true, default: false }
 })
 
@@ -54,7 +55,7 @@ export class UserRepository {
     return {
       _id: user._id,
       name: user.name,
-      auraPoints: user.auraPoints,
+      points: user.points,
       challenges: user.challenges,
       isAdmin: user.isAdmin
     }
@@ -64,8 +65,8 @@ export class UserRepository {
     const users = await User.find(!showAdmins ? { isAdmin: showAdmins } : {})
 
     return users
-      .sort((a, b) => sorted ? b.auraPoints - a.auraPoints : 0)
-      .map(({ _id, name, challenges, auraPoints, dni }) => ({ _id, name, challenges, auraPoints, dni: catchDNI ? dni : undefined }))
+      .sort((a, b) => sorted ? b.points - a.points : 0)
+      .map(({ _id, name, challenges, points, dni }) => ({ _id, name, challenges, points, dni: catchDNI ? dni : undefined }))
   }
 
   static async getUserById ({ id }) {
@@ -76,7 +77,7 @@ export class UserRepository {
     return {
       _id: user._id,
       name: user.name,
-      auraPoints: user.auraPoints,
+      points: user.points,
       challenges: user.challenges,
       isAdmin: user.isAdmin
     }
@@ -93,12 +94,41 @@ export class UserRepository {
 
     await user
       .update({
-        auraPoints: user.auraPoints + challenge.auraPoints,
+        points: user.points + challenge.points,
         challenges: [...user.challenges, challengeId]
       })
       .save()
 
-    return challenge.auraPoints
+    return challenge.points
+  }
+
+  static async requestCompleteChallenge ({ userId, challengeId }) {
+    const user = User.findOne({ _id: userId })
+
+    if (!user) throw new Error('El usuario no existe.')
+
+    if (user.challenges.includes(challengeId)) throw new Error('Este reto ya ha sido completado.')
+    if (user.pendingChallenges.includes(challengeId)) throw new Error('Este reto ya ha sido solicitado.')
+
+    const challenge = await ChallengeRepository.getChallengeById({ id: challengeId })
+
+    if (!challenge) throw new Error('El reto no existe.')
+
+    await user
+      .update({
+        pendingChallenges: [...user.pendingChallenges, challengeId]
+      })
+      .save()
+
+    return challengeId
+  }
+
+  static async getPendingAndCompletedChallenges ({ userId, pendingChallenges = true, completedChallenges = true }) {
+    const user = User.findOne({ _id: userId })
+
+    if (!user) throw new Error('El usuario no existe.')
+
+    return { pendingChallenges: pendingChallenges ? user.pendingChallenges : null, completedChallenges: completedChallenges ? user.challenges : null }
   }
 }
 
