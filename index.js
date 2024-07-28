@@ -39,7 +39,7 @@ app.post('/login', async (req, res) => {
   const { dni, password } = req.body
   try {
     const user = await UserRepository.login({ dni, password })
-    const accessToken = jwt.sign({ id: user._id, name: user.name, auraPoints: user.auraPoints, isAdmin: user.isAdmin }, SECRET_JWT_KEY,
+    const accessToken = jwt.sign({ id: user._id, name: user.name, points: user.points, isAdmin: user.isAdmin }, SECRET_JWT_KEY,
       {
         expiresIn: '1h'
       }
@@ -90,8 +90,23 @@ app.get('/challenges', async (req, res) => {
   if (!user) return res.status(403).redirect('/')
 
   const challenges = await ChallengeRepository.getAllChallenges({ sorted: true })
+  const { pendingChallenges, completedChallenges } = await UserRepository.getPendingAndCompletedChallenges({ userId: user.id })
 
-  res.render('challenges', { loggedUser: user, allChallenges: challenges })
+  res.render('challenges', { loggedUser: user, allChallenges: challenges, pendingChallenges, completedChallenges })
+})
+
+app.post('/challenges/request-complete-challenge', async (req, res) => {
+  const { user } = req.session
+  if (!user) return res.status(403).send('No autorizado')
+
+  const { challengeId } = req.body
+
+  try {
+    const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId: user.id, challengeId })
+    res.send({ pendingChallengeAdded })
+  } catch (error) {
+    res.status(400).send({ err: error.message })
+  }
 })
 
 app.get('/admin-page', async (req, res) => {
@@ -140,10 +155,10 @@ app.post('/create-challenge', async (req, res) => {
   const { user } = req.session
   if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
 
-  const { title, description, auraPoints } = req.body
+  const { title, description, points } = req.body
 
   try {
-    const id = await ChallengeRepository.create({ title, description, auraPoints })
+    const id = await ChallengeRepository.create({ title, description, points })
     res.send({ id })
   } catch (error) {
     res.status(400).send({ err: error.message })
