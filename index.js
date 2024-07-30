@@ -99,11 +99,40 @@ app.post('/challenges/request-complete-challenge', async (req, res) => {
   const { user } = req.session
   if (!user) return res.status(403).send('No autorizado')
 
-  const { challengeId } = req.body
+  const { userId, challengeId } = req.body
 
   try {
-    const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId: user.id, challengeId })
+    const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId, challengeId })
     res.send({ pendingChallengeAdded })
+  } catch (error) {
+    res.status(400).send({ err: error.message })
+  }
+})
+
+app.post('/challenges/reject-challenge-completed', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const { userId, challengeId } = req.body
+
+  try {
+    console.log({ userId, challengeId })
+    const challengeRejected = await UserRepository.rejectChallengeCompleted({ userId, challengeId })
+    res.send({ challengeRejected })
+  } catch (error) {
+    res.status(400).send({ err: error.message })
+  }
+})
+
+app.post('/challenges/accept-challenge-completed', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const { userId, challengeId } = req.body
+
+  try {
+    const challengeAccepted = await UserRepository.acceptChallengeCompleted({ userId, challengeId })
+    res.send({ challengeAccepted })
   } catch (error) {
     res.status(400).send({ err: error.message })
   }
