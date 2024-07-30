@@ -12,6 +12,17 @@
   /* Muestra barras de desplazamiento si es necesario */
 }
 
+.table-container::-webkit-scrollbar {
+  display: none;
+}
+
+.table-container {
+  -ms-overflow-style: none;
+  /* IE y Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -21,6 +32,10 @@ table {
   margin: 0;
   border-spacing: 0;
 
+}
+
+thead {
+  font-size: 1.1rem;
 }
 
 tbody tr {
@@ -41,12 +56,18 @@ tbody tr {
 
 @media (max-width: 700px) {
   table {
-    font-size: .6rem;
+    font-size: .5rem;
   }
 
   .table-container {
-    max-width: 380px;
+    margin-top: 1.2rem;
+    max-width: 95vw;
+    max-height: 89.5vh;
     padding: 0;
+  }
+
+  thead {
+    font-size: .6rem;
   }
 
   table th,
