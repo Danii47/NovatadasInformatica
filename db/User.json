@@ -1,1 +1,292 @@
-[{"_id":"7a247907-cdaa-4fbc-ba87-12004fbab67c","dni":"12474427D","name":"Dani Fdez","password":"$2b$10$0v1OXeK2NQvgRmv4PV4bIOMmdCBbj35alWz2f.v3eYvJ/tXB3Xhfq","pendingChallenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f","e670bf9a-2776-4164-8546-8ab8e819aed8","915325e9-9b2a-420d-a0ac-64d6439635d2","c95b5f73-5264-4d94-a09f-b1f20b8eb3ff","9e254fcf-104e-45bd-8318-479ec96dca80","acc31aa4-63ce-4d6d-8f4f-f0fc2d67bb3c","04823d67-b67c-40d2-996a-e2024f854e95","069f80ae-ee16-4969-b4df-341b3094ccda","3dbeae2e-dcc7-462d-a4a0-308795f24836","aa272b65-a791-4719-b0ea-b6521a07034c","90bf27e8-a2a6-421b-8924-3e0b50b7daf7","5f26def0-b2f3-4fcd-9523-e527cddbee32","82c6ee7e-3065-4025-b776-30f5c227b25e"],"challenges":["8e4e4c81-d0a5-4146-bde5-6222a11528f7","5ecc4cd9-ae14-411d-873d-5e7e011a9d64"],"points":666,"isAdmin":true},{"_id":"4998758a-8852-4dd5-95f2-83bb73555863","dni":"71960285R","name":"Daniel Fernández Varona","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false},{"_id":"4998758a-8852-4dd5-95f2-83bb73555862","dni":"71960285R","name":"Sanjo","password":"$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW","pendingChallenges":[],"challenges":["cc7a751c-1280-4802-ae5c-d75982c5da4f"],"points":1,"isAdmin":false}]
+[
+  {
+    "_id": "7a247907-cdaa-4fbc-ba87-12004fbab67c",
+    "dni": "12474427D",
+    "name": "Dani Fdez",
+    "password": "$2b$10$0v1OXeK2NQvgRmv4PV4bIOMmdCBbj35alWz2f.v3eYvJ/tXB3Xhfq",
+    "pendingChallenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f",
+      "e670bf9a-2776-4164-8546-8ab8e819aed8",
+      "7e043d49-c0d1-4f1f-8623-5f402b8be4de",
+      "c95b5f73-5264-4d94-a09f-b1f20b8eb3ff",
+      "915325e9-9b2a-420d-a0ac-64d6439635d2",
+      "acc31aa4-63ce-4d6d-8f4f-f0fc2d67bb3c"
+    ],
+    "challenges": [
+      "8e4e4c81-d0a5-4146-bde5-6222a11528f7",
+      "5ecc4cd9-ae14-411d-873d-5e7e011a9d64"
+    ],
+    "points": 666,
+    "isAdmin": true
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555863",
+    "dni": "71960285R",
+    "name": "Daniel Fernández Varona",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [
+      "e670bf9a-2776-4164-8546-8ab8e819aed8",
+      "c95b5f73-5264-4d94-a09f-b1f20b8eb3ff",
+      "915325e9-9b2a-420d-a0ac-64d6439635d2"
+    ],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f",
+      "8e4e4c81-d0a5-4146-bde5-6222a11528f7",
+      "5ecc4cd9-ae14-411d-873d-5e7e011a9d64"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": "4998758a-8852-4dd5-95f2-83bb73555862",
+    "dni": "71960285R",
+    "name": "Sanjo",
+    "password": "$2b$10$eqMuzn07krvaP6jp.bgpc.1jnyl95k0t3JXhLyI9enDSu0dULHaBW",
+    "pendingChallenges": [],
+    "challenges": [
+      "cc7a751c-1280-4802-ae5c-d75982c5da4f"
+    ],
+    "points": 1,
+    "isAdmin": false
+  }
+]
