@@ -7,8 +7,11 @@
   <title>
     <%= userToShow.name %>
   </title>
+  <link rel='stylesheet' href='https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css'>
   <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
   <link href="/styles/table.css" rel="stylesheet" type="text/css">
+  <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="/js/notify.js"></script>
   <style>
     h1 {
       display: flex;
@@ -54,11 +57,28 @@
       border: none;
       outline: none;
       border-radius: 0px;
-      background-color: white;
-      font-size: 1rem;
+      background-color: transparent;
+      font-size: 1.2rem;
       cursor: pointer;
-      padding: 0.1rem;
-      border-radius: 6px;
+      padding: 0.2rem;
+      transition: background-color 0.2s;
+    }
+
+    .submenu button:first-child {
+      border-right: .5px solid #ccc;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    .submenu button:last-child {
+      border-left: .5px solid #ccc;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+
+    .submenu button:hover {
+      background-color: rgb(215, 215, 215);
     }
 
     .pending-row.active .submenu {
@@ -76,12 +96,14 @@
     .challenge-pending {
       color: rgb(143, 24, 24);
     }
-
-
   </style>
 </head>
 
 <body>
+  <div class='notify-container'>
+    <i id='notify-icon'></i>
+    <div class='notify-text'></div>
+  </div>
   <h1>
     <div>
       <%= userToShow.name %>
@@ -113,7 +135,7 @@
         <% }) %>
 
         <% pendingChallenges.forEach((challenge, index)=> { %>
-        <tr <%= loggedUser.isAdmin ? 'class=pending-row' : '' %>>
+        <tr <%= loggedUser.isAdmin ? 'id=' + challenge._id + ' class=pending-row' : '' %>>
           <td>
             <%= challenge.title %>
           </td>
@@ -140,8 +162,13 @@
   </div>
   <% if (loggedUser.isAdmin) { %>
   <script>
+    const $ = (selector) => document.querySelector(selector)
+    const $$ = (selector) => document.querySelectorAll(selector)
+
+    let rowSelected
+
     document.addEventListener('DOMContentLoaded', function() {
-      const pendingRows = document.querySelectorAll('.pending-row')
+      const pendingRows = $$('.pending-row')
 
       pendingRows.forEach(row => {
         row.addEventListener('click', function() {
@@ -151,24 +178,74 @@
 
           if (!isActive) {
             row.classList.add('active')
-            const submenu = row.querySelector('.submenu')
+            const submenu = $('.submenu')
             submenu.style.left = `${event.clientX}px`
             submenu.style.top = `${event.clientY}px`
+
+            rowSelected = row
           }
         })
       })
 
-      document.querySelectorAll('.accept-button').forEach(button => {
+      $$('.accept-button').forEach(button => {
         button.addEventListener('click', function(event) {
           event.stopPropagation()
-          alert('Desafío aceptado')
+
+          fetch('/challenges/accept-challenge-completed', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                userId: '<%= userToShow._id %>',
+                challengeId: rowSelected.id
+              })
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.err) {
+                notify(data.err, 1000)
+              } else {
+                $$('.pending-row').forEach(row => row.classList.remove('active'))
+
+                const pendingCell = rowSelected.querySelector('.challenge-pending')
+
+                pendingCell.innerHTML = 'Completado'
+                pendingCell.classList.remove('challenge-pending')
+                pendingCell.style.color = 'rgb(36, 165, 36)'
+                rowSelected.classList.remove('pending-row')
+
+                notify('Reto confirmado correctamente', 1000, 'success')
+              }
+            })
         })
       })
-
-      document.querySelectorAll('.reject-button').forEach(button => {
+      $$('.reject-button').forEach(button => {
         button.addEventListener('click', function(event) {
           event.stopPropagation()
-          alert('Desafío rechazado')
+
+          fetch('/challenges/reject-challenge-completed', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                userId: '<%= userToShow._id %>',
+                challengeId: rowSelected.id
+              })
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.err) {
+                notify(data.err, 1000)
+              } else {
+                $$('.pending-row').forEach(row => row.classList.remove('active'))
+
+                rowSelected.remove()
+
+                notify('Reto rechazado correctamente', 1000, 'success')
+              }
+            })
         })
       })
     })
