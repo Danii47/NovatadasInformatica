@@ -28,6 +28,56 @@
       text-align: center;
       margin: 1rem 0;
     }
+
+    .pending-row:nth-child(odd):hover {
+      background-color: rgb(230 230 230 / .7);
+    }
+
+    .pending-row:nth-child(even):hover {
+      background-color: rgb(230 230 230 / .7);
+    }
+
+    .pending-row {
+      cursor: pointer;
+    }
+
+    .submenu {
+      display: none;
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .submenu button {
+      border: none;
+      outline: none;
+      border-radius: 0px;
+      background-color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.1rem;
+      border-radius: 6px;
+    }
+
+    .pending-row.active .submenu {
+      display: flex;
+    }
+
+    tbody tr td:last-child {
+      font-weight: 600;
+    }
+
+    .challenge-completed {
+      color: rgb(36, 165, 36);
+    }
+
+    .challenge-pending {
+      color: rgb(143, 24, 24);
+    }
+
+
   </style>
 </head>
 
@@ -44,22 +94,86 @@
         <tr>
           <th>Reto</th>
           <th>Puntos</th>
+          <th>Estado</th>
         </tr>
       </thead>
       <tbody>
         <% completedChalleges.forEach((challenge, index)=> { %>
-          <tr>
-            <td>
-              <%= challenge.title %>
-            </td>
-            <td>
-              <%= challenge.points %>
-            </td>
-          </tr>
-          <% }) %>
+        <tr>
+          <td>
+            <%= challenge.title %>
+          </td>
+          <td>
+            <%= challenge.points %>
+          </td>
+          <td class="challenge-completed">
+            Completado
+          </td>
+        </tr>
+        <% }) %>
+
+        <% pendingChallenges.forEach((challenge, index)=> { %>
+        <tr <%= loggedUser.isAdmin ? 'class=pending-row' : '' %>>
+          <td>
+            <%= challenge.title %>
+          </td>
+          <td>
+            <%= challenge.points %>
+          </td>
+
+
+          <td class="challenge-pending">
+            Pendiente
+
+            <% if (loggedUser.isAdmin) { %>
+            <div class="submenu">
+              <button class="accept-button">✅</button>
+              <button class="reject-button">❌</button>
+            </div>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+
       </tbody>
     </table>
   </div>
+  <% if (loggedUser.isAdmin) { %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const pendingRows = document.querySelectorAll('.pending-row')
+
+      pendingRows.forEach(row => {
+        row.addEventListener('click', function() {
+          const isActive = row.classList.contains('active')
+
+          pendingRows.forEach(r => r.classList.remove('active'))
+
+          if (!isActive) {
+            row.classList.add('active')
+            const submenu = row.querySelector('.submenu')
+            submenu.style.left = `${event.clientX}px`
+            submenu.style.top = `${event.clientY}px`
+          }
+        })
+      })
+
+      document.querySelectorAll('.accept-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+          event.stopPropagation()
+          alert('Desafío aceptado')
+        })
+      })
+
+      document.querySelectorAll('.reject-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+          event.stopPropagation()
+          alert('Desafío rechazado')
+        })
+      })
+    })
+  </script>
+  <% } %>
 </body>
 
 </html>
