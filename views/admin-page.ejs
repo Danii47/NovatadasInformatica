@@ -287,7 +287,7 @@
     let allChallenges = []
     let allUsers = []
 
-    window.addEventListener("load", () => {
+    window.addEventListener("DOMContentLoaded", () => {
       fetch('/get-db-data', {
         method: 'GET',
         headers: {
