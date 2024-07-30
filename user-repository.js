@@ -66,7 +66,7 @@ export class UserRepository {
 
     return users
       .sort((a, b) => sorted ? b.points - a.points : 0)
-      .map(({ _id, name, challenges, points, dni }) => ({ _id, name, challenges, points, dni: catchDNI ? dni : undefined }))
+      .map(({ _id, name, challenges, pendingChallenges, points, dni }) => ({ _id, name, challenges, pendingChallenges, points, dni: catchDNI ? dni : undefined }))
   }
 
   static async getUserById ({ id }) {
@@ -79,6 +79,7 @@ export class UserRepository {
       name: user.name,
       points: user.points,
       challenges: user.challenges,
+      pendingChallenges: user.pendingChallenges,
       isAdmin: user.isAdmin
     }
   }
