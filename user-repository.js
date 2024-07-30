@@ -131,6 +131,39 @@ export class UserRepository {
 
     return { pendingChallenges: pendingChallenges ? user.pendingChallenges : null, completedChallenges: completedChallenges ? user.challenges : null }
   }
+
+  static async acceptChallengeCompleted ({ userId, challengeId }) {
+    const user = User.findOne({ _id: userId })
+
+    if (!user) throw new Error('El usuario no existe.')
+
+    if (!user.pendingChallenges.includes(challengeId)) throw new Error('El reto no ha sido solicitado.')
+
+    await user
+      .update({
+        pendingChallenges: user.pendingChallenges.filter(id => id !== challengeId),
+        challenges: [...user.challenges, challengeId]
+      })
+      .save()
+
+    return challengeId
+  }
+
+  static async rejectChallengeCompleted ({ userId, challengeId }) {
+    const user = User.findOne({ _id: userId })
+
+    if (!user) throw new Error('El usuario no existe.')
+
+    if (!user.pendingChallenges.includes(challengeId)) throw new Error('El reto no ha sido solicitado.')
+
+    await user
+      .update({
+        pendingChallenges: user.pendingChallenges.filter(id => id !== challengeId)
+      })
+      .save()
+
+    return challengeId
+  }
 }
 
 class Validation {
