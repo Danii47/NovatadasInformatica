@@ -81,3 +81,15 @@ li a:hover {
   background-color: #357aa8;
   color: white;
 }
+
+@media (max-width: 700px) {
+
+  li {
+    font-size: 1rem;
+  }
+
+  li a {
+    padding: .8rem;
+  }
+  
+}
