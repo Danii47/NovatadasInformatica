@@ -8,7 +8,6 @@
   <link
     href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
     rel='stylesheet'>
-  <link rel='stylesheet' href='https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css'>
 
   <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
   <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
@@ -70,7 +69,7 @@
     }
 
     .challenge-card h2 {
-      max-width: 80%;
+      max-width: 75%;
     }
 
     .challenge-card button {
@@ -110,7 +109,8 @@
       background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
       color: white;
       padding: .25rem .6rem;
-      border-radius: 16px;
+      font-size: 1.1rem;
+      border-radius: 24px;
       display: flex;
       align-items: center;
       box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
@@ -131,9 +131,22 @@
       filter: blur(10px);
     }
 
+
     .challenge-card:hover:not(.completed):not(.pending) .points::before {
       animation: points-reflection 2s ease-in-out forwards;
       opacity: 1;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f1f1f188;
+      padding: .5rem;
+      text-align: center;
+      font-size: .9rem;
+      color: #333;
     }
 
     @keyframes points-reflection {
@@ -251,6 +264,12 @@
             <% } %>
               <% }) %>
   </div>
+  <% if (loggedUser.isAdmin) { %>
+    <footer>
+      <p>Eres administrador, por lo que los retos que solicites o completes no quedarán reflejados en el marcador</p>
+    </footer>
+    <% } %>
+  
 
   <script>
     const $ = (selector) => document.querySelector(selector)
