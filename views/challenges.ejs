@@ -5,9 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retos - Novatadas Informática</title>
-  <link
-    href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
-    rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap' rel='stylesheet'>
 
   <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
   <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
@@ -37,7 +35,7 @@
       flex-direction: column;
       justify-content: space-between;
       box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
-      transition: box-shadow .2s ease, background-color .2s ease, scale .15s ease;
+      transition: box-shadow .2s ease, background-color .2s ease, scale .15s ease, transform .15s ease;
     }
 
     .challenge-card.pending {
@@ -52,6 +50,7 @@
 
     .challenge-card:hover:not(.pending):not(.completed) {
       scale: 1.02;
+      transform: rotate(-.5deg);
       box-shadow: 3px 3px 20px rgba(0, 0, 0, .4);
     }
 
@@ -187,89 +186,89 @@
         <li><a href="/challenges" id="a-selected">Retos</a></li>
         <li><a href="/scoreboard">Marcador</a></li>
         <% if (loggedUser.isAdmin) { %>
-          <li><a href="/admin-page">Admin</a></li>
-          <% } %>
+        <li><a href="/admin-page">Admin</a></li>
+        <% } %>
       </ul>
     </nav>
   </header>
 
   <div class="challenges">
     <% allChallenges.forEach((challenge, index)=> { %>
-      <% if (completedChallenges.includes(challenge._id)) { %>
-        <div class="challenge-card completed">
-          <div>
-            <h2>
-              <%= challenge.title %>
-            </h2>
-            <p class="points">
-              <%= challenge.points %> aura
-            </p>
-          </div>
-          <p>
-            <%= challenge.description %>
-          </p>
+    <% if (completedChallenges.includes(challenge._id)) { %>
+    <div class="challenge-card completed">
+      <div>
+        <h2>
+          <%= challenge.title %>
+        </h2>
+        <p class="points">
+          <%= challenge.points %> aura
+        </p>
+      </div>
+      <p>
+        <%= challenge.description %>
+      </p>
 
-          <form class="request-completed-challenge-form">
-            <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-            <button type="submit" class="completed" disabled>
-              Completado
-            </button>
-          </form>
+      <form class="request-completed-challenge-form">
+        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+        <button type="submit" class="completed" disabled>
+          Completado
+        </button>
+      </form>
 
-        </div>
-        <% } else if (pendingChallenges.includes(challenge._id)) { %>
-          <div class="challenge-card pending">
-            <div>
-              <h2>
-                <%= challenge.title %>
-              </h2>
-              <p class="points">
-                <%= challenge.points %> aura
-              </p>
-            </div>
-            <p>
-              <%= challenge.description %>
-            </p>
+    </div>
+    <% } else if (pendingChallenges.includes(challenge._id)) { %>
+    <div class="challenge-card pending">
+      <div>
+        <h2>
+          <%= challenge.title %>
+        </h2>
+        <p class="points">
+          <%= challenge.points %> aura
+        </p>
+      </div>
+      <p>
+        <%= challenge.description %>
+      </p>
 
-            <form class="request-completed-challenge-form">
-              <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-              <button type="submit" class="pending" disabled>
-                Ya solicitado
-              </button>
-            </form>
+      <form class="request-completed-challenge-form">
+        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+        <button type="submit" class="pending" disabled>
+          Ya solicitado
+        </button>
+      </form>
 
-          </div>
-          <% } else { %>
-            <div id="challenge-card-<%= challenge._id %>" class="challenge-card">
-              <div>
-                <h2>
-                  <%= challenge.title %>
-                </h2>
-                <p class="points">
-                  <%= challenge.points %> aura
-                </p>
-              </div>
-              <p>
-                <%= challenge.description %>
-              </p>
+    </div>
+    <% } else { %>
+    <div id="challenge-card-<%= challenge._id %>" class="challenge-card">
+      <div>
+        <h2>
+          <%= challenge.title %>
+        </h2>
+        <p class="points">
+          <%= challenge.points %> aura
+        </p>
+      </div>
+      <p>
+        <%= challenge.description %>
+      </p>
 
-              <form class="request-completed-challenge-form">
-                <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-                <button type="submit">
-                  Solicitar
-                </button>
-              </form>
+      <form class="request-completed-challenge-form">
+        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+        <button type="submit">
+          Solicitar
+        </button>
+      </form>
 
-            </div>
-            <% } %>
-              <% }) %>
+    </div>
+    <% } %>
+    <% }) %>
   </div>
   <% if (loggedUser.isAdmin) { %>
-    <footer>
-      <p>Eres administrador, por lo que los retos que solicites o completes no quedarán reflejados en el marcador</p>
-    </footer>
-    <% } %>
-  
+  <footer>
+    <p>Eres administrador, por lo que los retos que solicites o completes no quedarán reflejados en el marcador.</p>
+  </footer>
+  <% } %>
+
 
   <script>
     const $ = (selector) => document.querySelector(selector)
@@ -284,14 +283,14 @@
         const challengeId = requestCompletedChallengeForm.querySelector('input[name="challengeId"]').value
 
         fetch(`/challenges/request-complete-challenge`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            challengeId
-          })
-        }).then((res) => res.json())
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              challengeId
+            })
+          }).then((res) => res.json())
           .then((data) => {
             if (data.err) {
               notify(data.err, 1000)
@@ -309,7 +308,6 @@
 
       })
     })
-
   </script>
 </body>
 
