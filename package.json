@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch .",
+    "dev": "node --watch --env-file=.env .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,7 +18,9 @@
     "db-local": "3.1.0",
     "ejs": "3.1.10",
     "express": "4.19.2",
-    "jsonwebtoken": "9.0.2"
+    "jsonwebtoken": "9.0.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.3"
   },
   "devDependencies": {
     "standard": "^17.1.0"
