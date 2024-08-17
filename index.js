@@ -1,10 +1,20 @@
 import express from 'express'
-import { PORT, SECRET_JWT_KEY } from './config.js'
+import { PORT, SECRET_JWT_KEY, MONGOOSE_CONNECT } from './config.js'
 import { UserRepository } from './user-repository.js'
+import { ChallengeRepository } from './challenge-repository.js'
 import { corsMiddleWare } from './middlewares/cors.js'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
-import { ChallengeRepository } from './challenge-repository.js'
+import mongoose from 'mongoose'
+
+mongoose.connect(`${MONGOOSE_CONNECT}`, {
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true
+}).then(() => {
+  console.log('\x1b[36m', '\n[MONGO-DB] Conectado a DB ☁️', '\x1b[0m')
+}).catch((error) => {
+  console.log('\x1b[31m', '\n[MONGO-DB] Ocurrio un error al intentar conectar la DB:\n', error, '\x1b[0m')
+})
 
 const app = express()
 
@@ -39,7 +49,7 @@ app.post('/login', async (req, res) => {
   const { dni, password } = req.body
   try {
     const user = await UserRepository.login({ dni, password })
-    const accessToken = jwt.sign({ id: user._id, name: user.name, points: user.points, isAdmin: user.isAdmin }, SECRET_JWT_KEY,
+    const accessToken = jwt.sign({ ...user }, SECRET_JWT_KEY,
       {
         expiresIn: '1h'
       }
