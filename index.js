@@ -100,7 +100,7 @@ app.post('/challenges/request-complete-challenge', async (req, res) => {
   if (!user) return res.status(403).send('No autorizado')
 
   const { userId, challengeId } = req.body
-
+  console.log({ userId, challengeId })
   try {
     const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId, challengeId })
     res.send({ pendingChallengeAdded })
@@ -190,6 +190,20 @@ app.post('/create-challenge', async (req, res) => {
   try {
     const id = await ChallengeRepository.create({ title, description, points })
     res.send({ id })
+  } catch (error) {
+    res.status(400).send({ err: error.message })
+  }
+})
+
+app.post('/challenges/delete-challenge', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const { challengeId } = req.body
+
+  try {
+    const challengeDeleted = await ChallengeRepository.deleteChallenge({ challengeId })
+    res.send({ challengeDeleted })
   } catch (error) {
     res.status(400).send({ err: error.message })
   }
