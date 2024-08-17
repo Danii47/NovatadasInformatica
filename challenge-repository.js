@@ -60,11 +60,13 @@ export class ChallengeRepository {
     return Challenge.find({ _id: { $in: challengesIds } })
   }
 
-  static async deleteChallenge (id) {
-    const challenge = Challenge.findOne({ _id: id })
+  static async deleteChallenge ({ challengeId }) {
+    const challenge = Challenge.findOne({ _id: challengeId })
 
     if (!challenge) throw new Error('El desafío no existe.')
 
-    Challenge.delete({ _id: id }).save()
+    challenge.remove()
+
+    return challengeId
   }
 }
