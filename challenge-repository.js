@@ -1,13 +1,4 @@
-import DBLocal from 'db-local'
-
-const { Schema } = new DBLocal({ path: './db' })
-
-const Challenge = Schema('Challenge', {
-  _id: { type: String, required: true },
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  points: { type: Number, required: true }
-})
+import Challenge from './schemas/Challenge.js'
 
 export class ChallengeRepository {
   static async create ({ title, description, points }) {
@@ -15,20 +6,19 @@ export class ChallengeRepository {
 
     if (auraPointsNumber < 0) throw new Error('Los puntos de aura deben ser positivos.')
 
-    const id = crypto.randomUUID()
-
-    Challenge.create({
-      _id: id,
+    const newChallenge = new Challenge({
       title,
       description,
       points: auraPointsNumber
-    }).save()
+    })
 
-    return id
+    await newChallenge.save()
+
+    return newChallenge._id
   }
 
   static async getAllChallenges ({ sorted = false, maxCharacters } = {}) {
-    const challenges = Challenge.find()
+    const challenges = await Challenge.find()
 
     if (sorted) {
       challenges.sort((a, b) => b.points - a.points)
@@ -53,11 +43,11 @@ export class ChallengeRepository {
   }
 
   static async getCompletedChallenges ({ challengesIds }) {
-    return Challenge.find({ _id: { $in: challengesIds } })
+    return await Challenge.find({ _id: { $in: challengesIds } })
   }
 
   static async getPendingChallenges ({ challengesIds }) {
-    return Challenge.find({ _id: { $in: challengesIds } })
+    return await Challenge.find({ _id: { $in: challengesIds } })
   }
 
   static async deleteChallenge ({ challengeId }) {
@@ -65,7 +55,9 @@ export class ChallengeRepository {
 
     if (!challenge) throw new Error('El desafío no existe.')
 
-    challenge.remove()
+    // TODO: Remove challenge from users
+
+    challenge.deleteOne()
 
     return challengeId
   }
