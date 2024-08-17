@@ -71,7 +71,7 @@
       max-width: 75%;
     }
 
-    .challenge-card button {
+    .challenge-card .request-challenge-button {
       background-color: #35a850;
       color: white;
       padding: .5rem 1rem;
@@ -81,17 +81,31 @@
       transition: background-color .2s ease;
     }
 
-    .challenge-card:not(.pending):not(.completed) button:hover {
+    .challenge-card .delete-challenge-button {
+      background-color: #8b2c2c;
+      color: white;
+      padding: .5rem 1rem;
+      border: 1px solid #551818;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color .2s ease;
+    }
+
+    .challenge-card .delete-challenge-button:hover {
+      background-color: #551818;
+    }
+
+    .challenge-card:not(.pending):not(.completed) .request-challenge-button:hover {
       background-color: #2e7c3e;
     }
 
-    .challenge-card button.pending {
+    .challenge-card .request-challenge-button.pending {
       background-color: #8b2c2c;
       border: none;
       cursor: not-allowed;
     }
 
-    .challenge-card button.completed {
+    .challenge-card .request-challenge-button.completed {
       background-color: #367142;
       border: none;
       cursor: not-allowed;
@@ -101,6 +115,12 @@
       display: flex;
       justify-content: center;
       margin-top: auto;
+    }
+
+    .challenge-options {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
     }
 
     .points {
@@ -208,12 +228,22 @@
         <%= challenge.description %>
       </p>
 
-      <form class="request-completed-challenge-form">
-        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-        <button type="submit" class="completed" disabled>
-          Completado
-        </button>
-      </form>
+      <div class="challenge-options">
+        <form class="request-completed-challenge-form">
+          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+          <button type="submit" class="request-challenge-button completed" disabled>
+            Solicitar
+          </button>
+        </form>
+        <% if (loggedUser.isAdmin) { %>
+        <form class="delete-challenge-form">
+          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+          <button type="submit" class="delete-challenge-button">
+            Eliminar
+          </button>
+        </form>
+        <% } %>
+      </div>
 
     </div>
     <% } else if (pendingChallenges.includes(challenge._id)) { %>
@@ -230,12 +260,22 @@
         <%= challenge.description %>
       </p>
 
-      <form class="request-completed-challenge-form">
-        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-        <button type="submit" class="pending" disabled>
-          Ya solicitado
-        </button>
-      </form>
+      <div class="challenge-options">
+        <form class="request-completed-challenge-form">
+          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+          <button type="submit" class="request-challenge-button pending" disabled>
+            Solicitar
+          </button>
+        </form>
+        <% if (loggedUser.isAdmin) { %>
+        <form class="delete-challenge-form">
+          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+          <button type="submit" class="delete-challenge-button">
+            Eliminar
+          </button>
+        </form>
+        <% } %>
+      </div>
 
     </div>
     <% } else { %>
@@ -252,12 +292,22 @@
         <%= challenge.description %>
       </p>
 
-      <form class="request-completed-challenge-form">
-        <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-        <button type="submit">
-          Solicitar
-        </button>
-      </form>
+      <div class="challenge-options">
+        <form class="request-completed-challenge-form">
+          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+          <button class="request-challenge-button" type="submit">
+            Solicitar
+          </button>
+        </form>
+        <% if (loggedUser.isAdmin) { %>
+        <form class="delete-challenge-form">
+          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+          <button type="submit" class="delete-challenge-button">
+            Eliminar
+          </button>
+        </form>
+        <% } %>
+      </div>
 
     </div>
     <% } %>
@@ -281,8 +331,43 @@
       requestCompletedChallengeForm.addEventListener('submit', (event) => {
         event.preventDefault()
         const challengeId = requestCompletedChallengeForm.querySelector('input[name="challengeId"]').value
-
+        console.log('<%= loggedUser.points %>')
         fetch(`/challenges/request-complete-challenge`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              challengeId,
+              userId: '<%= loggedUser.id %>'
+            })
+          }).then((res) => res.json())
+          .then((data) => {
+            if (data.err) {
+              notify(data.err, 1000)
+            } else {
+              $(`#challenge-card-${challengeId}`).classList.add('pending')
+
+              requestCompletedChallengeForm.querySelector('.request-challenge-button').textContent = 'Ya solicitado'
+
+              requestCompletedChallengeForm.querySelector('.request-challenge-button').classList.add('pending')
+              requestCompletedChallengeForm.querySelector('.request-challenge-button').disabled = true
+
+              notify('Reto solicitado correctamente.', 1000, 'success')
+            }
+          })
+
+      })
+    })
+  
+    const deleteChallengeForms = $$('.delete-challenge-form')
+
+    deleteChallengeForms.forEach((deleteChallengeForm) => {
+      deleteChallengeForm.addEventListener('submit', (event) => {
+        event.preventDefault()
+        const challengeId = deleteChallengeForm.querySelector('input[name="challengeId"]').value
+
+        fetch(`/challenges/delete-challenge`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -295,14 +380,9 @@
             if (data.err) {
               notify(data.err, 1000)
             } else {
-              $(`#challenge-card-${challengeId}`).classList.add('pending')
+              $(`#challenge-card-${challengeId}`).remove()
 
-              requestCompletedChallengeForm.querySelector('button').textContent = 'Ya solicitado'
-
-              requestCompletedChallengeForm.querySelector('button').classList.add('pending')
-              requestCompletedChallengeForm.querySelector('button').disabled = true
-
-              notify('Reto solicitado correctamente.', 1000, 'success')
+              notify('Reto eliminado correctamente.', 1000, 'success')
             }
           })
 
