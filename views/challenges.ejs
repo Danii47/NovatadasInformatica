@@ -11,6 +11,19 @@
   <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
   <script type="text/javascript" src="/js/notify.js"></script>
   <style>
+    html::-webkit-scrollbar {
+      display: none;
+    }
+
+    html {
+
+      -ms-overflow-style: none;
+      /* IE y Edge */
+      scrollbar-width: none;
+      /* Firefox */
+
+    }
+
     .challenges {
       padding: 2rem;
       display: flex;
@@ -23,9 +36,9 @@
     }
 
     .challenge-card {
+      flex: 1 1 33%;
       padding: .85rem;
       background-color: #f1f1f1;
-
       max-width: 500px;
       /* 650px para 2 columnas */
       scale: 1;
@@ -232,7 +245,7 @@
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="request-challenge-button completed" disabled>
-            Solicitar
+            Completado
           </button>
         </form>
         <% if (loggedUser.isAdmin) { %>
@@ -264,7 +277,7 @@
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="request-challenge-button pending" disabled>
-            Solicitar
+            Ya solicitado
           </button>
         </form>
         <% if (loggedUser.isAdmin) { %>
@@ -359,7 +372,7 @@
 
       })
     })
-  
+
     const deleteChallengeForms = $$('.delete-challenge-form')
 
     deleteChallengeForms.forEach((deleteChallengeForm) => {
