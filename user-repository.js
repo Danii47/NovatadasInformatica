@@ -121,10 +121,15 @@ export class UserRepository {
 
     if (!user.pendingChallenges.includes(challengeId)) throw new Error('El reto no ha sido solicitado.')
 
+    const challenge = await ChallengeRepository.getChallengeById({ id: challengeId })
+
+    if (!challenge) throw new Error('El reto no existe.')
+
     await user
       .updateOne({
         pendingChallenges: user.pendingChallenges.filter(id => id !== challengeId),
-        challenges: [...user.challenges, challengeId]
+        challenges: [...user.challenges, challengeId],
+        points: user.points + challenge.points
       })
 
     return challengeId
