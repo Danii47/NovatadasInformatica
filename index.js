@@ -172,7 +172,7 @@ app.get('/user/:id', async (req, res) => {
 
     res.render('user', { loggedUser: user, userToShow, completedChalleges, pendingChallenges })
   } catch (error) {
-    res.status(404).send('Usuario no encontrado.')
+    res.status(403).redirect('/')
   }
 })
 
