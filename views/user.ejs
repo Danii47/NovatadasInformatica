@@ -133,6 +133,33 @@
     .challenge-pending {
       color: rgb(143, 24, 24);
     }
+
+    .return-page {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      border-radius: 8px;
+      background-color: #ededed;
+      width: 35px;
+      height: 35px;
+      color: #333;
+      border: 1px solid #b3b3b3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .return-page:hover {
+      background-color: #d5d5d5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
   </style>
 </head>
 
@@ -141,6 +168,13 @@
     <i id='notify-icon'></i>
     <div class='notify-text'></div>
   </div>
+
+  <div class="return-page">
+    <a href="/scoreboard">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
+
   <h1>
     <div>
       <%= userToShow.name %>
