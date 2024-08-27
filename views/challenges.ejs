@@ -174,11 +174,12 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      background-color: #f1f1f188;
+      background-color: #f1f1f1;
       padding: .5rem;
       text-align: center;
       font-size: .9rem;
       color: #333;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
     }
 
     @keyframes points-reflection {
@@ -204,6 +205,7 @@
         max-width: 100%;
       }
     }
+
   </style>
 </head>
 
@@ -242,13 +244,14 @@
       </p>
 
       <div class="challenge-options">
+        <% if (!loggedUser.isAdmin) { %>
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="request-challenge-button completed" disabled>
             Completado
           </button>
         </form>
-        <% if (loggedUser.isAdmin) { %>
+        <% } else if (loggedUser.id == "66c0ab2fa2465cc92d0e735c" || loggedUser.id == "66c0ac03bf25a5a4e2153849") { %>
         <form class="delete-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="delete-challenge-button">
@@ -274,13 +277,14 @@
       </p>
 
       <div class="challenge-options">
+        <% if (!loggedUser.isAdmin) { %>
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="request-challenge-button pending" disabled>
             Ya solicitado
           </button>
         </form>
-        <% if (loggedUser.isAdmin) { %>
+        <% } else if (loggedUser.id == "66c0ab2fa2465cc92d0e735c" || loggedUser.id == "66c0ac03bf25a5a4e2153849") { %>
         <form class="delete-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="delete-challenge-button">
@@ -306,13 +310,14 @@
       </p>
 
       <div class="challenge-options">
+        <% if (!loggedUser.isAdmin) { %>
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button class="request-challenge-button" type="submit">
             Solicitar
           </button>
         </form>
-        <% if (loggedUser.isAdmin) { %>
+        <% } else if (loggedUser.id == "66c0ab2fa2465cc92d0e735c" || loggedUser.id == "66c0ac03bf25a5a4e2153849") { %>
         <form class="delete-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="delete-challenge-button">
@@ -328,15 +333,17 @@
   </div>
   <% if (loggedUser.isAdmin) { %>
   <footer>
-    <p>Eres administrador, por lo que los retos que solicites o completes no quedarán reflejados en el marcador.</p>
+    <p>Estas desde la vista de administrador.</p>
   </footer>
   <% } %>
 
-
   <script>
-    const $ = (selector) => document.querySelector(selector)
     const $$ = (selector) => document.querySelectorAll(selector)
+    const $ = (selector) => document.querySelector(selector)
+  </script>
 
+  <% if (!loggedUser.isAdmin) { %>
+  <script>
     const requestCompletedChallengeForms = $$('.request-completed-challenge-form')
 
     requestCompletedChallengeForms.forEach((requestCompletedChallengeForm) => {
@@ -372,7 +379,10 @@
 
       })
     })
-
+  </script>
+  <% } %>
+  <% if (loggedUser.id == "66c0ab2fa2465cc92d0e735c" || loggedUser.id == "66c0ac03bf25a5a4e2153849") { %>
+  <script>
     const deleteChallengeForms = $$('.delete-challenge-form')
 
     deleteChallengeForms.forEach((deleteChallengeForm) => {
@@ -402,6 +412,7 @@
       })
     })
   </script>
+  <% } %>
 </body>
 
 </html>
