@@ -57,7 +57,7 @@ export class ChallengeRepository {
 
     // TODO: Remove challenge from users
 
-    challenge.deleteOne()
+    await challenge.deleteOne()
 
     return challengeId
   }
