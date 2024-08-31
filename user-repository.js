@@ -158,14 +158,16 @@ class Validation {
 
   static dni (dni) {
     if (typeof dni !== 'string') throw new Error('El DNI debe ser una cadena de texto.')
-    if (!/^\d{8}[A-Z]$/.test(dni)) throw new Error('El DNI no tiene un formato válido.')
+    if (dni.length !== 5) throw new Error('El DNI debe tener 5 caracteres.')
+    if (!Number(dni)) throw new Error('El DNI debe ser un número.')
+    // if (!/^\d{8}[A-Z]$/.test(dni)) throw new Error('El DNI no tiene un formato válido.')
 
-    const dniNumbers = dni.substring(0, 8)
-    const letter = dni.charAt(8)
-    const validLetters = 'TRWAGMYFPDXBNJZSQVHLCKE'
-    const calculatedLetter = validLetters.charAt(parseInt(dniNumbers, 10) % 23)
+    // const dniNumbers = dni.substring(0, 8)
+    // const letter = dni.charAt(8)
+    // const validLetters = 'TRWAGMYFPDXBNJZSQVHLCKE'
+    // const calculatedLetter = validLetters.charAt(parseInt(dniNumbers, 10) % 23)
 
-    if (calculatedLetter !== letter) throw new Error('La letra del DNI no es correcta.')
+    // if (calculatedLetter !== letter) throw new Error('La letra del DNI no es correcta.')
   }
 
   static password (password) {

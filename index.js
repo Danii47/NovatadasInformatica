@@ -98,11 +98,15 @@ app.get('/scoreboard', async (req, res) => {
 app.get('/challenges', async (req, res) => {
   const { user } = req.session
   if (!user) return res.status(403).redirect('/')
+  try {
+    const challenges = await ChallengeRepository.getAllChallenges({ sorted: true })
+    const { pendingChallenges, completedChallenges } = await UserRepository.getPendingAndCompletedChallenges({ userId: user.id })
 
-  const challenges = await ChallengeRepository.getAllChallenges({ sorted: true })
-  const { pendingChallenges, completedChallenges } = await UserRepository.getPendingAndCompletedChallenges({ userId: user.id })
-
-  res.render('challenges', { loggedUser: user, allChallenges: challenges, pendingChallenges, completedChallenges })
+    res.render('challenges', { loggedUser: user, allChallenges: challenges, pendingChallenges, completedChallenges })
+  } catch (error) {
+    console.log(error)
+    res.status(403).redirect('/')
+  }
 })
 
 app.post('/challenges/request-complete-challenge', async (req, res) => {

@@ -4,7 +4,7 @@ export class ChallengeRepository {
   static async create ({ title, description, points }) {
     const auraPointsNumber = Number(points)
 
-    if (auraPointsNumber < 0) throw new Error('Los puntos de aura deben ser positivos.')
+    if (auraPointsNumber < 0) throw new Error('Los puntos deben ser positivos.')
 
     const newChallenge = new Challenge({
       title,
