@@ -2,14 +2,14 @@ import Challenge from './schemas/Challenge.js'
 
 export class ChallengeRepository {
   static async create ({ title, description, points }) {
-    const auraPointsNumber = Number(points)
+    const pointsNumber = Number(points)
 
-    if (auraPointsNumber < 0) throw new Error('Los puntos deben ser positivos.')
+    if (pointsNumber < 0) throw new Error('Los puntos deben ser positivos.')
 
     const newChallenge = new Challenge({
       title,
       description,
-      points: auraPointsNumber
+      points: pointsNumber
     })
 
     await newChallenge.save()
