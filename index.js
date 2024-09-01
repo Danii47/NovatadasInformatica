@@ -78,7 +78,8 @@ app.post('/register', async (req, res) => {
     const id = await UserRepository.create({ name, dni, password })
     res.send({ id })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    console.error(error)
+    res.status(400).send({ err: 'Ocurrió un error al crear el usuario' })
   }
 })
 

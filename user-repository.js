@@ -13,7 +13,7 @@ export class UserRepository {
     const user = await User.findOne({ dni })
     if (user) throw new Error('El usuario ya existe.')
 
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+    const hashedPassword = await bcrypt.hash(password, Number(SALT_ROUNDS))
 
     const newUser = new User({
       name,
