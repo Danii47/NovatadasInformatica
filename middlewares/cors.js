@@ -4,8 +4,7 @@ export const corsMiddleWare = () => cors({
   origin: (origin, cb) => {
     const ACCEPTED_ORIGINS = [
       'http://localhost:3000',
-      'http://localhost:5137',
-      'https://my-app.com'
+      'https://novatadasinformatica.onrender.com'
     ]
 
     if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
