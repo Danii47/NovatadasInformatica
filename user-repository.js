@@ -49,7 +49,12 @@ export class UserRepository {
     const users = await User.find(!showAdmins ? { isAdmin: showAdmins } : {})
 
     return users
-      .sort((a, b) => sorted ? b.points - a.points : 0)
+      .sort((a, b) => {
+        if (sorted) {
+          if (a.points !== b.points) return b.points - a.points
+          return a.name.localeCompare(b.name)
+        } else return 0
+      })
       .map(({ _id, name, challenges, pendingChallenges, points, dni }) => ({ _id, name, challenges, pendingChallenges, points, dni: catchDNI ? dni : undefined }))
   }
 
@@ -148,6 +153,16 @@ export class UserRepository {
       })
 
     return challengeId
+  }
+
+  static async becomeAdministrator ({ userId }) {
+    const user = await User.findOne({ _id: userId })
+    if (!user) throw new Error('El usuario no existe.')
+    if (user.isAdmin) throw new Error('El usuario ya es administrador.')
+
+    await user.updateOne({ isAdmin: true })
+
+    return userId
   }
 }
 

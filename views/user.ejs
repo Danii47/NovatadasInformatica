@@ -156,6 +156,28 @@
       background-color: #d5d5d5;
     }
 
+    .become-administrator {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      background-color: #ededed;
+      padding: .5rem 1rem;
+      color: #333;
+      border: 1px solid #b3b3b3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .become-administrator:hover {
+      background-color: #d5d5d5;
+    }
+
     a {
       text-decoration: none;
       color: inherit;
@@ -185,6 +207,12 @@
       <i class="fas fa-arrow-left"></i>
     </a>
   </div>
+
+  <% if (loggedUser.id == "66d300a6a3f8683c9a0b5c76" && !userToShow.isAdmin) { %>
+  <button class="become-administrator">
+    Convertir en administrador
+  </button>
+  <% } %>
 
   <h1>
     <div>
@@ -302,6 +330,7 @@
             })
         })
       })
+      
       $$('.reject-button').forEach(button => {
         button.addEventListener('click', function(event) {
           event.stopPropagation()
@@ -328,6 +357,27 @@
                 notify('Reto rechazado correctamente', 1000, 'success')
               }
             })
+        })
+      })
+      
+      $('.become-administrator').addEventListener('click', function() {
+        fetch('/users/become-administrator', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: '<%= userToShow._id %>'
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('.become-administrator').remove()
+            notify('Usuario convertido en administrador correctamente', 1000, 'success')
+          }
         })
       })
     })

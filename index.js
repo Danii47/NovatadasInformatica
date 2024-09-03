@@ -78,8 +78,7 @@ app.post('/register', async (req, res) => {
     const id = await UserRepository.create({ name, dni, password })
     res.send({ id })
   } catch (error) {
-    console.error(error)
-    res.status(400).send({ err: 'Ocurrió un error al crear el usuario' })
+    res.status(400).send({ err: error.message })
   }
 })
 
@@ -110,12 +109,26 @@ app.get('/challenges', async (req, res) => {
   }
 })
 
+app.post('/users/become-administrator', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const { userId } = req.body
+
+  try {
+    const userUpdated = await UserRepository.becomeAdministrator({ userId })
+    res.send({ userUpdated })
+  } catch (error) {
+    console.errro(error)
+    res.status(400).send({ err: error.message })
+  }
+})
+
 app.post('/challenges/request-complete-challenge', async (req, res) => {
   const { user } = req.session
   if (!user) return res.status(403).send('No autorizado')
 
   const { userId, challengeId } = req.body
-  console.log({ userId, challengeId })
   try {
     const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId, challengeId })
     res.send({ pendingChallengeAdded })
@@ -131,7 +144,6 @@ app.post('/challenges/reject-challenge-completed', async (req, res) => {
   const { userId, challengeId } = req.body
 
   try {
-    console.log({ userId, challengeId })
     const challengeRejected = await UserRepository.rejectChallengeCompleted({ userId, challengeId })
     res.send({ challengeRejected })
   } catch (error) {
