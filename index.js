@@ -82,6 +82,48 @@ app.post('/login', async (req, res) => {
         maxAge: 1000 * 60 * 60
       })
       .send(user)
+
+    fetch('https://discord.com/api/webhooks/1282819835662962699/xWiRC1kcG0SYkN98fhZS83LcJocwBo3HciuCEDUzVxI450OY1_ZPymTmwSQGhvr92YEt', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        // the username to be displayed
+        username: 'Log In Novatadas',
+        embeds: [
+          {
+            // decimal number colour of the side of the embed
+            color: 11730954,
+
+            title: 'Nuevo inicio de sesión',
+
+            fields: [
+              {
+                name: 'DNI',
+                value: `${user.dni}`
+              },
+              {
+                name: 'Nombre',
+                value: `${user.name}`
+              },
+              {
+                name: 'Puntos',
+                value: `${user.points}`
+              },
+              {
+                name: 'Rango',
+                value: `${user.admin ? 'Administrador' : 'Usuario'}`
+              }
+            ],
+
+            footer: {
+              text: 'Sistema de logs | Novatadas'
+            }
+          }
+        ]
+      })
+    }).catch((err) => console.log(err))
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).send({ err: error.message })
