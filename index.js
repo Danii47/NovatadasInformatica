@@ -1,11 +1,13 @@
 import express from 'express'
-import { PORT, SECRET_JWT_KEY, MONGOOSE_CONNECT } from './config.js'
+import { PORT, SERVER_URL, SECRET_JWT_KEY, MONGOOSE_CONNECT } from './config.js'
 import { UserRepository } from './user-repository.js'
 import { ChallengeRepository } from './challenge-repository.js'
 import { corsMiddleWare } from './middlewares/cors.js'
+import { isAdminRedirect, isAdminMessage } from './middlewares/isAdmin.js'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
+import { ChallengeAlreadyAcceptedError, ChallengeAlreadyCompletedError, ChallengeAlreadyPendingError, ChallengeNotFoundError, ChallengeNotRequestedError, InvalidCredentialsError, InvalidPointsError, UserAlreadyAdministratorError, UserAlreadyExistsError, UserNotFoundError, ValidationError } from './errors.js'
 
 mongoose.connect(`${MONGOOSE_CONNECT}`, {
   // useNewUrlParser: true,
@@ -34,7 +36,9 @@ app.use((req, res, next) => {
   try {
     const data = jwt.verify(token, SECRET_JWT_KEY)
     req.session.user = data
-  } catch { }
+  } catch (error) {
+    res.clearCookie('access_token')
+  }
 
   next()
 })
@@ -45,15 +49,30 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
+app.post('/register', isAdminMessage, async (req, res) => {
+  const { name, dni, password } = req.body
+
+  try {
+    const id = await UserRepository.create({ name, dni, password })
+    res.send({ id })
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof UserAlreadyExistsError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
+  }
+})
+
 app.post('/login', async (req, res) => {
   const { dni, password } = req.body
   try {
     const user = await UserRepository.login({ dni, password })
-    const accessToken = jwt.sign({ ...user }, SECRET_JWT_KEY,
-      {
-        expiresIn: '1h'
-      }
-    )
+    const accessToken = jwt.sign({ ...user }, SECRET_JWT_KEY, {
+      expiresIn: '1h'
+    })
 
     res
       .cookie('access_token', accessToken, {
@@ -64,21 +83,13 @@ app.post('/login', async (req, res) => {
       })
       .send(user)
   } catch (error) {
-    res.status(401).send({ err: error.message })
-  }
-})
-
-app.post('/register', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
-  const { name, dni, password } = req.body
-
-  try {
-    const id = await UserRepository.create({ name, dni, password })
-    res.send({ id })
-  } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof ValidationError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof InvalidCredentialsError) {
+      res.status(401).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
@@ -90,9 +101,12 @@ app.get('/scoreboard', async (req, res) => {
   const { user } = req.session
   if (!user) return res.status(403).redirect('/')
 
-  const users = await UserRepository.getAllUsers({ sorted: true })
-
-  res.render('scoreboard', { loggedUser: user, allUsers: users })
+  try {
+    const users = await UserRepository.getAllUsers({ sorted: true })
+    res.render('scoreboard', { loggedUser: user, allUsers: users })
+  } catch (error) {
+    res.status(500).redirect('/')
+  }
 })
 
 app.get('/challenges', async (req, res) => {
@@ -104,23 +118,24 @@ app.get('/challenges', async (req, res) => {
 
     res.render('challenges', { loggedUser: user, allChallenges: challenges, pendingChallenges, completedChallenges })
   } catch (error) {
-    console.log(error)
-    res.status(403).redirect('/')
+    res.status(500).redirect('/')
   }
 })
 
-app.post('/users/become-administrator', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/users/become-administrator', isAdminMessage, async (req, res) => {
   const { userId } = req.body
 
   try {
     const userUpdated = await UserRepository.becomeAdministrator({ userId })
     res.send({ userUpdated })
   } catch (error) {
-    console.errro(error)
-    res.status(400).send({ err: error.message })
+    if (error instanceof UserNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof UserAlreadyAdministratorError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
@@ -133,46 +148,67 @@ app.post('/challenges/request-complete-challenge', async (req, res) => {
     const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId, challengeId })
     res.send({ pendingChallengeAdded })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof UserNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeAlreadyAcceptedError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeAlreadyPendingError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.post('/challenges/reject-challenge-completed', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/challenges/reject-challenge-completed', isAdminMessage, async (req, res) => {
   const { userId, challengeId } = req.body
 
   try {
     const challengeRejected = await UserRepository.rejectChallengeCompleted({ userId, challengeId })
     res.send({ challengeRejected })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof UserNotFoundError) {
+      return res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeNotRequestedError) {
+      return res.status(400).send({ err: error.message })
+    } else {
+      return res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.post('/challenges/accept-challenge-completed', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/challenges/accept-challenge-completed', isAdminMessage, async (req, res) => {
   const { userId, challengeId } = req.body
 
   try {
     const challengeAccepted = await UserRepository.acceptChallengeCompleted({ userId, challengeId })
     res.send({ challengeAccepted })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof UserNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeNotRequestedError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.get('/admin-page', async (req, res) => {
+app.get('/admin-page', isAdminRedirect, async (req, res) => {
   const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).redirect('/')
 
-  const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
-  const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
+  try {
+    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+    const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
 
-  res.render('admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
+    res.render('admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
+  } catch (error) {
+    res.status(500).redirect('/')
+  }
 })
 
 app.get('/user/:id', async (req, res) => {
@@ -189,14 +225,15 @@ app.get('/user/:id', async (req, res) => {
 
     res.render('user', { loggedUser: user, userToShow, completedChalleges, pendingChallenges })
   } catch (error) {
-    res.status(403).redirect('/')
+    if (error instanceof UserNotFoundError) {
+      res.status(404).redirect('/')
+    } else {
+      res.status(500).redirect('/')
+    }
   }
 })
 
-app.post('/add-points', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/add-points', isAdminMessage, async (req, res) => {
   const { userId, challengeId } = req.body
 
   try {
@@ -204,66 +241,78 @@ app.post('/add-points', async (req, res) => {
 
     res.send({ points: newPoints })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof UserNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else if (error instanceof ChallengeAlreadyCompletedError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.post('/create-challenge', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/challenges/create-challenge', isAdminMessage, async (req, res) => {
   const { title, description, points } = req.body
 
   try {
     const id = await ChallengeRepository.create({ title, description, points })
     res.send({ id })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof InvalidPointsError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.post('/challenges/delete-challenge', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/challenges/delete-challenge', isAdminMessage, async (req, res) => {
   const { challengeId } = req.body
 
   try {
     const challengeDeleted = await ChallengeRepository.deleteChallenge({ challengeId })
     res.send({ challengeDeleted })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof ChallengeNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.post('/users/delete-user', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
-
+app.post('/users/delete-user', isAdminMessage, async (req, res) => {
   const { userId } = req.body
 
   try {
     const userDeleted = await UserRepository.deleteUser({ userId })
     res.send({ userDeleted })
   } catch (error) {
-    res.status(400).send({ err: error.message })
+    if (error instanceof UserNotFoundError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
   }
 })
 
-app.get('/get-db-data', async (req, res) => {
-  const { user } = req.session
-  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+app.get('/get-db-data', isAdminMessage, async (req, res) => {
+  try {
+    const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
+    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
 
-  const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
-  const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
-
-  res.send({ challenges, users })
+    res.send({ challenges, users })
+  } catch (error) {
+    res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+  }
 })
 
-app.use((req, res) => {
+app.use((_, res) => {
   res.status(404).send('Página no encontrada.')
 })
 
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`)
+  console.log(`Servidor escuchando en ${SERVER_URL}:${PORT}`)
 })
