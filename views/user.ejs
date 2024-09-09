@@ -208,7 +208,7 @@
     </a>
   </div>
 
-  <% if (loggedUser.id == "66d300a6a3f8683c9a0b5c76" && !userToShow.isAdmin) { %>
+  <% if (loggedUser.isSuperAdmin && !userToShow.isAdmin) { %>
   <button class="become-administrator">
     Convertir en administrador
   </button>
