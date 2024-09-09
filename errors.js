@@ -33,13 +33,6 @@ export class InvalidCredentialsError extends Error {
   }
 }
 
-export class ForbiddenError extends Error {
-  constructor (message) {
-    super(message)
-    this.name = 'ForbiddenError'
-  }
-}
-
 export class UnauthorizedError extends Error {
   constructor (message) {
     super(message)
@@ -79,6 +72,13 @@ export class ChallengeNotRequestedError extends Error {
   constructor (message) {
     super(message)
     this.name = 'ChallengeNotRequestedError'
+  }
+}
+
+export class InvalidPointsError extends Error {
+  constructor (message) {
+    super(message)
+    this.name = 'InvalidPointsError'
   }
 }
 
