@@ -53,6 +53,7 @@ export class UserRepository {
     return users
       .sort((a, b) => {
         if (sorted) {
+          // Sort by points and then, by name
           if (a.points !== b.points) return b.points - a.points
           return a.name.localeCompare(b.name)
         } else return 0
@@ -125,11 +126,10 @@ export class UserRepository {
 
     if (!user) throw new UserNotFoundError('El usuario no existe.')
 
-    if (!user.pendingChallenges.includes(challengeId)) throw new ChallengeNotRequestedError('El reto no ha sido solicitado.')
-
     const challenge = await ChallengeRepository.getChallengeById({ id: challengeId })
-
     if (!challenge) throw new ChallengeNotFoundError('El reto no existe.')
+
+    if (!user.pendingChallenges.includes(challengeId)) throw new ChallengeNotRequestedError('El reto no ha sido solicitado.')
 
     await user
       .updateOne({
@@ -167,7 +167,7 @@ export class UserRepository {
     return userId
   }
 
-  static async removeUser ({ userId }) {
+  static async deleteUser ({ userId }) {
     const user = await User.findOne({ _id: userId })
     if (!user) throw new UserNotFoundError('El usuario no existe.')
 
