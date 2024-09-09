@@ -1,10 +1,11 @@
+import { ChallengeNotFoundError, InvalidPointsError } from './errors.js'
 import Challenge from './schemas/Challenge.js'
 
 export class ChallengeRepository {
   static async create ({ title, description, points }) {
     const pointsNumber = Number(points)
 
-    if (pointsNumber < 0) throw new Error('Los puntos deben ser positivos.')
+    if (pointsNumber < 0) throw new InvalidPointsError('Los puntos deben ser positivos.')
 
     const newChallenge = new Challenge({
       title,
@@ -24,20 +25,20 @@ export class ChallengeRepository {
       challenges.sort((a, b) => b.points - a.points)
     }
 
-    if (maxCharacters) {
-      return challenges.map(challenge => ({
-        ...challenge,
-        title: challenge.title.slice(0, maxCharacters) + (challenge.title.length > maxCharacters ? '...' : '')
-      }))
-    }
-
-    return challenges
+    return challenges.map(challenge => {
+      return {
+        _id: challenge._id,
+        points: challenge.points,
+        description: challenge.description,
+        title: maxCharacters ? challenge.title.slice(0, maxCharacters) + (challenge.title.length > maxCharacters ? '...' : '') : challenge.title
+      }
+    })
   }
 
   static async getChallengeById ({ id }) {
     const challenge = await Challenge.findOne({ _id: id })
 
-    if (!challenge) throw new Error('El reto no existe.')
+    if (!challenge) throw new ChallengeNotFoundError('El reto no existe.')
 
     return challenge
   }
@@ -53,7 +54,7 @@ export class ChallengeRepository {
   static async deleteChallenge ({ challengeId }) {
     const challenge = Challenge.findOne({ _id: challengeId })
 
-    if (!challenge) throw new Error('El desafío no existe.')
+    if (!challenge) throw new ChallengeNotFoundError('El reto no existe.')
 
     // TODO: Remove challenge from users
 
