@@ -101,7 +101,7 @@ app.post('/login', async (req, res) => {
             fields: [
               {
                 name: 'DNI',
-                value: `${user.dni}`
+                value: `${dni}`
               },
               {
                 name: 'Nombre',
@@ -113,7 +113,7 @@ app.post('/login', async (req, res) => {
               },
               {
                 name: 'Rango',
-                value: `${user.admin ? 'Administrador' : 'Usuario'}`
+                value: `${user.isAdmin ? 'Administrador' : 'Usuario'}`
               }
             ],
 
