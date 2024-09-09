@@ -236,6 +236,20 @@ app.post('/challenges/delete-challenge', async (req, res) => {
   }
 })
 
+app.post('/users/delete-user', async (req, res) => {
+  const { user } = req.session
+  if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
+
+  const { userId } = req.body
+
+  try {
+    const userDeleted = await UserRepository.deleteUser({ userId })
+    res.send({ userDeleted })
+  } catch (error) {
+    res.status(400).send({ err: error.message })
+  }
+})
+
 app.get('/get-db-data', async (req, res) => {
   const { user } = req.session
   if (!user || !user.isAdmin) return res.status(403).send('No autorizado')
