@@ -40,7 +40,6 @@
       padding: .85rem;
       background-color: #f1f1f1;
       max-width: 500px;
-      /* 650px para 2 columnas */
       scale: 1;
       border: 1px solid #7d7d7d;
       border-radius: 8px;
@@ -254,7 +253,7 @@
             Completado
           </button>
         </form>
-        <% } else if (loggedUser.id == "66d300a6a3f8683c9a0b5c76" || loggedUser.id == "66d3002ea3f8683c9a0b5c6e") { %>
+        <% } else if (loggedUser.isSuperAdmin) { %>
         <form class="delete-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="delete-challenge-button">
@@ -287,7 +286,7 @@
             Ya solicitado
           </button>
         </form>
-        <% } else if (loggedUser.id == "66d300a6a3f8683c9a0b5c76" || loggedUser.id == "66d3002ea3f8683c9a0b5c6e") { %>
+        <% } else if (loggedUser.isSuperAdmin) { %>
         <form class="delete-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="delete-challenge-button">
@@ -320,7 +319,7 @@
             Solicitar
           </button>
         </form>
-        <% } else if (loggedUser.id == "66d300a6a3f8683c9a0b5c76" || loggedUser.id == "66d3002ea3f8683c9a0b5c6e") { %>
+        <% } else if (loggedUser.isSuperAdmin) { %>
         <form class="delete-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="delete-challenge-button">
@@ -354,7 +353,7 @@
       requestCompletedChallengeForm.addEventListener('submit', (event) => {
         event.preventDefault()
         const challengeId = requestCompletedChallengeForm.querySelector('input[name="challengeId"]').value
-        console.log('<%= loggedUser.points %>')
+
         fetch(`/challenges/request-complete-challenge`, {
             method: 'POST',
             headers: {
@@ -384,7 +383,7 @@
     })
   </script>
   <% } %>
-  <% if (loggedUser.id == "66d300a6a3f8683c9a0b5c76" || loggedUser.id == "66d3002ea3f8683c9a0b5c6e") { %>
+  <% if (loggedUser.isSuperAdmin) { %>
   <script>
     const deleteChallengeForms = $$('.delete-challenge-form')
 
