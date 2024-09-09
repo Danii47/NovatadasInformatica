@@ -41,7 +41,8 @@ export class UserRepository {
       id: user._id,
       name: user.name,
       points: user.points,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      isSuperAdmin: user.isSuperAdmin
     }
   }
 
