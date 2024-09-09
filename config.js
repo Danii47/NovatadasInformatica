@@ -2,6 +2,6 @@ export const {
   PORT = 3000,
   SERVER_URL = 'http://localhost',
   SALT_ROUNDS = 10,
-  SECRET_JWT_KEY = 'this-is-an-awesome-secret-key-please-change-it-in-production',
+  SECRET_JWT_KEY = 'ASDFGHJKL-1234567890-QWERTYUIOP-0987654321-ZXCVBNM-54321-09876-12345-67890',
   MONGOOSE_CONNECT
 } = process.env
