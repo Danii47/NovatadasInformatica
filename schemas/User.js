@@ -7,7 +7,8 @@ const User = new Schema({
   pendingChallenges: { type: Array, required: true, default: [] },
   challenges: { type: Array, required: true, default: [] },
   points: { type: Number, required: true, default: 0 },
-  isAdmin: { type: Boolean, required: true, default: false }
+  isAdmin: { type: Boolean, required: true, default: false },
+  isSuperAdmin: { type: Boolean, required: true, default: false }
 })
 
 export default model('User', User)
