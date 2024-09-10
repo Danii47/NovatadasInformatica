@@ -109,7 +109,7 @@
             <%= user.points %>
           </td>
           <td>
-            <%= user.challenges.length %>
+            <%= user.challenges.length + user.extraPoints.length %>
           </td>
           <% if (loggedUser.isAdmin) { %>
           <td>
