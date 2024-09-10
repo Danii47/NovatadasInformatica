@@ -374,8 +374,8 @@
 
               requestCompletedChallengeForm.querySelector('.request-challenge-button').classList.add('pending')
               requestCompletedChallengeForm.querySelector('.request-challenge-button').disabled = true
-
-              notify(`${data.title} - Reto solicitado correctamente.`, 1000, 'success')
+              
+              notify(`${data.pendingChallengeAdded.title} - Reto solicitado correctamente.`, 1000, 'success')
             }
           })
 
