@@ -146,7 +146,7 @@
       height: 35px;
       color: #333;
       border: 1px solid #b3b3b3;
-      
+
       transition: background-color 0.2s;
     }
 
@@ -259,7 +259,7 @@
         </tr>
       </thead>
       <tbody>
-        <% completedChalleges.forEach((challenge, index)=> { %>
+        <% completedChalleges.forEach((challenge, index) => { %>
         <tr>
           <td>
             <%= challenge.title %>
@@ -272,8 +272,21 @@
           </td>
         </tr>
         <% }) %>
+        <% userToShow.extraPoints?.forEach((extraPoint) => { %>
+        <tr>
+          <td>
+            <%= extraPoint.name %>
+          </td>
+          <td>
+            <%= extraPoint.points %>
+          </td>
+          <td class="challenge-completed">
+            Completado
+          </td>
+        </tr>
+        <% }) %>
 
-        <% pendingChallenges.forEach((challenge, index)=> { %>
+        <% pendingChallenges.forEach((challenge, index) => { %>
         <tr <%= loggedUser.isAdmin ? 'id=' + challenge._id + ' class=pending-row' : '' %>>
           <td>
             <%= challenge.title %>
