@@ -52,6 +52,10 @@
       width: 300px;
     }
 
+    .create-container.add-extra-points {
+      width: 300px;
+    }
+
     .create-form {
       display: flex;
       flex-direction: column;
@@ -134,7 +138,7 @@
       padding-bottom: .5rem;
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 1000px) {
       .admin-utils-container {
         flex-direction: column;
         gap: 1rem;
@@ -168,7 +172,12 @@
       <ul>
         <li><a href="/challenges">Retos</a></li>
         <li><a href="/scoreboard">Marcador</a></li>
+        <% if (loggedUser.isAdmin) { %>
         <li><a href="/admin-page" id="a-selected">Admin</a></li>
+        <% } %>
+        <% if (loggedUser.isSuperAdmin) { %>
+        <li><a href="/super-admin-page">Avanzadas</a></li>
+        <% } %>
       </ul>
     </nav>
   </header>
@@ -217,21 +226,21 @@
             <i class="fa-solid fa-input-text"></i>
             Nombre del reto
           </label>
-          <input type="text" id="challenge-name" name="challenge-name">
+          <input type="text" id="challenge-name" name="challenge-name" placeholder="El titulo que se verá en el reto">
         </div>
         <div>
           <label for="challenge-description" class="input-label">
             <i class="fa-solid fa-message-captions"></i>
             Descripción del reto
           </label>
-          <textarea id="challenge-description" name="challenge-description"></textarea>
+          <textarea id="challenge-description" name="challenge-description" placeholder="Escribe en que consiste el reto"></textarea>
         </div>
         <div>
           <label for="challenge-points">
             <i class="fa-solid fa-hundred-points"></i>
             Puntos del reto
           </label>
-          <input type="number" min="1" id="challenge-points" name="challenge-points">
+          <input type="number" min="1" id="challenge-points" name="challenge-points" placeholder="Puntos que valdrá el reto">
         </div>
         <div class="create-button-container">
           <button type="submit">Crear reto</button>
@@ -277,6 +286,47 @@
         </div>
       </form>
     </div>
+    <% if (loggedUser.isSuperAdmin) { %>
+    <div class="create-container add-extra-points">
+      <h2>Añadir puntos</h2>
+      <form class="create-form" id="add-extra-points-form">
+        <div>
+          <label for="username" class="input-label">
+            <i class="fa-solid fa-user"></i>
+            Usuario
+          </label>
+          <input type="text" id="search-users-extra-points" placeholder="Buscar usuario">
+          <select type="text" id="users-extra-points" name="users">
+            <option hidden disabled selected value>Selecciona un usuario</option>
+            <% allUsers.forEach((user)=> { %>
+            <option title="<%= user.name %>" value="<%= user._id %>">
+              <%= user.name %> - <%= user.dni %>
+            </option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label for="extra-points-text" class="input-label">
+            <i class="fa-solid fa-input-text"></i>
+            Texto personalizado
+          </label>
+
+          <input type="text" id="extra-points-text" placeholder="Escribe un reto personalizado">
+        </div>
+        <div>
+          <label for="extra-points" class="input-label">
+            <i class="fa-solid fa-input-text"></i>
+            Puntos extra
+          </label>
+
+          <input type="text" type="number" min="1" id="extra-points" placeholder="Puntuación a sumar">
+        </div>
+        <div class="create-button-container">
+          <button type="submit">Añadir</button>
+        </div>
+      </form>
+    </div>
+    <% } %>
   </div>
   <script>
     const $ = (selector) => document.querySelector(selector)
@@ -305,7 +355,12 @@
 
     $("#search-users").addEventListener("change", (event) => {
       event.preventDefault()
-      filterUsers(event.target.value)
+      filterUsers(event.target.value, "users")
+    })
+
+    $("#search-users-extra-points").addEventListener("change", (event) => {
+      event.preventDefault()
+      filterUsers(event.target.value, "users-extra-points")
     })
 
     function filterChallenges(inputText) {
@@ -328,7 +383,7 @@
       `
     }
 
-    function filterUsers(inputText) {
+    function filterUsers(inputText, id) {
       let filtered = !inputText ?
         allUsers :
         allUsers.filter(user => {
@@ -336,7 +391,7 @@
           return concatText.toLowerCase().includes(inputText.toLowerCase())
         })
 
-      $("#users").innerHTML = `
+      $(`#${id}`).innerHTML = `
         ${filtered
           .map(user => `
             <option title="${user.name}" value="${user._id}">
@@ -447,9 +502,49 @@
           } else {
             $('#users').value = ''
             $('#challenges').value = ''
+            $('#search-users').value = ''
+            $('#search-challenge').value = ''
 
             $('#search-users').focus()
-            notify(`${data.points} Puntos añadidos correctamente.`, 1000, "success")
+            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
+          }
+        })
+    })
+
+
+    const addExtraPointsForm = $('#add-extra-points-form')
+
+    addExtraPointsForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const userId = $('#users-extra-points').value
+      const extraPointsText = $('#extra-points-text').value
+      const extraPoints = $('#extra-points').value
+
+      if (!userId || !extraPointsText || !extraPoints) return notify('Por favor, rellena todos los campos.', 1000)
+      fetch('/add-extra-points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId,
+            extraPointsText,
+            extraPoints: Number(extraPoints)
+          })
+        })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('#users-extra-points').value = ''
+            $('#extra-points-text').value = ''
+            $('#extra-points').value = ''
+            $('#search-users-extra-points').value = ''
+
+
+            $('#search-users-extra-points').focus()
+            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
           }
         })
     })
