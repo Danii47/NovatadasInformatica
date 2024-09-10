@@ -225,6 +225,10 @@
         <% if (loggedUser.isAdmin) { %>
         <li><a href="/admin-page">Admin</a></li>
         <% } %>
+        <% if (loggedUser.isSuperAdmin) { %>
+        <li><a href="/super-admin-page">Avanzadas</a></li>
+        <% } %>
+        
       </ul>
     </nav>
   </header>
