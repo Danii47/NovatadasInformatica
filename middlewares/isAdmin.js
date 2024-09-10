@@ -13,3 +13,11 @@ export const isAdminMessage = (req, res, next) => {
   }
   next()
 }
+
+export const isSuperAdminRedirect = (req, res, next) => {
+  const { user } = req.session
+  if (!user || !user.isSuperAdmin) {
+    return res.status(403).redirect('/')
+  }
+  next()
+}
