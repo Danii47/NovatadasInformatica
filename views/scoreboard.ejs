@@ -93,6 +93,7 @@
           <% if (loggedUser.isAdmin) { %>
           <th>Retos solicitados</th>
           <% } %>
+          <th>Premio extra</th>
         </tr>
       </thead>
       <tbody>
@@ -115,6 +116,13 @@
             <%= user.pendingChallenges.length %>
           </td>
           <% } %>
+          <td>
+            <% if (index < 2) { %>
+            -
+            <% } else { %>
+            <%= user.extraPrizePercentage %>%
+            <% } %>
+          </td>
         </tr>
         <% }) %>
       </tbody>
