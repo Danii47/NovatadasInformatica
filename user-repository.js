@@ -55,6 +55,7 @@ export class UserRepository {
         if (sorted) {
           // Sort by points and then, by name
           if (a.points !== b.points) return b.points - a.points
+          else if (a.pendingChallenges.length !== b.pendingChallenges.length) return b.pendingChallenges.length - a.pendingChallenges.length
           return a.name.localeCompare(b.name)
         } else return 0
       })
