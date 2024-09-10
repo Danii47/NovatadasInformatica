@@ -3,12 +3,13 @@ import { PORT, SERVER_URL, SECRET_JWT_KEY, MONGOOSE_CONNECT, DISCORD_WEBHOOK_LOG
 import { UserRepository } from './user-repository.js'
 import { ChallengeRepository } from './challenge-repository.js'
 import { corsMiddleWare } from './middlewares/cors.js'
-import { isAdminRedirect, isAdminMessage } from './middlewares/isAdmin.js'
+import { isAdminRedirect, isAdminMessage, isSuperAdminRedirect } from './middlewares/isAdmin.js'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
 import { ChallengeAlreadyAcceptedError, ChallengeAlreadyCompletedError, ChallengeAlreadyPendingError, ChallengeNotFoundError, ChallengeNotRequestedError, InvalidCredentialsError, InvalidPointsError, UserAlreadyAdministratorError, UserAlreadyExistsError, UserNotFoundError, ValidationError } from './errors.js'
 import { sendWebhook } from './utils/sendWebhook.js'
+import { getTotalPoints } from './utils/getTotalPoints.js'
 
 mongoose.connect(`${MONGOOSE_CONNECT}`, {
   // useNewUrlParser: true,
@@ -119,7 +120,14 @@ app.get('/scoreboard', async (req, res) => {
 
   try {
     const users = await UserRepository.getAllUsers({ sorted: true })
-    res.render('scoreboard', { loggedUser: user, allUsers: users })
+
+    const totalPoints = getTotalPoints({ users, start: 2 })
+    const extraPrizePercentage = (user.points / totalPoints * 100) || 0
+
+    res.render('scoreboard', {
+      loggedUser: user,
+      allUsers: users.map((user) => ({ ...user, extraPrizePercentage }))
+    })
   } catch (error) {
     res.status(500).redirect('/')
   }
@@ -238,6 +246,19 @@ app.get('/admin-page', isAdminRedirect, async (req, res) => {
     const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
 
     res.render('admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
+  } catch (error) {
+    res.status(500).redirect('/')
+  }
+})
+
+app.get('/super-admin-page', isSuperAdminRedirect, async (req, res) => {
+  const { user } = req.session
+
+  try {
+    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+    const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
+
+    res.render('super-admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
   } catch (error) {
     res.status(500).redirect('/')
   }
