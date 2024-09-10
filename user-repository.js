@@ -53,13 +53,13 @@ export class UserRepository {
     return users
       .sort((a, b) => {
         if (sorted) {
-          // Sort by points and then, by name
+          // Sort by points and then, length of pendingChallenges and then, by name
           if (a.points !== b.points) return b.points - a.points
           else if (a.pendingChallenges.length !== b.pendingChallenges.length) return b.pendingChallenges.length - a.pendingChallenges.length
           return a.name.localeCompare(b.name)
         } else return 0
       })
-      .map(({ _id, name, challenges, pendingChallenges, points, dni }) => ({ _id, name, challenges, pendingChallenges, points, dni: catchDNI ? dni : undefined }))
+      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, dni }) => ({ _id, name, challenges, pendingChallenges, extraPoints, points, dni: catchDNI ? dni : undefined }))
   }
 
   static async getUserById ({ id }) {
@@ -73,6 +73,7 @@ export class UserRepository {
       points: user.points,
       challenges: user.challenges,
       pendingChallenges: user.pendingChallenges,
+      extraPoints: user.extraPoints,
       isAdmin: user.isAdmin
     }
   }
@@ -93,6 +94,20 @@ export class UserRepository {
       })
 
     return challenge.points
+  }
+
+  static async addExtraPoints ({ userId, extraPointsText, extraPoints }) {
+    const user = await User.findOne({ _id: userId })
+
+    if (!user) throw new UserNotFoundError('El usuario no existe.')
+
+    await user
+      .updateOne({
+        extraPoints: [...user.extraPoints, { name: extraPointsText, points: extraPoints }],
+        points: user.points + extraPoints
+      })
+
+    return extraPoints
   }
 
   static async requestCompleteChallenge ({ userId, challengeId }) {
