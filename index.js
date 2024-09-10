@@ -3,7 +3,7 @@ import { PORT, SERVER_URL, SECRET_JWT_KEY, MONGOOSE_CONNECT, DISCORD_WEBHOOK_LOG
 import { UserRepository } from './user-repository.js'
 import { ChallengeRepository } from './challenge-repository.js'
 import { corsMiddleWare } from './middlewares/cors.js'
-import { isAdminRedirect, isAdminMessage, isSuperAdminRedirect } from './middlewares/isAdmin.js'
+import { isAdminRedirect, isAdminMessage, isSuperAdminRedirect, isSuperAdminMessage } from './middlewares/isAdmin.js'
 import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
@@ -299,6 +299,22 @@ app.post('/add-points', isAdminMessage, async (req, res) => {
     } else if (error instanceof ChallengeNotFoundError) {
       res.status(400).send({ err: error.message })
     } else if (error instanceof ChallengeAlreadyCompletedError) {
+      res.status(400).send({ err: error.message })
+    } else {
+      res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
+    }
+  }
+})
+
+app.post('/add-extra-points', isSuperAdminMessage, async (req, res) => {
+  const { userId, extraPointsText, extraPoints } = req.body
+
+  try {
+    const newPoints = await UserRepository.addExtraPoints({ userId, extraPointsText, extraPoints })
+
+    res.send({ points: newPoints })
+  } catch (error) {
+    if (error instanceof UserNotFoundError) {
       res.status(400).send({ err: error.message })
     } else {
       res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
