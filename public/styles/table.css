@@ -1,6 +1,6 @@
 .table-container {
   width: 100%;
-  max-width: 700px;
+  max-width: 900px;
   margin: 3rem auto;
   border-radius: 8px;
   border: 1px solid #333;
@@ -54,9 +54,9 @@ tbody tr {
   cursor: pointer;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   table {
-    font-size: .7rem;
+    font-size: .6rem;
   }
 
   .table-container {
@@ -72,7 +72,7 @@ tbody tr {
 
   table th,
   table td {
-    padding: .2rem;
+    padding: 0rem;
 
   }
 }
