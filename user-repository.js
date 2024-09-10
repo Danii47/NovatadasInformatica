@@ -110,7 +110,7 @@ export class UserRepository {
         pendingChallenges: [...user.pendingChallenges, challengeId]
       })
 
-    return challengeId
+    return challenge
   }
 
   static async getPendingAndCompletedChallenges ({ userId, pendingChallenges = true, completedChallenges = true }) {

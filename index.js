@@ -1,5 +1,5 @@
 import express from 'express'
-import { PORT, SERVER_URL, SECRET_JWT_KEY, MONGOOSE_CONNECT } from './config.js'
+import { PORT, SERVER_URL, SECRET_JWT_KEY, MONGOOSE_CONNECT, DISCORD_WEBHOOK_LOGIN, DISCORD_WEBHOOK_REQUEST_CHALLENGE } from './config.js'
 import { UserRepository } from './user-repository.js'
 import { ChallengeRepository } from './challenge-repository.js'
 import { corsMiddleWare } from './middlewares/cors.js'
@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken'
 import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose'
 import { ChallengeAlreadyAcceptedError, ChallengeAlreadyCompletedError, ChallengeAlreadyPendingError, ChallengeNotFoundError, ChallengeNotRequestedError, InvalidCredentialsError, InvalidPointsError, UserAlreadyAdministratorError, UserAlreadyExistsError, UserNotFoundError, ValidationError } from './errors.js'
+import { sendWebhook } from './utils/sendWebhook.js'
 
 mongoose.connect(`${MONGOOSE_CONNECT}`, {
   // useNewUrlParser: true,
@@ -83,47 +84,20 @@ app.post('/login', async (req, res) => {
       })
       .send(user)
 
-    fetch('https://discord.com/api/webhooks/1282819835662962699/xWiRC1kcG0SYkN98fhZS83LcJocwBo3HciuCEDUzVxI450OY1_ZPymTmwSQGhvr92YEt', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        // the username to be displayed
-        username: 'Log In Novatadas',
-        embeds: [
-          {
-            // decimal number colour of the side of the embed
-            color: 11730954,
-
-            title: 'Nuevo inicio de sesión',
-
-            fields: [
-              {
-                name: 'DNI',
-                value: `${dni}`
-              },
-              {
-                name: 'Nombre',
-                value: `${user.name}`
-              },
-              {
-                name: 'Puntos',
-                value: `${user.points}`
-              },
-              {
-                name: 'Rango',
-                value: `${user.isAdmin ? 'Administrador' : 'Usuario'}`
-              }
-            ],
-
-            footer: {
-              text: 'Sistema de logs | Novatadas'
-            }
-          }
-        ]
-      })
-    }).catch((err) => console.log(err))
+    await sendWebhook(DISCORD_WEBHOOK_LOGIN, {
+      username: 'Log In Novatadas',
+      embeds: [{
+        color: 4373056,
+        title: 'Nuevo inicio de sesión',
+        fields: [
+          { name: 'DNI', value: `${dni}` },
+          { name: 'Nombre', value: `${user.name}` },
+          { name: 'Puntos', value: `${user.points}` },
+          { name: 'Rango', value: `${user.isAdmin ? 'Administrador' : 'Usuario'}` }
+        ],
+        footer: { text: 'Sistema de logs | Novatadas' }
+      }]
+    })
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).send({ err: error.message })
@@ -189,6 +163,22 @@ app.post('/challenges/request-complete-challenge', async (req, res) => {
   try {
     const pendingChallengeAdded = await UserRepository.requestCompleteChallenge({ userId, challengeId })
     res.send({ pendingChallengeAdded })
+
+    await sendWebhook(DISCORD_WEBHOOK_REQUEST_CHALLENGE, {
+      username: 'Request Challenge Novatadas',
+      embeds: [{
+        color: 4352180,
+        title: 'Nuevo reto solicitado',
+        fields: [
+          { name: 'Nombre', value: `${user.name}` },
+          { name: 'Puntos', value: `${user.points}` },
+          { name: 'Rango', value: `${user.isAdmin ? 'Administrador' : 'Usuario'}` },
+          { name: 'Reto', value: `${pendingChallengeAdded.title}` },
+          { name: 'Puntos', value: `${pendingChallengeAdded.points}` }
+        ],
+        footer: { text: 'Sistema de logs | Novatadas' }
+      }]
+    })
   } catch (error) {
     if (error instanceof UserNotFoundError) {
       res.status(400).send({ err: error.message })
