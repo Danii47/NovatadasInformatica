@@ -21,3 +21,11 @@ export const isSuperAdminRedirect = (req, res, next) => {
   }
   next()
 }
+
+export const isSuperAdminMessage = (req, res, next) => {
+  const { user } = req.session
+  if (!user || !user.isSuperAdmin) {
+    return res.status(403).send('No autorizado.')
+  }
+  next()
+}
