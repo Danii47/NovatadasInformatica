@@ -120,7 +120,7 @@
             <% if (index < 2) { %>
             -
             <% } else { %>
-            <%= user.extraPrizePercentage %>%
+            <%= user.points / totalPoints * 100 || 0 %>%
             <% } %>
           </td>
         </tr>

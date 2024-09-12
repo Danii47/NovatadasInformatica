@@ -122,12 +122,8 @@ app.get('/scoreboard', async (req, res) => {
     const users = await UserRepository.getAllUsers({ sorted: true })
 
     const totalPoints = getTotalPoints({ users, start: 2 })
-    const extraPrizePercentage = (user.points / totalPoints * 100) || 0
 
-    res.render('scoreboard', {
-      loggedUser: user,
-      allUsers: users.map((user) => ({ ...user, extraPrizePercentage }))
-    })
+    res.render('scoreboard', { loggedUser: user, allUsers: users, totalPoints })
   } catch (error) {
     res.status(500).redirect('/')
   }
