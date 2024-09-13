@@ -44,29 +44,16 @@
 
     .logged-user-row {
       color: white;
-      animation: breathe 2s infinite;
+      background-color: rgb(19, 94, 0) !important;
     }
 
-    @keyframes breathe {
-      0% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.01);
-      }
-
-      100% {
-        transform: scale(1);
-      }
+    .logged-user-row:hover {
+      background-color: rgb(17, 83, 0) !important;
     }
   </style>
 </head>
 
 <body>
-
-
-
   <header>
     <nav>
       <ul>
@@ -98,7 +85,7 @@
       </thead>
       <tbody>
         <% allUsers.forEach((user, index)=> { %>
-        <tr id="<%= user._id %>" class="<%= user._id === loggedUser.id ? 'logged-user-row' : '' %>">
+        <tr id="<%= user.id %>" class="<%= user.id == loggedUser.id ? 'logged-user-row' : '' %>">
           <td>
             <%= index + 1 %>
           </td>
@@ -134,9 +121,11 @@
 
     const tableRows = $$('tbody tr')
 
-    tableRows.forEach(row => {
-      row.addEventListener('click', () => {
-        window.location.href = `/user/${row.id}`
+    document.addEventListener('DOMContentLoaded', () => {
+      tableRows.forEach(row => {
+        row.addEventListener('click', () => {
+          window.location.href = `/user/${row.id}`
+        })
       })
     })
   </script>

@@ -59,7 +59,7 @@ export class UserRepository {
           return a.name.localeCompare(b.name)
         } else return 0
       })
-      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, dni }) => ({ _id, name, challenges, pendingChallenges, extraPoints, points, dni: catchDNI ? dni : undefined }))
+      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, dni }) => ({ id: _id, name, challenges, pendingChallenges, extraPoints, points, dni: catchDNI ? dni : undefined }))
   }
 
   static async getUserById ({ id }) {

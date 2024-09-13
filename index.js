@@ -247,6 +247,19 @@ app.get('/admin-page', isAdminRedirect, async (req, res) => {
   }
 })
 
+app.get('/spinner', isAdminRedirect, async (req, res) => {
+  const { user } = req.session
+
+  try {
+    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+    const totalPoints = getTotalPoints({ users, start: 2 })
+
+    res.render('spinner', { loggedUser: user, allUsers: users, totalPoints })
+  } catch (error) {
+    res.status(500).redirect('/')
+  }
+})
+
 app.get('/super-admin-page', isSuperAdminRedirect, async (req, res) => {
   const { user } = req.session
 

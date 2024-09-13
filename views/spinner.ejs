@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
+
+  <title>Wheel</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+    }
+
+    .container {
+      position: relative;
+      text-align: center;
+    }
+
+    canvas {
+      border: 2px solid #333;
+      border-radius: 50%;
+      display: block;
+      max-width: 100%;
+      height: auto;
+      transition: transform 6s ease-in-out;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -19px;
+      left: 50%;
+      transform: translateX(50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid #333;
+      rotate: 180deg;
+    }
+
+    /* Media Queries */
+    @media (max-width: 800px) {
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      canvas {
+        width: 98vw;
+        /* Adjust to fit the screen */
+        height: auto;
+        /* Maintain aspect ratio */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <canvas id="wheel" width="800" height="800"></canvas>
+    <button id="spin">Girar ruleta</button>
+  </div>
+  <script>
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+
+    let spinStartTime = null;
+    let spinDuration = 2000; // Duración de la animación en milisegundos
+    let spinAngle = 0;
+    let targetAngle = 0;
+    let spinning = false;
+    let segments = []; // Aquí almacenamos la información de cada segmento
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    function calculateSegments() {
+      let startAngle = 0;
+      segments = [];
+      allUsers.forEach(user => {
+        const endAngle = startAngle + (2 * Math.PI * (user.percentage / 100));
+        segments.push({
+          user,
+          startAngle,
+          endAngle
+        });
+        startAngle = endAngle;
+      });
+    }
+
+    function getWinner(angle) {
+      for (const segment of segments) {
+        if (angle >= segment.startAngle && angle
+
+          <
+          segment.endAngle) {
+          return segment.user.name;
+        }
+      }
+      return "Unknown";
+    }
+
+    const allUsers = JSON.parse('<%- JSON.stringify(allUsers) %>')
+      .map((user, index) => ({
+        ...user,
+        percentage: index < 2 ? 0 : (user.points / Number('<%= totalPoints %>') * 100)
+      })).filter(user => user.percentage > 0)
+
+    const colors = ['#8BC6EC', '#9599E2'];
+
+    function drawWheel() {
+      const radius = Math.min(canvas.width, canvas.height) / 2;
+
+      let startAngle = 0;
+
+      allUsers.forEach((user, index) => {
+        const endAngle = startAngle + (2 * Math.PI * (user.percentage / 100));
+
+        // Draw the segment
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = colors[index % colors.length];
+        ctx.fill();
+
+        // Draw the text
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate((startAngle + endAngle) / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `${radius / 30}px Arial`;
+        ctx.fillText(user.name, radius - 10, 10);
+        ctx.restore();
+
+        startAngle = endAngle;
+      });
+    }
+
+    const button = document.getElementById('spin')
+
+    button.addEventListener('click', () => {
+      // Añadir clase para iniciar la animación
+      const randomAngle = (360 * 5) + (Math.random() * 360 * 10); // Girar entre 5 y 15 vueltas
+      const finalAngle = (randomAngle) % 360
+      canvas.style.transform = `rotate(${randomAngle}deg)`;
+    });
+
+    drawWheel();
+  </script>
+</body>
+
+</html>
