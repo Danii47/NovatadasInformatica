@@ -205,7 +205,6 @@ export class UserRepository {
       count += users[i].points
       if (randomNumber <= count) {
         await User.findOneAndUpdate({ _id: users[i].id }, { isExtraWinner: true })
-        await User.updateMany({}, { isExtraWinner: false })
         return users[i]
       }
     }
