@@ -9,7 +9,13 @@
   <link rel='stylesheet' href='https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css'>
   <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
   <link href="/styles/table.css" rel="stylesheet" type="text/css">
+  <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="/js/notify.js"></script>
   <style>
+    tbody tr {
+      cursor: pointer;
+    }
+
     tbody tr:nth-child(odd):hover {
       background-color: rgb(230 230 230 / .7);
     }
@@ -50,10 +56,18 @@
     .logged-user-row:hover {
       background-color: rgb(17, 83, 0) !important;
     }
+
+    .extra-winner {
+      background-color: #fff09a !important;
+    }
   </style>
 </head>
 
 <body>
+  <div class='notify-container'>
+    <i id='notify-icon'></i>
+    <div class='notify-text'></div>
+  </div>
   <header>
     <nav>
       <ul>
@@ -80,12 +94,16 @@
           <% if (loggedUser.isAdmin) { %>
           <th>Retos solicitados</th>
           <% } %>
-          <th>Premio extra</th>
+          <th>Premio extra
+            <% if (loggedUser.isSuperAdmin) { %>
+            <span id='extra-prize'><i class='fa-solid fa-gift'></i></span>
+            <% } %>
+          </th>
         </tr>
       </thead>
       <tbody>
         <% allUsers.forEach((user, index)=> { %>
-        <tr id="<%= user.id %>" class="<%= user.id == loggedUser.id ? 'logged-user-row' : '' %>">
+        <tr id="<%= user.id %>" class="<%= user.isExtraWinner ? 'extra-winner' : (user.id == loggedUser.id ? 'logged-user-row' : '') %>">
           <td>
             <%= index + 1 %>
           </td>
@@ -129,6 +147,54 @@
       })
     })
   </script>
+  <% if (loggedUser.isSuperAdmin) { %>
+  <script>
+    const totalPoints = ('<%= totalPoints %>')
+    console.log(totalPoints)
+
+    // Elimino los dos primeros usuarios porque tienen premio asegurado
+    const allUsers = JSON.parse('<%- JSON.stringify(allUsers) %>')
+      .slice(2)
+      .filter(user => user.points > 0 && !user.isExtraWinner)
+      .map(user => ({ ...user, extraPrizePercentage: (user.points / totalPoints * 100).toFixed(2) }))
+
+    const allUsersIds = allUsers.map(user => user.id)
+
+    const rows = Array.from($$('tbody tr'))
+      .filter(row => allUsersIds.includes(row.id))
+
+    const extraPrize = $('#extra-prize')
+
+    let i = Math.floor(Math.random() * rows.length)
+
+    const audio = new Audio('/sounds/tap.mp3')
+
+    extraPrize.addEventListener('click', () => {
+      const spinningInterval = setInterval(() => {
+        audio.play()
+        rows[i].classList.remove('extra-winner')
+        i = Math.floor(Math.random() * rows.length)
+        rows[i].classList.add('extra-winner')
+      }, 75)
+      
+      setTimeout(() => {
+        fetch('/spin-extra-prize', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then((res) => res.json())
+          .then((data) => {
+            clearInterval(spinningInterval)
+            rows.forEach(row => row.classList.remove('extra-winner'))
+            document.querySelector(`[id='${data.winner.id}']`).classList.add('extra-winner')
+            notify(`¡Enhorabuena! El premio extra ha sido para ${data.winner.name}`, 1000, 'success')
+          })
+
+      }, 5000)
+    })
+  </script>
+  <% } %>
 </body>
 
 </html>
