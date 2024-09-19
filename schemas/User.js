@@ -13,6 +13,7 @@ const User = new Schema({
   challenges: { type: Array, required: true, default: [] },
   extraPoints: [ExtraPointsSchema],
   points: { type: Number, required: true, default: 0 },
+  isExtraWinner: { type: Boolean, required: true, default: false },
   isAdmin: { type: Boolean, required: true, default: false },
   isSuperAdmin: { type: Boolean, required: true, default: false }
 })
