@@ -60,6 +60,10 @@
     .extra-winner {
       background-color: #fff09a !important;
     }
+
+    .extra-winner-spinning {
+      background-color: #c2b56f !important;
+    }
   </style>
 </head>
 
@@ -150,13 +154,11 @@
   <% if (loggedUser.isSuperAdmin) { %>
   <script>
     const totalPoints = ('<%= totalPoints %>')
-    console.log(totalPoints)
 
     // Elimino los dos primeros usuarios porque tienen premio asegurado
-    const allUsers = JSON.parse('<%- JSON.stringify(allUsers) %>')
+    let allUsers = JSON.parse('<%- JSON.stringify(allUsers) %>')
       .slice(2)
       .filter(user => user.points > 0 && !user.isExtraWinner)
-      .map(user => ({ ...user, extraPrizePercentage: (user.points / totalPoints * 100).toFixed(2) }))
 
     const allUsersIds = allUsers.map(user => user.id)
 
@@ -172,9 +174,9 @@
     extraPrize.addEventListener('click', () => {
       const spinningInterval = setInterval(() => {
         audio.play()
-        rows[i].classList.remove('extra-winner')
+        rows[i].classList.remove('extra-winner-spinning')
         i = Math.floor(Math.random() * rows.length)
-        rows[i].classList.add('extra-winner')
+        rows[i].classList.add('extra-winner-spinning')
       }, 75)
       
       setTimeout(() => {
@@ -186,8 +188,12 @@
         }).then((res) => res.json())
           .then((data) => {
             clearInterval(spinningInterval)
-            rows.forEach(row => row.classList.remove('extra-winner'))
+            rows
+              .forEach(row => row.classList.remove('extra-winner-spinning'))
             document.querySelector(`[id='${data.winner.id}']`).classList.add('extra-winner')
+            allUsers = allUsers.filter(user => user.id !== data.winner.id)
+            rows.filter(row => row.id !== data.winner.id)
+            
             notify(`¡Enhorabuena! El premio extra ha sido para ${data.winner.name}`, 1000, 'success')
           })
 
