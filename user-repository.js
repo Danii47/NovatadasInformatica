@@ -4,6 +4,7 @@ import { SALT_ROUNDS } from './config.js'
 import { ChallengeRepository } from './challenge-repository.js'
 import User from './schemas/User.js'
 import { ChallengeAlreadyAcceptedError, ChallengeAlreadyCompletedError, ChallengeAlreadyPendingError, ChallengeNotFoundError, ChallengeNotRequestedError, InvalidCredentialsError, UserAlreadyAdministratorError, UserAlreadyExistsError, UserNotFoundError, ValidationError } from './errors.js'
+import { getTotalPoints } from './utils/getTotalPoints.js'
 
 export class UserRepository {
   static async create ({ name, dni, password }) {
@@ -59,7 +60,7 @@ export class UserRepository {
           return a.name.localeCompare(b.name)
         } else return 0
       })
-      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, dni }) => ({ id: _id, name, challenges, pendingChallenges, extraPoints, points, dni: catchDNI ? dni : undefined }))
+      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, isExtraWinner, dni }) => ({ id: _id, name, challenges, pendingChallenges, extraPoints, points, isExtraWinner, dni: catchDNI ? dni : undefined }))
   }
 
   static async getUserById ({ id }) {
@@ -190,6 +191,26 @@ export class UserRepository {
     await user.deleteOne()
 
     return userId
+  }
+
+  static async spinExtraPrize () {
+    const users = (await UserRepository.getAllUsers({ sorted: true, showAdmins: false, catchDNI: false }))
+      .filter((user) => !user.isExtraWinner)
+
+    const totalPoints = getTotalPoints({ users, start: 2 })
+    const randomNumber = Math.random() * totalPoints
+    let count = 0
+
+    for (let i = 2; i < users.length; i++) {
+      count += users[i].points
+      if (randomNumber <= count) {
+        await User.findOneAndUpdate({ _id: users[i].id }, { isExtraWinner: true })
+        await User.updateMany({}, { isExtraWinner: false })
+        return users[i]
+      }
+    }
+
+    return null
   }
 }
 
