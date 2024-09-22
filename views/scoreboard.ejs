@@ -61,6 +61,10 @@
       background-color: #fff09a !important;
     }
 
+    .extra-winner:hover {
+      background-color: #e0d17a !important;
+    }
+
     .extra-winner-spinning {
       background-color: #c2b56f !important;
     }
@@ -109,7 +113,15 @@
         <% allUsers.forEach((user, index)=> { %>
         <tr id="<%= user.id %>" class="<%= user.isExtraWinner ? 'extra-winner' : (user.id == loggedUser.id ? 'logged-user-row' : '') %>">
           <td>
+            <% if (index === 0) { %>
+            🥇
+            <% } else if (index === 1) { %>
+            🥈
+            <% } else if (index === 2) { %>
+            🥉
+            <% } else { %>
             <%= index + 1 %>
+            <% } %>
           </td>
           <td>
             <%= user.name %>
@@ -144,7 +156,7 @@
     const tableRows = $$('tbody tr')
 
     document.addEventListener('DOMContentLoaded', () => {
-      tableRows.forEach(row => {
+      tableRows.forEach((row, indexRow) => { 
         row.addEventListener('click', () => {
           window.location.href = `/user/${row.id}`
         })
@@ -193,7 +205,7 @@
             document.querySelector(`[id='${data.winner.id}']`).classList.add('extra-winner')
             allUsers = allUsers.filter(user => user.id !== data.winner.id)
             rows.filter(row => row.id !== data.winner.id)
-            
+
             notify(`¡Enhorabuena! El premio extra ha sido para ${data.winner.name}`, 1000, 'success')
           })
 
