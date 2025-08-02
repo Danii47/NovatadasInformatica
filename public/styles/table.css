@@ -57,7 +57,7 @@ tbody tr:nth-child(even) {
 
   .table-container {
     margin-top: 1.2rem;
-    max-width: 100vw;
+    max-width: 100vw; /* view width | view heigth */
     max-height: 91vh;
     border-radius: 0;
     padding: 0;
