@@ -71,7 +71,7 @@ app.post('/login', async (req, res) => {
   try {
     const user = await UserRepository.login({ email, password })
     const accessToken = jwt.sign({ ...user }, SECRET_JWT_KEY, {
-      expiresIn: '1h'
+      expiresIn: '10d'
     })
 
     res
@@ -79,7 +79,7 @@ app.post('/login', async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 1000 * 60 * 60
+        maxAge: 1000 * 60 * 60 * 24 * 10 // 10 days
       })
       .send(user)
 
