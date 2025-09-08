@@ -82,11 +82,12 @@ li a:hover {
 @media (max-width: 700px) {
 
   li {
-    font-size: 1rem;
+    font-size: .8rem;
   }
 
   li a {
     padding: .8rem;
+    width: 100px;
   }
   
 }
