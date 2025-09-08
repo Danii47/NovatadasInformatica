@@ -12,6 +12,11 @@
   <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
   <script type="text/javascript" src="/js/notify.js"></script>
   <style>
+    body {
+      background-color: #000;
+      height: 100vh;
+    }
+
     tbody tr {
       cursor: pointer;
     }
@@ -79,13 +84,13 @@
   <header>
     <nav>
       <ul>
-        <li><a href="/challenges">Retos</a></li>
-        <li><a href="/scoreboard" id="a-selected">Marcador</a></li>
+        <li><a href="/challenges">RETOS</a></li>
+        <li><a href="/scoreboard" id="a-selected">MARCADOR</a></li>
         <% if (loggedUser.isAdmin) { %>
-        <li><a href="/admin-page">Admin</a></li>
+        <li><a href="/admin-page">ADMIN</a></li>
         <% } %>
         <% if (loggedUser.isSuperAdmin) { %>
-        <li><a href="/super-admin-page">Avanzadas</a></li>
+        <li><a href="/super-admin-page">AVANZADAS</a></li>
         <% } %>
       </ul>
     </nav>

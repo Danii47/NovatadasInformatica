@@ -31,7 +31,6 @@ table {
   padding: .25rem;
   margin: 0;
   border-spacing: 0;
-
 }
 
 thead {
@@ -43,11 +42,11 @@ tbody tr {
 }
 
 tbody tr:nth-child(odd) {
-  background-color: rgb(255 255 255 / .7);
+  background-color: rgb(255 255 255 / .95);
 }
 
 tbody tr:nth-child(even) {
-  background: rgb(255 255 255 / .8);
+  background: rgb(255 255 255 / .85);
 }
 
 @media (max-width: 900px) {
@@ -75,8 +74,8 @@ tbody tr:nth-child(even) {
 }
 
 table th {
-  color: white;
-  background: #2c6a94;
+  color: #000;
+  background: #eed000;
   position: sticky;
   top: 0;
   z-index: 2;

@@ -7,19 +7,19 @@ import { ChallengeAlreadyAcceptedError, ChallengeAlreadyCompletedError, Challeng
 import { getTotalPoints } from './utils/getTotalPoints.js'
 
 export class UserRepository {
-  static async create ({ name, dni, password }) {
+  static async create ({ name, email, password }) {
     Validation.name(name)
-    Validation.dni(dni)
+    Validation.email(email)
     Validation.password(password)
 
-    const user = await User.findOne({ dni })
+    const user = await User.findOne({ email })
     if (user) throw new UserAlreadyExistsError('El usuario ya existe.')
 
     const hashedPassword = await bcrypt.hash(password, Number(SALT_ROUNDS))
 
     const newUser = new User({
       name,
-      dni,
+      email,
       password: hashedPassword,
       isAdmin: false
     })
@@ -29,11 +29,11 @@ export class UserRepository {
     return newUser._id
   }
 
-  static async login ({ dni, password }) {
-    Validation.dni(dni)
+  static async login ({ email, password }) {
+    Validation.email(email)
     Validation.password(password)
 
-    const user = await User.findOne({ dni })
+    const user = await User.findOne({ email })
     if (!user) throw new InvalidCredentialsError('El usuario o la contraseña son incorrectos.')
 
     const isValid = await bcrypt.compare(password, user.password)
@@ -48,7 +48,7 @@ export class UserRepository {
     }
   }
 
-  static async getAllUsers ({ sorted = false, catchDNI = false, showAdmins = false } = {}) {
+  static async getAllUsers ({ sorted = false, catchEmail = false, showAdmins = false } = {}) {
     const users = await User.find(!showAdmins ? { isAdmin: showAdmins } : {})
 
     return users
@@ -60,7 +60,7 @@ export class UserRepository {
           return a.name.localeCompare(b.name)
         } else return 0
       })
-      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, isExtraWinner, dni }) => ({ id: _id, name, challenges, pendingChallenges, extraPoints, points, isExtraWinner, dni: catchDNI ? dni : undefined }))
+      .map(({ _id, name, challenges, pendingChallenges, extraPoints, points, isExtraWinner, email }) => ({ id: _id, name, challenges, pendingChallenges, extraPoints, points, isExtraWinner, email: catchEmail ? email : undefined }))
   }
 
   static async getUserById ({ id }) {
@@ -194,7 +194,7 @@ export class UserRepository {
   }
 
   static async spinExtraPrize () {
-    const users = (await UserRepository.getAllUsers({ sorted: true, showAdmins: false, catchDNI: false }))
+    const users = (await UserRepository.getAllUsers({ sorted: true, showAdmins: false, catchEmail: false }))
       .filter((user) => !user.isExtraWinner)
 
     const totalPoints = getTotalPoints({ users, start: 2 })
@@ -218,21 +218,13 @@ class Validation {
     if (typeof name !== 'string') throw new ValidationError('El nombre debe ser una cadena de texto.')
   }
 
-  static dni (dni) {
-    if (typeof dni !== 'string') throw new ValidationError('El DNI debe ser una cadena de texto.')
-    if (dni.length !== 5) throw new ValidationError('El DNI debe tener 5 caracteres.')
-    if (!Number(dni)) throw new ValidationError('El DNI debe ser un número.')
-    // if (!/^\d{8}[A-Z]$/.test(dni)) throw new Error('El DNI no tiene un formato válido.')
-
-    // const dniNumbers = dni.substring(0, 8)
-    // const letter = dni.charAt(8)
-    // const validLetters = 'TRWAGMYFPDXBNJZSQVHLCKE'
-    // const calculatedLetter = validLetters.charAt(parseInt(dniNumbers, 10) % 23)
-
-    // if (calculatedLetter !== letter) throw new Error('La letra del DNI no es correcta.')
+  static email (email) {
+    if (typeof email !== 'string') throw new ValidationError('El email debe ser una cadena de texto.')
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new ValidationError('El email no tiene un formato válido.')
   }
 
   static password (password) {
     if (typeof password !== 'string') throw new ValidationError('La contraseña debe ser una cadena de texto.')
+    if (password.length < 8) throw new ValidationError('La contraseña debe tener al menos 8 caracteres.')
   }
 }

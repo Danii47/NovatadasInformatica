@@ -6,7 +6,7 @@ const ExtraPointsSchema = new Schema({
 })
 
 const User = new Schema({
-  dni: { type: String, required: true },
+  email: { type: String, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
   pendingChallenges: { type: Array, required: true, default: [] },

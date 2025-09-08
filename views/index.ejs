@@ -7,9 +7,9 @@
   <link rel='preconnect' href='https://fonts.googleapis.com'>
   <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
   <link rel='stylesheet' href='https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css'>
-  <link
-    href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'
-    rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
   <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
   <link href='/styles/password.css' rel='stylesheet' type='text/css'>
   <script type="text/javascript" src="/js/notify.js"></script>
@@ -22,7 +22,7 @@
 
       color-scheme: light dark;
       color: #333;
-      background-color: #1B1B1B;
+      background-color: #000;
 
       font-synthesis: none;
       text-rendering: optimizeLegibility;
@@ -48,16 +48,18 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+      background: #000;
+      overflow: hidden;
     }
 
     .login-container {
       width: 22rem;
-      background-color: #ececec;
+      background-color: #eed000;
       padding: 2.5rem 3rem;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, .6);
       text-align: center;
+      z-index: 10;
     }
 
     .input-group {
@@ -72,38 +74,31 @@
       border: 1px solid #b5b5b5;
       color: #20211d;
       border-radius: 5px;
-      background-color: #fafafa;
+      background-color: #fff;
       outline: 0;
     }
 
     .input-group input:focus {
-      border: 1px solid #357aa8;
+      border: 1px solid #000;
     }
 
     .loginButton {
       width: 100%;
       padding: 0.75rem;
       border-radius: 7px;
-      color: #357aa8;
       font-size: 1.2rem;
-
+      background-color: #000;
       font-weight: bolder;
       cursor: pointer;
-      background: linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%) border-box;
       border: 2px solid transparent;
     }
 
     .loginButton:hover {
-      color: white;
-      background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%) padding-box,
-        linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%) border-box;
+      background-color: #222;
     }
 
     .loginButton:active {
-      color: white;
-      background: linear-gradient(135deg, #5c86a2 0%, #6a6da6 100%) padding-box,
-        linear-gradient(135deg, #5c86a2 0%, #6a6da6 100%) border-box;
+      background-color: #333;
     }
 
     .loginError {
@@ -120,11 +115,9 @@
       align-items: center;
       justify-content: center;
       gap: .5rem;
-      background: -webkit-linear-gradient(#8BC6EC 0%, #9599E2 85%);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      border-bottom: solid 1px rgba(255, 255, 255, 0.3);
+      color: #000;
+
+      border-bottom: solid 1px #000;
       padding-bottom: .7rem;
       margin: 0 0 .7rem 0;
     }
@@ -134,13 +127,82 @@
       flex-direction: row;
       align-items: center;
       gap: .5rem;
-      color: #474747;
+      color: #000;
       padding-bottom: .5rem;
+    }
+
+    #background-rectangle {
+      position: absolute;
+      top: 300px;
+      left: -2000px;
+      width: 2500px;
+      height: 70px;
+      background-color: #eed000;
+      filter: blur(100px);
+      transform: translateX(-50%) rotate(-45deg);
+      animation: moveX 5s ease-out infinite;
+      text-overflow: ellipsis;
+    }
+
+    @keyframes moveX {
+      from {
+        transform: translateX(0) rotate(-45deg);
+      }
+
+      to {
+        transform: translateX(3700px) rotate(-45deg);
+      }
+    }
+
+    #background-text {
+      font-family: "Archivo Black", sans-serif;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translate(-50%);
+      font-size: 10rem;
+      font-weight: bolder;
+      color: #000;
+      white-space: nowrap;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+      filter: blur(2px);
+    }
+
+    .background-text-down {
+      top: 73vh !important;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overscroll-behavior-x: none;
+        touch-action: pan-y;
+      }
+
+      #background-text {
+        font-size: 3rem;
+        top: 10%;
+      }
+
+      .background-text-down {
+        top: 76vh !important;
+        font-size: 6rem !important;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div id="background-rectangle">
+
+  </div>
+  <div id="background-text">
+    NOVATADAS
+  </div>
+  <div id="background-text" class="background-text-down">
+    25-26
+  </div>
 
   <div class='notify-container'>
     <i id='notify-icon'></i>
@@ -153,7 +215,7 @@
       <div class='input-group'>
         <div class='label-container'>
           <i class='fa-solid fa-id-card'></i>
-          <label for='username'>DNI</label>
+          <label for='username'>Correo</label>
         </div>
         <input type='text' id='username' name='username' />
       </div>
@@ -173,7 +235,6 @@
     </form>
   </div>
   <script>
-
     const $ = (selector) => document.querySelector(selector)
 
     const loginForm = $('#login-form')
@@ -190,15 +251,15 @@
       if (!username || !password) return notify('Por favor, rellena todos los campos.', 1000)
 
       fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          dni: username.toUpperCase(),
-          password
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: username.toLowerCase(),
+            password
+          })
         })
-      })
         .then(res => res.json())
         .then((data) => {
           if (data.err) {
@@ -226,7 +287,6 @@
         passwordInput.type = 'password'
       }
     })
-
   </script>
 </body>
 

@@ -13,10 +13,15 @@
   <script type="text/javascript" src="/js/notify.js"></script>
 
   <style>
+    body {
+      background-color: #000;
+      height: 100vh;
+    }
     h1 {
       text-align: center;
       padding: 2rem;
       margin: 0;
+      color: #eed000;
     }
 
     .admin-utils-container {
@@ -26,22 +31,39 @@
       align-items: center;
       gap: 2.5rem;
     }
-
+    
     .admin-utils-container h2 {
       text-align: center;
-      border-bottom: 1px solid #3331;
+      border-bottom: solid 1px #777;
       padding-bottom: .5rem;
       margin-bottom: 1rem;
+      color: #000;
     }
-
+    
     .create-container {
       width: 600px;
-      background-color: #ececec;
+      background-color: #fff;
       padding: 1.2rem;
       margin: 1rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      border: 1px solid #333;
+      border: 3px solid #eed000;
+      position: relative;
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .create-container::before {
+      content: "";
+      position: absolute;
+      top: 0px;
+      border-radius: calc(8px - .2rem);
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      border: 1px solid #000;
+      pointer-events: none;
     }
 
     .create-container.user {
@@ -59,8 +81,9 @@
     .create-form {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-around;
       gap: 1rem;
+      flex: 1;
     }
 
     .create-form div {
@@ -105,22 +128,21 @@
 
     .create-form input:focus,
     .create-form textarea:focus {
-      border: 1px solid #357aa8;
+      border: 1px solid #eed000;
     }
 
     .create-button-container button {
       width: 150px;
-      color: black;
       padding: .5rem;
       border-radius: 5px;
-      border: 1px solid #333;
-      background-color: #fff;
+      background-color: #eed000;
       cursor: pointer;
+      border: 2px solid transparent;
+      color: #000
     }
 
     .create-button-container button:hover {
-      background-color: #333;
-      color: white;
+      background-color: #ceb200;
     }
 
     .create-button-container {
@@ -134,7 +156,7 @@
       flex-direction: row;
       align-items: center;
       gap: .5rem;
-      color: #474747;
+      color: #000;
       padding-bottom: .5rem;
     }
 
@@ -170,13 +192,13 @@
   <header>
     <nav>
       <ul>
-        <li><a href="/challenges">Retos</a></li>
-        <li><a href="/scoreboard">Marcador</a></li>
+        <li><a href="/challenges">RETOS</a></li>
+        <li><a href="/scoreboard">MARCADOR</a></li>
         <% if (loggedUser.isAdmin) { %>
-        <li><a href="/admin-page" id="a-selected">Admin</a></li>
+        <li><a href="/admin-page" id="a-selected">ADMIN</a></li>
         <% } %>
         <% if (loggedUser.isSuperAdmin) { %>
-        <li><a href="/super-admin-page">Avanzadas</a></li>
+        <li><a href="/super-admin-page">AVANZADAS</a></li>
         <% } %>
       </ul>
     </nav>
@@ -188,11 +210,11 @@
       <h2>Crear usuario</h2>
       <form class="create-form" id="create-user-form">
         <div>
-          <label for="user-dni" class="input-label">
+          <label for="user-email" class="input-label">
             <i class="fa-solid fa-id-card"></i>
-            DNI del usuario
+            Correo del usuario
           </label>
-          <input type="text" id="user-dni" name="user-dni">
+          <input type="email" id="user-email" name="user-email">
         </div>
         <div>
           <label for="user-name" class="input-label">
@@ -207,7 +229,7 @@
             Contraseña del usuario
           </label>
           <div class="password-container">
-            <input type="password" id="user-password" name="user-password">
+            <input type="password" id="user-password" name="user-password" min="8">
             <button class="hide-password" type="button">
               <i class="fa-regular fa-eye"></i>
             </button>
@@ -236,7 +258,7 @@
           <textarea id="challenge-description" name="challenge-description" placeholder="Escribe en que consiste el reto"></textarea>
         </div>
         <div>
-          <label for="challenge-points">
+          <label for="challenge-points" class="input-label">
             <i class="fa-solid fa-hundred-points"></i>
             Puntos del reto
           </label>
@@ -260,7 +282,7 @@
             <option hidden disabled selected value>Selecciona un usuario</option>
             <% allUsers.forEach((user)=> { %>
             <option title="<%= user.name %>" value="<%= user._id %>">
-              <%= user.name %> - <%= user.dni %>
+              <%= user.name %> - <%= user.email %>
             </option>
             <% }) %>
           </select>
@@ -300,7 +322,7 @@
             <option hidden disabled selected value>Selecciona un usuario</option>
             <% allUsers.forEach((user)=> { %>
             <option title="<%= user.name %>" value="<%= user._id %>">
-              <%= user.name %> - <%= user.dni %>
+              <%= user.name %> - <%= user.email %>
             </option>
             <% }) %>
           </select>
@@ -387,7 +409,7 @@
       let filtered = !inputText ?
         allUsers :
         allUsers.filter(user => {
-          const concatText = `${user.name} - ${user.dni}`
+          const concatText = `${user.name} - ${user.email}`
           return concatText.toLowerCase().includes(inputText.toLowerCase())
         })
 
@@ -395,7 +417,7 @@
         ${filtered
           .map(user => `
             <option title="${user.name}" value="${user._id}">
-              ${user.name} - ${user.dni}
+              ${user.name} - ${user.email}
             </option>
           `)
           .join('')
@@ -407,11 +429,11 @@
 
     createUserFrom.addEventListener('submit', async (e) => {
       e.preventDefault()
-      const userDNI = $('#user-dni').value
+      const userEmail = $('#user-email').value
       const userName = $('#user-name').value
       const userPassword = $('#user-password').value
 
-      if (!userDNI || !userName || !userPassword) return notify('Por favor, rellena todos los campos.', 1000)
+      if (!userEmail || !userName || !userPassword) return notify('Por favor, rellena todos los campos.', 1000)
 
       fetch('/register', {
           method: 'POST',
@@ -419,7 +441,7 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            dni: userDNI,
+            email: userEmail,
             name: userName,
             password: userPassword
           })
@@ -429,12 +451,12 @@
           if (data.err) {
             notify(data.err, 1000)
           } else {
-            $('#user-dni').value = ''
+            $('#user-email').value = ''
             $('#user-name').value = ''
             $('#user-password').value = ''
 
-            $('#user-dni').focus()
-            notify(`${userDNI} - Usuario creado correctamente.`, 1000, "success")
+            $('#user-email').focus()
+            notify(`${userEmail} - Usuario creado correctamente.`, 1000, "success")
           }
         })
     })

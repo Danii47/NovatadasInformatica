@@ -11,14 +11,12 @@ import { ChallengeAlreadyAcceptedError, ChallengeAlreadyCompletedError, Challeng
 import { sendWebhook } from './utils/sendWebhook.js'
 import { getTotalPoints } from './utils/getTotalPoints.js'
 
-mongoose.connect(`${MONGOOSE_CONNECT}`, {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true
-}).then(() => {
-  console.log('\x1b[36m', '\n[MONGO-DB] Conectado a DB ☁️', '\x1b[0m')
-}).catch((error) => {
-  console.log('\x1b[31m', '\n[MONGO-DB] Ocurrio un error al intentar conectar la DB:\n', error, '\x1b[0m')
-})
+mongoose.connect(`${MONGOOSE_CONNECT}`)
+  .then(() => {
+    console.log('\x1b[36m', '\n[MONGO-DB] Conectado a DB ☁️', '\x1b[0m')
+  }).catch((error) => {
+    console.log('\x1b[31m', '\n[MONGO-DB] Ocurrio un error al intentar conectar la DB:\n', error, '\x1b[0m')
+  })
 
 const app = express()
 
@@ -52,10 +50,10 @@ app.get('/', (req, res) => {
 })
 
 app.post('/register', isAdminMessage, async (req, res) => {
-  const { name, dni, password } = req.body
+  const { name, email, password } = req.body
 
   try {
-    const id = await UserRepository.create({ name, dni, password })
+    const id = await UserRepository.create({ name, email, password })
     res.send({ id })
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -69,9 +67,9 @@ app.post('/register', isAdminMessage, async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-  const { dni, password } = req.body
+  const { email, password } = req.body
   try {
-    const user = await UserRepository.login({ dni, password })
+    const user = await UserRepository.login({ email, password })
     const accessToken = jwt.sign({ ...user }, SECRET_JWT_KEY, {
       expiresIn: '1h'
     })
@@ -91,7 +89,7 @@ app.post('/login', async (req, res) => {
         color: 4373056,
         title: 'Nuevo inicio de sesión',
         fields: [
-          { name: 'DNI', value: `${dni}` },
+          { name: 'Email', value: `${email}` },
           { name: 'Nombre', value: `${user.name}` },
           { name: 'Puntos', value: `${user.points}` },
           { name: 'Rango', value: `${user.isAdmin ? 'Administrador' : 'Usuario'}` }
@@ -238,7 +236,7 @@ app.get('/admin-page', isAdminRedirect, async (req, res) => {
   const { user } = req.session
 
   try {
-    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+    const users = await UserRepository.getAllUsers({ sorted: true, catchEmail: true })
     const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
 
     res.render('admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
@@ -251,7 +249,7 @@ app.get('/super-admin-page', isSuperAdminRedirect, async (req, res) => {
   const { user } = req.session
 
   try {
-    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+    const users = await UserRepository.getAllUsers({ sorted: true, catchEmail: true })
     const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
 
     res.render('super-admin-page', { loggedUser: user, allUsers: users, allChallenges: challenges })
@@ -366,7 +364,7 @@ app.post('/users/delete-user', isAdminMessage, async (req, res) => {
 app.get('/get-db-data', isAdminMessage, async (req, res) => {
   try {
     const challenges = await ChallengeRepository.getAllChallenges({ sorted: true, maxCharacters: 20 })
-    const users = await UserRepository.getAllUsers({ sorted: true, catchDNI: true })
+    const users = await UserRepository.getAllUsers({ sorted: true, catchEmail: true })
 
     res.send({ challenges, users })
   } catch (error) {
