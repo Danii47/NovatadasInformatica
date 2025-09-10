@@ -31,7 +31,6 @@ table {
   padding: .25rem;
   margin: 0;
   border-spacing: 0;
-
 }
 
 thead {
@@ -43,26 +42,23 @@ tbody tr {
 }
 
 tbody tr:nth-child(odd) {
-  background-color: rgb(255 255 255 / .7);
+  background-color: rgb(255 255 255 / .95);
 }
 
 tbody tr:nth-child(even) {
-  background: rgb(255 255 255 / .8);
-}
-
-tbody tr {
-  cursor: pointer;
+  background: rgb(255 255 255 / .85);
 }
 
 @media (max-width: 900px) {
   table {
-    font-size: .6rem;
+    font-size: .55rem;
   }
 
   .table-container {
     margin-top: 1.2rem;
-    max-width: 95vw;
-    max-height: 89.5vh;
+    max-width: 100vw; /* view width | view heigth */
+    max-height: 91vh;
+    border-radius: 0;
     padding: 0;
   }
 
@@ -78,8 +74,8 @@ tbody tr {
 }
 
 table th {
-  color: white;
-  background: #2c6a94;
+  color: #000;
+  background: #eed000;
   position: sticky;
   top: 0;
   z-index: 2;

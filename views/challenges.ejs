@@ -24,6 +24,10 @@
 
     }
 
+    body {
+      background-color: #000;
+    }
+
     .challenges {
       padding: 2rem;
       display: flex;
@@ -38,16 +42,28 @@
     .challenge-card {
       flex: 1 1 50%;
       padding: .85rem;
-      background-color: #f1f1f1;
+      background-color: #fff;
+      border: 3px solid #eed000;
       max-width: 500px;
       scale: 1;
-      border: 1px solid #7d7d7d;
       border-radius: 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
       transition: box-shadow .2s ease, background-color .2s ease, scale .15s ease, transform .15s ease;
+    }
+
+    .challenge-card::before {
+      content: "";
+      position: absolute;
+      top: 0px;
+      border-radius: calc(.85rem - 8px);
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      border: 1px solid #000;
+      pointer-events: none;
     }
 
     .challenge-card.pending {
@@ -137,8 +153,8 @@
 
     .points {
       position: relative;
-      background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
-      color: white;
+      background: #eed000;
+      color: #000;
       padding: .25rem .6rem;
       font-size: 1.1rem;
       border-radius: 24px;
@@ -146,6 +162,7 @@
       align-items: center;
       box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
       overflow: hidden;
+      font-weight: bold;
     }
 
     .points::before {
@@ -162,10 +179,25 @@
       filter: blur(10px);
     }
 
-
     .challenge-card:hover:not(.completed):not(.pending) .points::before {
       animation: points-reflection 2s ease-in-out forwards;
       opacity: 1;
+    }
+
+    .challenge-dialog {
+      border-radius: 8px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
+      padding: 1rem;
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 300px;
+      max-width: 90vw;
+      background-color: #fff;
+      border: 3px solid #eed000;
+      color: #000;
     }
 
     footer {
@@ -179,6 +211,10 @@
       font-size: .9rem;
       color: #333;
       box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
+    }
+
+    .confirm-text-dialog {
+      margin-bottom: 1rem;
     }
 
     @keyframes points-reflection {
@@ -220,22 +256,51 @@
   <header>
     <nav>
       <ul>
-        <li><a href="/challenges" id="a-selected">Retos</a></li>
-        <li><a href="/scoreboard">Marcador</a></li>
+        <li><a href="/challenges" id="a-selected">RETOS</a></li>
+        <li><a href="/scoreboard">MARCADOR</a></li>
         <% if (loggedUser.isAdmin) { %>
-        <li><a href="/admin-page">Admin</a></li>
+        <li><a href="/admin-page">ADMIN</a></li>
         <% } %>
         <% if (loggedUser.isSuperAdmin) { %>
-        <li><a href="/super-admin-page">Avanzadas</a></li>
+        <li><a href="/super-admin-page">AVANZADAS</a></li>
         <% } %>
-        
       </ul>
     </nav>
   </header>
 
   <div class="challenges">
     <% allChallenges.forEach((challenge, index)=> { %>
-    <% if (completedChallenges.includes(challenge._id)) { %>
+    <% if (loggedUser.isAdmin || loggedUser.isSuperAdmin) { %>
+    <div class="challenge-card" id="challenge-card-<%= challenge._id %>">
+      <div>
+        <h2>
+          <%= challenge.title %>
+        </h2>
+        <p class="points">
+          <%= challenge.points %> puntos
+        </p>
+      </div>
+      <p>
+        <%= challenge.description %>
+      </p>
+
+      <% if (loggedUser.isSuperAdmin) { %>
+      <div class="challenge-options">
+        <button class="delete-challenge-button" onclick="document.getElementById('delete-challenge-dialog-<%= challenge._id %>').showModal()">Eliminar</button>
+        <dialog class="challenge-dialog" id="delete-challenge-dialog-<%= challenge._id %>" closedby="any">
+          <h3 class="confirm-text-dialog">¿Estas seguro de que quieres eliminar el reto <%= challenge.title %>?</h3>
+          <form class="delete-challenge-form">
+            <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+            <button type="submit" class="delete-challenge-button">
+              Eliminar
+            </button>
+          </form>
+        </dialog>
+      </div>
+      <% } %>
+    </div>
+
+    <% } else if (completedChallenges.includes(challenge._id)) { %>
     <div class="challenge-card completed">
       <div>
         <h2>
@@ -249,23 +314,14 @@
         <%= challenge.description %>
       </p>
 
-      <div class="challenge-options">
-        <% if (!loggedUser.isAdmin) { %>
+      <!-- <div class="challenge-options">
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="request-challenge-button completed" disabled>
             Completado
           </button>
         </form>
-        <% } else if (loggedUser.isSuperAdmin) { %>
-        <form class="delete-challenge-form">
-          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-          <button type="submit" class="delete-challenge-button">
-            Eliminar
-          </button>
-        </form>
-        <% } %>
-      </div>
+      </div> -->
 
     </div>
     <% } else if (pendingChallenges.includes(challenge._id)) { %>
@@ -282,27 +338,18 @@
         <%= challenge.description %>
       </p>
 
-      <div class="challenge-options">
-        <% if (!loggedUser.isAdmin) { %>
+      <!-- <div class="challenge-options">
         <form class="request-completed-challenge-form">
           <input type="hidden" name="challengeId" value="<%= challenge._id %>">
           <button type="submit" class="request-challenge-button pending" disabled>
             Ya solicitado
           </button>
         </form>
-        <% } else if (loggedUser.isSuperAdmin) { %>
-        <form class="delete-challenge-form">
-          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-          <button type="submit" class="delete-challenge-button">
-            Eliminar
-          </button>
-        </form>
-        <% } %>
-      </div>
+      </div> -->
 
     </div>
     <% } else { %>
-    <div id="challenge-card-<%= challenge._id %>" class="challenge-card">
+    <div id="challenge-card-<%= challenge._id %>" class="challenge-card" onclick="document.getElementById('request-completed-challenge-dialog-<%= challenge._id %>').showModal()">
       <div>
         <h2>
           <%= challenge.title %>
@@ -316,28 +363,22 @@
       </p>
 
       <div class="challenge-options">
-        <% if (!loggedUser.isAdmin) { %>
-        <form class="request-completed-challenge-form">
-          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-          <button class="request-challenge-button" type="submit">
-            Solicitar
-          </button>
-        </form>
-        <% } else if (loggedUser.isSuperAdmin) { %>
-        <form class="delete-challenge-form">
-          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-          <button type="submit" class="delete-challenge-button">
-            Eliminar
-          </button>
-        </form>
-        <% } %>
+        <dialog class="challenge-dialog" id="request-completed-challenge-dialog-<%= challenge._id %>" closedby="any">
+          <h3 class="confirm-text-dialog">¿Estas seguro de que quieres solicitar el reto <%= challenge.title %>?</h3>
+          <form class="request-completed-challenge-form">
+            <input type="hidden" name="challengeId" value="<%= challenge._id %>">
+            <button type="submit" class="request-challenge-button">
+              Confirmar
+            </button>
+          </form>
+        </dialog>
       </div>
 
     </div>
     <% } %>
     <% }) %>
   </div>
-  <% if (loggedUser.isAdmin) { %>
+  <% if (loggedUser.isAdmin || loggedUser.isSuperAdmin) { %>
   <footer>
     <p>Estas desde la vista de administrador.</p>
   </footer>
@@ -373,12 +414,13 @@
               notify(data.err, 1000)
             } else {
               $(`#challenge-card-${challengeId}`).classList.add('pending')
+              $(`#request-completed-challenge-dialog-${challengeId}`).close()
 
               requestCompletedChallengeForm.querySelector('.request-challenge-button').textContent = 'Ya solicitado'
 
               requestCompletedChallengeForm.querySelector('.request-challenge-button').classList.add('pending')
               requestCompletedChallengeForm.querySelector('.request-challenge-button').disabled = true
-              
+
               notify(`${data.pendingChallengeAdded.title} - Reto solicitado correctamente.`, 1000, 'success')
             }
           })
