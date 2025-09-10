@@ -378,7 +378,6 @@ app.get('/spin-extra-prize', isSuperAdminMessage, async (req, res) => {
 
     res.send({ winner })
   } catch (error) {
-    console.log(error)
     res.status(500).send({ err: 'Ha ocurrido un error inesperado.' })
   }
 })

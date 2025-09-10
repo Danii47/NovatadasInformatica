@@ -163,7 +163,7 @@
 
     @media (max-width: 1000px) {
       .admin-utils-container {
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 1rem;
       }
 
@@ -286,7 +286,7 @@
           <select type="text" id="users" name="users">
             <option hidden disabled selected value>Selecciona un usuario</option>
             <% allUsers.forEach((user)=> { %>
-            <option title="<%= user.name %>" value="<%= user._id %>">
+            <option title="<%= user.name %>" value="<%= user.id %>">
               <%= user.name %> - <%= user.email %>
             </option>
             <% }) %>
@@ -315,7 +315,7 @@
     </div>
     <% if (loggedUser.isSuperAdmin) { %>
     <div class="create-container add-extra-points">
-      <h2>Añadir puntos</h2>
+      <h2>Añadir puntos extra</h2>
       <form class="create-form" id="add-extra-points-form">
         <div>
           <label for="username" class="input-label">
@@ -326,7 +326,7 @@
           <select type="text" id="users-extra-points" name="users">
             <option hidden disabled selected value>Selecciona un usuario</option>
             <% allUsers.forEach((user)=> { %>
-            <option title="<%= user.name %>" value="<%= user._id %>">
+            <option title="<%= user.name %>" value="<%= user.id %>">
               <%= user.name %> - <%= user.email %>
             </option>
             <% }) %>
@@ -355,51 +355,7 @@
     </div>
     <% } %>
   </div>
-  <% if (loggedUser.isSuperAdmin) { %>
-  <script>
-    $("#search-users-extra-points").addEventListener("change", (event) => {
-      event.preventDefault()
-      filterUsers(event.target.value, "users-extra-points")
-    })
 
-    const addExtraPointsForm = $('#add-extra-points-form')
-
-    addExtraPointsForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const userId = $('#users-extra-points').value
-      const extraPointsText = $('#extra-points-text').value
-      const extraPoints = $('#extra-points').value
-
-      if (!userId || !extraPointsText || !extraPoints) return notify('Por favor, rellena todos los campos.', 1000)
-      fetch('/add-extra-points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId,
-            extraPointsText,
-            extraPoints: Number(extraPoints)
-          })
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.err) {
-            notify(data.err, 1000)
-          } else {
-            $('#users-extra-points').value = ''
-            $('#extra-points-text').value = ''
-            $('#extra-points').value = ''
-            $('#search-users-extra-points').value = ''
-
-
-            $('#search-users-extra-points').focus()
-            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
-          }
-        })
-    })
-  </script>
-  <% } %>
   <script>
     const $ = (selector) => document.querySelector(selector)
 
@@ -461,7 +417,7 @@
       $(`#${id}`).innerHTML = `
         ${filtered
           .map(user => `
-            <option title="${user.name}" value="${user._id}">
+            <option title="${user.name}" value="${user.id}">
               ${user.name} - ${user.email}
             </option>
           `)
@@ -601,6 +557,73 @@
       }
     })
   </script>
+
+  <% if (loggedUser.isSuperAdmin) { %>
+  <script>
+    $("#search-users-extra-points").addEventListener("change", (event) => {
+      event.preventDefault()
+      filterUsers(event.target.value, "users-extra-points")
+    })
+
+    const addExtraPointsForm = $('#add-extra-points-form')
+
+    addExtraPointsForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const userId = $('#users-extra-points').value
+      const extraPointsText = $('#extra-points-text').value
+      const extraPoints = $('#extra-points').value
+
+      if (!userId || !extraPointsText || !extraPoints) return notify('Por favor, rellena todos los campos.', 1000)
+      fetch('/add-extra-points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId,
+            extraPointsText,
+            extraPoints: Number(extraPoints)
+          })
+        })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('#users-extra-points').value = ''
+            $('#extra-points-text').value = ''
+            $('#search-users-extra-points').value = ''
+
+
+            $('#search-users-extra-points').focus()
+            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
+          }
+          $('#extra-points').value = ''
+        })
+    })
+
+    function filterUsers(inputText, id) {
+      let filtered = !inputText ?
+        allUsers :
+        allUsers.filter(user => {
+          const concatText = `${user.name} - ${user.email}`
+          return concatText.toLowerCase().includes(inputText.toLowerCase())
+        })
+
+      $(`#${id}`).innerHTML = `
+        ${filtered
+          .map(user => `
+            <option title="${user.name}" value="${user.id}">
+              ${user.name} - ${user.email}
+            </option>
+          `)
+          .join('')
+        }
+      `
+    }
+  </script>
+  <% } %>
+
 </body>
 
 </html>
