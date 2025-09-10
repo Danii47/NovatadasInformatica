@@ -146,7 +146,7 @@
             <% if (index < 2) { %>
             -
             <% } else { %>
-            <%= (user.points / totalPoints * 100).toFixed(2) || 0 %>%
+            <%= ((user.points / totalPoints * 100) || 0).toFixed(2) %>%
             <% } %>
           </td>
         </tr>
