@@ -32,7 +32,7 @@
       align-items: center;
       gap: 2.5rem;
     }
-    
+
     .admin-utils-container h2 {
       text-align: center;
       border-bottom: solid 1px #777;
@@ -40,7 +40,7 @@
       margin-bottom: 1rem;
       color: #000;
     }
-    
+
     .create-container {
       width: 600px;
       background-color: #fff;
@@ -355,6 +355,51 @@
     </div>
     <% } %>
   </div>
+  <% if (loggedUser.isSuperAdmin) { %>
+  <script>
+    $("#search-users-extra-points").addEventListener("change", (event) => {
+      event.preventDefault()
+      filterUsers(event.target.value, "users-extra-points")
+    })
+
+    const addExtraPointsForm = $('#add-extra-points-form')
+
+    addExtraPointsForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const userId = $('#users-extra-points').value
+      const extraPointsText = $('#extra-points-text').value
+      const extraPoints = $('#extra-points').value
+
+      if (!userId || !extraPointsText || !extraPoints) return notify('Por favor, rellena todos los campos.', 1000)
+      fetch('/add-extra-points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId,
+            extraPointsText,
+            extraPoints: Number(extraPoints)
+          })
+        })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.err) {
+            notify(data.err, 1000)
+          } else {
+            $('#users-extra-points').value = ''
+            $('#extra-points-text').value = ''
+            $('#extra-points').value = ''
+            $('#search-users-extra-points').value = ''
+
+
+            $('#search-users-extra-points').focus()
+            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
+          }
+        })
+    })
+  </script>
+  <% } %>
   <script>
     const $ = (selector) => document.querySelector(selector)
 
@@ -383,11 +428,6 @@
     $("#search-users").addEventListener("change", (event) => {
       event.preventDefault()
       filterUsers(event.target.value, "users")
-    })
-
-    $("#search-users-extra-points").addEventListener("change", (event) => {
-      event.preventDefault()
-      filterUsers(event.target.value, "users-extra-points")
     })
 
     function filterChallenges(inputText) {
@@ -533,44 +573,6 @@
             $('#search-challenge').value = ''
 
             $('#search-users').focus()
-            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
-          }
-        })
-    })
-
-
-    const addExtraPointsForm = $('#add-extra-points-form')
-
-    addExtraPointsForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const userId = $('#users-extra-points').value
-      const extraPointsText = $('#extra-points-text').value
-      const extraPoints = $('#extra-points').value
-
-      if (!userId || !extraPointsText || !extraPoints) return notify('Por favor, rellena todos los campos.', 1000)
-      fetch('/add-extra-points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId,
-            extraPointsText,
-            extraPoints: Number(extraPoints)
-          })
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.err) {
-            notify(data.err, 1000)
-          } else {
-            $('#users-extra-points').value = ''
-            $('#extra-points-text').value = ''
-            $('#extra-points').value = ''
-            $('#search-users-extra-points').value = ''
-
-
-            $('#search-users-extra-points').focus()
             notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
           }
         })
