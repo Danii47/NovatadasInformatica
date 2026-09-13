@@ -1,0 +1,70 @@
+/* ========================= Panel de administración ======================== */
+
+.admin-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: start;
+}
+
+/* --------------------------------------------------- Cola de validación */
+
+.queue {
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.queue__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+  transition: opacity 0.15s;
+}
+
+.queue__item:last-child {
+  border-bottom: none;
+}
+
+.queue__item--gone {
+  opacity: 0;
+}
+
+.queue__who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.queue__name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.queue__name:hover {
+  color: var(--brand);
+}
+
+.queue__challenge {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.queue__right {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 420px) {
+  .queue__right .points-chip {
+    display: none;
+  }
+}

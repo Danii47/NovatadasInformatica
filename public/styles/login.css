@@ -1,0 +1,78 @@
+/* ============================ Pantalla de acceso ========================== */
+
+.login-body {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: clamp(1rem, 5vw, 2.5rem);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: clamp(1.5rem, 5vw, 2.25rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.login-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-md);
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.login-brand__name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.login-brand__edition {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.login-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.login-subtitle {
+  margin: 0.25rem 0 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+
+#login-submit {
+  margin-top: 0.35rem;
+  min-height: 42px;
+}
+
+.login-foot {
+  margin-top: 1.5rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}

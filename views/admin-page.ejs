@@ -1,604 +1,375 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administración - Novatadas Informática</title>
-  <link href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap' rel='stylesheet'>
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
-  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
-  <link href="/styles/notify.css" rel="stylesheet" type="text/css">
-  <link href="/styles/password.css" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="/js/notify.js"></script>
-
-  <style>
-    body {
-      background-color: #000;
-      height: 100vh;
-    }
-
-    h1 {
-      text-align: center;
-      padding: 2rem;
-      margin: 0;
-      color: #eed000;
-    }
-
-    .admin-utils-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 2.5rem;
-    }
-    
-    .admin-utils-container h2 {
-      text-align: center;
-      border-bottom: solid 1px #777;
-      padding-bottom: .5rem;
-      margin-bottom: 1rem;
-      color: #000;
-    }
-    
-    .create-container {
-      width: 600px;
-      background-color: #fff;
-      padding: 1.2rem;
-      margin: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      border: 3px solid #eed000;
-      position: relative;
-      min-height: 50vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .create-container::before {
-      content: "";
-      position: absolute;
-      top: 0px;
-      border-radius: calc(8px - .2rem);
-      left: 0px;
-      right: 0px;
-      bottom: 0px;
-      border: 1px solid #000;
-      pointer-events: none;
-    }
-
-    .create-container.user {
-      width: 300px;
-    }
-
-    .create-container.add-points {
-      width: 300px;
-    }
-
-    .create-container.add-extra-points {
-      width: 300px;
-    }
-
-    .create-form {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      gap: 1rem;
-      flex: 1;
-    }
-
-    .create-form div {
-      display: flex;
-      flex-direction: column;
-      gap: .2rem;
-    }
-
-    .create-form textarea {
-      height: 45px;
-      field-sizing: content;
-      min-height: 40px;
-      max-height: 100px;
-      resize: vertical;
-    }
-
-    .create-form input,
-    .create-form textarea,
-    .create-form select {
-      font-size: 1.05rem;
-      width: 100%;
-      padding: 0.5rem 0.3rem;
-      border: 1px solid #b5b5b5;
-      color: #20211d;
-      border-radius: 5px;
-      background-color: #fafafa;
-      outline: 0;
-    }
-
-    /* Chrome, Safari, Edge, Opera */
-    .create-form input::-webkit-outer-spin-button,
-    .create-form input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    /* Firefox */
-    .create-form input[type=number] {
-      appearance: textfield;
-      -moz-appearance: textfield;
-    }
-
-    .create-form input:focus,
-    .create-form textarea:focus {
-      border: 1px solid #eed000;
-    }
-
-    .create-button-container button {
-      width: 150px;
-      padding: .5rem;
-      border-radius: 5px;
-      background-color: #eed000;
-      cursor: pointer;
-      border: 2px solid transparent;
-      color: #000
-    }
-
-    .create-button-container button:hover {
-      background-color: #ceb200;
-    }
-
-    .create-button-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .input-label {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: .5rem;
-      color: #000;
-      padding-bottom: .5rem;
-    }
-
-    @media (max-width: 1000px) {
-      .admin-utils-container {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .create-container {
-        width: 300px;
-        margin: 1rem;
-      }
-
-      .create-container.user {
-        margin-bottom: 2rem;
-      }
-
-      h1 {
-        padding: 0;
-        margin-top: 1rem;
-      }
-
-      body {
-        height: auto;
-      }
-    }
-  </style>
+  <%- include('partials/head', { title: 'Administración · Novatadas Informática', extraStyles: ['/styles/navigation.css', '/styles/picker.css', '/styles/admin.css', '/styles/password.css'] }) %>
 </head>
 
 <body>
-  <div class="notify-container">
-    <i id="notify-icon" class="fa-solid fa-triangle-exclamation fa-beat"></i>
-    <div class="notify-text"></div>
-  </div>
+  <%- include('partials/toast') %>
+  <%- include('partials/appbar', { active: 'admin' }) %>
 
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/challenges">RETOS</a></li>
-        <li><a href="/scoreboard">MARCADOR</a></li>
-        <% if (loggedUser.isAdmin) { %>
-        <li><a href="/admin-page" id="a-selected">ADMIN</a></li>
-        <% } %>
-        <% if (loggedUser.isSuperAdmin) { %>
-        <li><a href="/super-admin-page">AVANZADAS</a></li>
-        <% } %>
-      </ul>
-    </nav>
-  </header>
+  <%
+    const challengeById = new Map(allChallenges.map((challenge) => [challenge._id, challenge]))
 
-  <h1>Administración</h1>
-  <div class="admin-utils-container">
-    <div class="create-container user">
-      <h2>Crear usuario</h2>
-      <form class="create-form" id="create-user-form">
-        <div>
-          <label for="user-email" class="input-label">
-            <i class="fa-solid fa-id-card"></i>
-            Correo del usuario
-          </label>
-          <input type="email" id="user-email" name="user-email">
-        </div>
-        <div>
-          <label for="user-name" class="input-label">
-            <i class="fa-solid fa-user"></i>
-            Nombre del usuario
-          </label>
-          <input type="text" id="user-name" name="user-name">
-        </div>
-        <div>
-          <label for="user-password" class="input-label">
-            <i class="fa-solid fa-key"></i>
-            Contraseña del usuario
-          </label>
-          <div class="password-container">
-            <input type="password" id="user-password" name="user-password" min="8">
-            <button class="hide-password" type="button">
-              <i class="fa-regular fa-eye"></i>
+    // Cola de validación: todo lo que está esperando a un veterano, en un sitio.
+    const queue = []
+    allUsers.forEach((user) => {
+      user.pendingChallenges.forEach((challengeId) => {
+        const challenge = challengeById.get(String(challengeId))
+        if (challenge) queue.push({ user, challenge })
+      })
+    })
+    queue.sort((a, b) => b.challenge.points - a.challenge.points)
+  %>
+
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">Panel de veteranos</p>
+        <h1 class="display display--lg">Administración</h1>
+      </div>
+      <div class="row">
+        <span class="badge"><%= allUsers.length %> novatos</span>
+        <span class="badge"><%= allChallenges.length %> retos</span>
+        <% if (queue.length > 0) { %>
+        <span class="badge badge--accent"><%= queue.length %> por validar</span>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- ============================ Cola de validación ==================== -->
+    <section class="panel mb-1" id="queue-panel">
+      <div class="panel-head">
+        <h2>Pendientes de validar</h2>
+        <span class="badge badge--accent" id="queue-count"><%= queue.length %></span>
+      </div>
+
+      <% if (queue.length === 0) { %>
+      <div class="empty-state" id="queue-empty">No hay nada pendiente.</div>
+      <% } else { %>
+      <div class="queue" id="queue-list">
+        <% queue.forEach(({ user, challenge }) => { %>
+        <div class="queue__item" data-user-id="<%= user.id %>" data-challenge-id="<%= challenge._id %>">
+          <div class="queue__who">
+            <a class="queue__name" href="/user/<%= user.id %>"><%= user.name %></a>
+            <span class="queue__challenge"><%= challenge.title %></span>
+          </div>
+          <div class="queue__right">
+            <span class="points-chip num"><%= challenge.points %></span>
+            <button class="icon-btn icon-btn--accept" type="button" data-action="accept"
+              title="Validar" aria-label="Validar reto de <%= user.name %>">
+              <i class="fa-solid fa-check" aria-hidden="true"></i>
+            </button>
+            <button class="icon-btn icon-btn--reject" type="button" data-action="reject"
+              title="Rechazar" aria-label="Rechazar reto de <%= user.name %>">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
           </div>
         </div>
-        <div class="create-button-container">
-          <button type="submit">Crear usuario</button>
-        </div>
-      </form>
-    </div>
-    <div class="create-container challenge">
-      <h2>Crear reto</h2>
-      <form id="create-challenge-form" class="create-form">
-        <div>
-          <label for="challenge-name" class="input-label">
-            <i class="fa-solid fa-input-text"></i>
-            Nombre del reto
-          </label>
-          <input type="text" id="challenge-name" name="challenge-name" placeholder="El titulo que se verá en el reto">
-        </div>
-        <div>
-          <label for="challenge-description" class="input-label">
-            <i class="fa-solid fa-message-captions"></i>
-            Descripción del reto
-          </label>
-          <textarea id="challenge-description" name="challenge-description" placeholder="Escribe en que consiste el reto"></textarea>
-        </div>
-        <div>
-          <label for="challenge-points" class="input-label">
-            <i class="fa-solid fa-hundred-points"></i>
-            Puntos del reto
-          </label>
-          <input type="number" min="1" id="challenge-points" name="challenge-points" placeholder="Puntos que valdrá el reto">
-        </div>
-        <div class="create-button-container">
-          <button type="submit">Crear reto</button>
-        </div>
-      </form>
-    </div>
-    <div class="create-container add-points">
-      <h2>Añadir puntos</h2>
-      <form class="create-form" id="add-points-form">
-        <div>
-          <label for="username" class="input-label">
-            <i class="fa-solid fa-user"></i>
-            Usuario
-          </label>
-          <input type="text" id="search-users" placeholder="Buscar usuario">
-          <select type="text" id="users" name="users">
-            <option hidden disabled selected value>Selecciona un usuario</option>
-            <% allUsers.forEach((user)=> { %>
-            <option title="<%= user.name %>" value="<%= user._id %>">
-              <%= user.name %> - <%= user.email %>
-            </option>
-            <% }) %>
-          </select>
-        </div>
-        <div>
-          <label for="challenge" class="input-label">
-            <i class="fa-duotone fa-camera-retro"></i>
-            Reto
-          </label>
+        <% }) %>
+      </div>
+      <% } %>
+    </section>
 
-          <input type="text" id="search-challenge" placeholder="Buscar reto">
-          <select type="text" id="challenges" name="challenge">
-            <option hidden disabled selected value>Selecciona un reto</option>
-            <% allChallenges.forEach((challenge)=> { %>
-            <option title="<%= challenge.description %>" value="<%= challenge._id %>">
-              <%= challenge.title %> - <%= challenge.points %>
-            </option>
-            <% }) %>
-          </select>
+    <div class="grid admin-grid">
+      <!-- ============================ Crear usuario ====================== -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Crear usuario</h2>
         </div>
-        <div class="create-button-container">
-          <button type="submit">Añadir</button>
-        </div>
-      </form>
-    </div>
-    <% if (loggedUser.isSuperAdmin) { %>
-    <div class="create-container add-extra-points">
-      <h2>Añadir puntos</h2>
-      <form class="create-form" id="add-extra-points-form">
-        <div>
-          <label for="username" class="input-label">
-            <i class="fa-solid fa-user"></i>
-            Usuario
-          </label>
-          <input type="text" id="search-users-extra-points" placeholder="Buscar usuario">
-          <select type="text" id="users-extra-points" name="users">
-            <option hidden disabled selected value>Selecciona un usuario</option>
-            <% allUsers.forEach((user)=> { %>
-            <option title="<%= user.name %>" value="<%= user._id %>">
-              <%= user.name %> - <%= user.email %>
-            </option>
-            <% }) %>
-          </select>
-        </div>
-        <div>
-          <label for="extra-points-text" class="input-label">
-            <i class="fa-solid fa-input-text"></i>
-            Texto personalizado
-          </label>
+        <% if (loggedUser.isSuperAdmin) { %>
+        <p class="panel-note">
+          ¿Vas a dar de alta a todo un curso? Usa la
+          <a class="text-brand" href="/gestion">importación masiva</a>.
+        </p>
+        <% } %>
 
-          <input type="text" id="extra-points-text" placeholder="Escribe un reto personalizado">
-        </div>
-        <div>
-          <label for="extra-points" class="input-label">
-            <i class="fa-solid fa-hundred-points"></i>
-            Puntos extra
-          </label>
+        <form id="create-user-form" novalidate>
+          <div class="field">
+            <label for="user-email">Correo</label>
+            <input class="input" type="email" id="user-email" autocomplete="off" placeholder="nombre@ejemplo.com">
+          </div>
+          <div class="field">
+            <label for="user-name">Nombre</label>
+            <input class="input" type="text" id="user-name" autocomplete="off" placeholder="Nombre y apellidos">
+          </div>
+          <div class="field">
+            <label for="user-password">Contraseña</label>
+            <div class="password-container">
+              <input class="input" type="password" id="user-password" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+              <button class="hide-password" type="button" aria-label="Mostrar contraseña">
+                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <button class="btn btn--ghost btn--sm mt-1" type="button" id="generate-password">
+              Generar aleatoria
+            </button>
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">Crear usuario</button>
+        </form>
+      </section>
 
-          <input type="text" type="number" min="1" id="extra-points" placeholder="Puntuación a sumar">
+      <!-- ============================ Crear reto ========================= -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Crear reto</h2>
         </div>
-        <div class="create-button-container">
-          <button type="submit">Añadir</button>
+
+        <form id="create-challenge-form" novalidate>
+          <div class="field">
+            <label for="challenge-name">Título</label>
+            <input class="input" type="text" id="challenge-name" placeholder="El título que verán los novatos">
+          </div>
+          <div class="field">
+            <label for="challenge-description">Descripción</label>
+            <textarea class="textarea" id="challenge-description" placeholder="En qué consiste el reto"></textarea>
+          </div>
+          <div class="field">
+            <label for="challenge-points">Puntos</label>
+            <input class="input" type="number" min="1" id="challenge-points" placeholder="Cuánto vale el reto">
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">Crear reto</button>
+        </form>
+      </section>
+
+      <!-- ============================ Añadir puntos ====================== -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Validar reto a mano</h2>
         </div>
-      </form>
+        <p class="panel-note">Suma directamente los puntos de un reto sin esperar a la solicitud.</p>
+
+        <form id="add-points-form" novalidate>
+          <div class="field">
+            <span class="field-label">Usuario</span>
+            <div class="picker" id="points-user-picker">
+              <input class="input picker__input" type="text" role="combobox" aria-expanded="false"
+                autocomplete="off" placeholder="Busca por nombre o correo">
+              <input type="hidden" class="picker__value">
+              <ul class="picker__list" role="listbox" hidden></ul>
+            </div>
+          </div>
+          <div class="field">
+            <span class="field-label">Reto</span>
+            <div class="picker" id="points-challenge-picker">
+              <input class="input picker__input" type="text" role="combobox" aria-expanded="false"
+                autocomplete="off" placeholder="Busca un reto">
+              <input type="hidden" class="picker__value">
+              <ul class="picker__list" role="listbox" hidden></ul>
+            </div>
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">Añadir puntos</button>
+        </form>
+      </section>
+
+      <!-- ============================ Puntos extra ======================= -->
+      <% if (loggedUser.isSuperAdmin) { %>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Puntos extra</h2>
+        </div>
+        <p class="panel-note">Para premios fuera de la lista de retos. Admite valores negativos.</p>
+
+        <form id="add-extra-points-form" novalidate>
+          <div class="field">
+            <span class="field-label">Usuario</span>
+            <div class="picker" id="extra-user-picker">
+              <input class="input picker__input" type="text" role="combobox" aria-expanded="false"
+                autocomplete="off" placeholder="Busca por nombre o correo">
+              <input type="hidden" class="picker__value">
+              <ul class="picker__list" role="listbox" hidden></ul>
+            </div>
+          </div>
+          <div class="field">
+            <label for="extra-points-text">Concepto</label>
+            <input class="input" type="text" id="extra-points-text" placeholder="Por qué se le dan los puntos">
+          </div>
+          <div class="field">
+            <label for="extra-points">Puntos</label>
+            <input class="input" type="number" id="extra-points" placeholder="Puede ser negativo">
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">Añadir puntos extra</button>
+        </form>
+      </section>
+      <% } %>
     </div>
-    <% } %>
-  </div>
+  </main>
+
+  <script src="/js/picker.js"></script>
   <script>
     const $ = (selector) => document.querySelector(selector)
+    const $$ = (selector) => document.querySelectorAll(selector)
 
-    let allChallenges = []
-    let allUsers = []
+    const USERS = <%- jsonForScript(allUsers.map((u) => ({ value: u.id, label: u.name, hint: u.email }))) %>
+    const CHALLENGES = <%- jsonForScript(allChallenges.map((c) => ({ value: c._id, label: c.title, hint: `${c.points} puntos` }))) %>
 
-    window.addEventListener("DOMContentLoaded", () => {
-      fetch('/get-db-data', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(res => res.json())
-        .then((data) => {
-          allChallenges = data.challenges
-          allUsers = data.users
-        })
-    })
-
-    $("#search-challenge").addEventListener("change", (event) => {
-      event.preventDefault()
-      filterChallenges(event.target.value)
-    })
-
-    $("#search-users").addEventListener("change", (event) => {
-      event.preventDefault()
-      filterUsers(event.target.value, "users")
-    })
-
-    $("#search-users-extra-points").addEventListener("change", (event) => {
-      event.preventDefault()
-      filterUsers(event.target.value, "users-extra-points")
-    })
-
-    function filterChallenges(inputText) {
-      const filtered = !inputText ?
-        allChallenges :
-        allChallenges.filter(challenge => {
-          const concatText = `${challenge.title} - ${challenge.points}`
-          return concatText.toLowerCase().includes(inputText.toLowerCase())
-        })
-
-      $("#challenges").innerHTML = `
-        ${filtered
-          .map(challenge => `
-            <option title="${challenge.description}" value="${challenge._id}">
-              ${challenge.title} - ${challenge.points}
-            </option>
-          `)
-          .join('')
-        }
-      `
+    async function post (url, body) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      return { ok: res.ok, data: await res.json() }
     }
 
-    function filterUsers(inputText, id) {
-      let filtered = !inputText ?
-        allUsers :
-        allUsers.filter(user => {
-          const concatText = `${user.name} - ${user.email}`
-          return concatText.toLowerCase().includes(inputText.toLowerCase())
-        })
+    /* ------------------------------------------------ Cola de validación */
 
-      $(`#${id}`).innerHTML = `
-        ${filtered
-          .map(user => `
-            <option title="${user.name}" value="${user._id}">
-              ${user.name} - ${user.email}
-            </option>
-          `)
-          .join('')
-        }
-      `
+    function refreshQueueCount () {
+      const remaining = $$('#queue-list .queue__item').length
+      $('#queue-count').textContent = remaining
+
+      if (remaining === 0 && $('#queue-list')) {
+        $('#queue-list').outerHTML =
+          '<div class="empty-state">No hay nada pendiente.</div>'
+      }
     }
 
-    const createUserFrom = $('#create-user-form')
+    $$('#queue-list [data-action]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const item = button.closest('.queue__item')
+        const { userId, challengeId } = item.dataset
+        const accept = button.dataset.action === 'accept'
 
-    createUserFrom.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const userEmail = $('#user-email').value
-      const userName = $('#user-name').value
-      const userPassword = $('#user-password').value
+        item.querySelectorAll('button').forEach((b) => { b.disabled = true })
 
-      if (!userEmail || !userName || !userPassword) return notify('Por favor, rellena todos los campos.', 1000)
+        try {
+          const { ok, data } = await post(
+            accept ? '/challenges/accept-challenge-completed' : '/challenges/reject-challenge-completed',
+            { userId, challengeId }
+          )
 
-      fetch('/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: userEmail,
-            name: userName,
-            password: userPassword
-          })
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.err) {
-            notify(data.err, 1000)
-          } else {
-            $('#user-email').value = ''
-            $('#user-name').value = ''
-            $('#user-password').value = ''
-
-            $('#user-email').focus()
-            notify(`${userEmail} - Usuario creado correctamente.`, 1000, "success")
+          if (!ok || data.err) {
+            item.querySelectorAll('button').forEach((b) => { b.disabled = false })
+            return notify(data.err || 'No se ha podido completar la acción.')
           }
-        })
+
+          item.classList.add('queue__item--gone')
+          setTimeout(() => { item.remove(); refreshQueueCount() }, 200)
+
+          notify(accept ? 'Reto validado.' : 'Reto rechazado.', 1800, 'success')
+        } catch (error) {
+          item.querySelectorAll('button').forEach((b) => { b.disabled = false })
+          notify('No hay conexión con el servidor.')
+        }
+      })
     })
 
+    /* ------------------------------------------------------ Crear usuario */
 
-    const createChallengeForm = $('#create-challenge-form')
-
-    createChallengeForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const challengeName = $('#challenge-name').value
-      const challengeDescription = $('#challenge-description').value
-      const challengePoints = $('#challenge-points').value
-
-      if (!challengeName || !challengeDescription || !challengePoints) return notify('Por favor, rellena todos los campos.', 1000)
-
-      fetch('/challenges/create-challenge', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            title: challengeName,
-            description: challengeDescription,
-            points: challengePoints
-          })
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.err) {
-            notify(data.err, 1000)
-          } else {
-            $('#challenge-name').value = ''
-            $('#challenge-description').value = ''
-            $('#challenge-points').value = ''
-
-            $('#challenge-name').focus()
-            notify(`${challengeName} - Reto creado correctamente.`, 1000, "success")
-          }
-        })
-    })
-
-
-    const addPointsForm = $('#add-points-form')
-
-    addPointsForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const userId = $('#users').value
-      const challengeId = $('#challenges').value
-
-      if (!userId || !challengeId) return notify('Por favor, rellena todos los campos.', 1000)
-      fetch('/add-points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId,
-            challengeId
-          })
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.err) {
-            notify(data.err, 1000)
-          } else {
-            $('#users').value = ''
-            $('#challenges').value = ''
-            $('#search-users').value = ''
-            $('#search-challenge').value = ''
-
-            $('#search-users').focus()
-            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
-          }
-        })
-    })
-
-
-    const addExtraPointsForm = $('#add-extra-points-form')
-
-    addExtraPointsForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const userId = $('#users-extra-points').value
-      const extraPointsText = $('#extra-points-text').value
-      const extraPoints = $('#extra-points').value
-
-      if (!userId || !extraPointsText || !extraPoints) return notify('Por favor, rellena todos los campos.', 1000)
-      fetch('/add-extra-points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId,
-            extraPointsText,
-            extraPoints: Number(extraPoints)
-          })
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.err) {
-            notify(data.err, 1000)
-          } else {
-            $('#users-extra-points').value = ''
-            $('#extra-points-text').value = ''
-            $('#extra-points').value = ''
-            $('#search-users-extra-points').value = ''
-
-
-            $('#search-users-extra-points').focus()
-            notify(`${data.points} puntos añadidos correctamente.`, 1000, "success")
-          }
-        })
-    })
-
-    const hidePassBtn = $('.hide-password')
     const passwordInput = $('#user-password')
 
-    let hidePass = false
+    $('.hide-password').addEventListener('click', () => {
+      const hidden = passwordInput.type === 'password'
+      passwordInput.type = hidden ? 'text' : 'password'
+      $('.hide-password i').className = hidden ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'
+    })
 
-    hidePassBtn.addEventListener("click", (event) => {
+    $('#generate-password').addEventListener('click', () => {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
+      const bytes = crypto.getRandomValues(new Uint32Array(10))
+      passwordInput.value = Array.from(bytes, (n) => alphabet[n % alphabet.length]).join('')
+      passwordInput.type = 'text'
+      $('.hide-password i').className = 'fa-regular fa-eye-slash'
+    })
+
+    $('#create-user-form').addEventListener('submit', async (event) => {
       event.preventDefault()
 
-      hidePass = !hidePass
+      const email = $('#user-email').value.trim().toLowerCase()
+      const name = $('#user-name').value.trim()
+      const password = passwordInput.value
 
-      if (hidePass) {
-        $('.hide-password i').classList.remove('fa-eye')
-        $('.hide-password i').classList.add('fa-eye-slash')
-        passwordInput.type = "text"
+      if (!email || !name || !password) return notify('Rellena todos los campos.')
 
-      } else {
-        $('.hide-password i').classList.remove('fa-eye-slash')
-        $('.hide-password i').classList.add('fa-eye')
-        passwordInput.type = "password"
+      const { ok, data } = await post('/register', { email, name, password })
 
-      }
+      if (!ok || data.err) return notify(data.err || 'No se ha podido crear el usuario.')
+
+      $('#user-email').value = ''
+      $('#user-name').value = ''
+      passwordInput.value = ''
+      $('#user-email').focus()
+
+      notify(`${email} · usuario creado.`, 2400, 'success')
+    })
+
+    /* -------------------------------------------------------- Crear reto */
+
+    $('#create-challenge-form').addEventListener('submit', async (event) => {
+      event.preventDefault()
+
+      const title = $('#challenge-name').value.trim()
+      const description = $('#challenge-description').value.trim()
+      const points = $('#challenge-points').value
+
+      if (!title || !description || !points) return notify('Rellena todos los campos.')
+
+      const { ok, data } = await post('/challenges/create-challenge', { title, description, points })
+
+      if (!ok || data.err) return notify(data.err || 'No se ha podido crear el reto.')
+
+      $('#challenge-name').value = ''
+      $('#challenge-description').value = ''
+      $('#challenge-points').value = ''
+      $('#challenge-name').focus()
+
+      notify(`${title} · reto creado.`, 2400, 'success')
+    })
+
+    /* ------------------------------------------------------ Añadir puntos */
+
+    const pointsUserPicker = createPicker($('#points-user-picker'), { items: USERS })
+    const pointsChallengePicker = createPicker($('#points-challenge-picker'), { items: CHALLENGES })
+
+    $('#add-points-form').addEventListener('submit', async (event) => {
+      event.preventDefault()
+
+      const userId = pointsUserPicker.value
+      const challengeId = pointsChallengePicker.value
+
+      if (!userId || !challengeId) return notify('Selecciona un usuario y un reto de la lista.')
+
+      const { ok, data } = await post('/add-points', { userId, challengeId })
+
+      if (!ok || data.err) return notify(data.err || 'No se han podido añadir los puntos.')
+
+      pointsUserPicker.clear()
+      pointsChallengePicker.clear()
+
+      notify(`${data.points} puntos añadidos.`, 2400, 'success')
     })
   </script>
+
+  <% if (loggedUser.isSuperAdmin) { %>
+  <script>
+    const extraUserPicker = createPicker($('#extra-user-picker'), { items: USERS })
+
+    $('#add-extra-points-form').addEventListener('submit', async (event) => {
+      event.preventDefault()
+
+      const userId = extraUserPicker.value
+      const extraPointsText = $('#extra-points-text').value.trim()
+      const extraPoints = $('#extra-points').value
+
+      if (!userId || !extraPointsText || extraPoints === '') return notify('Rellena todos los campos.')
+
+      const { ok, data } = await post('/add-extra-points', {
+        userId,
+        extraPointsText,
+        extraPoints: Number(extraPoints)
+      })
+
+      if (!ok || data.err) return notify(data.err || 'No se han podido añadir los puntos.')
+
+      extraUserPicker.clear()
+      $('#extra-points-text').value = ''
+      $('#extra-points').value = ''
+
+      notify(`${data.points} puntos extra añadidos.`, 2400, 'success')
+    })
+  </script>
+  <% } %>
 </body>
 
 </html>

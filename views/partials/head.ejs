@@ -1,0 +1,26 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0f12">
+<meta name="color-scheme" content="dark">
+<title><%= title %></title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+<!-- site-assets.fontawesome.com dejó de servir a terceros y devuelve 403:
+     por eso no se veía ningún icono. cdnjs sí es un CDN público. -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet" href="/styles/theme.css">
+<link rel="stylesheet" href="/styles/notify.css">
+<% if (typeof extraStyles !== 'undefined') { extraStyles.forEach((href) => { %>
+<link rel="stylesheet" href="<%= href %>">
+<% }) } %>
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- Sin `defer`: los scripts en línea del final de cada vista usan notify() y
+     escapeHtml() durante el parseo, antes de que se ejecuten los diferidos. -->
+<script src="/js/notify.js"></script>

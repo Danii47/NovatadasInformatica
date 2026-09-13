@@ -1,0 +1,325 @@
+/* ============================== Gestión =================================== */
+
+.mgmt-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mgmt-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mgmt-tab {
+  flex: 0 0 auto;
+  position: relative;
+  min-height: 38px;
+  padding: 0.4rem 0.9rem;
+  border: 0;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.mgmt-tab:hover {
+  color: var(--text);
+}
+
+.mgmt-tab[aria-selected='true'] {
+  color: var(--text);
+}
+
+.mgmt-tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--brand);
+}
+
+/* ------------------------------------------------------- Previsualización */
+
+.preview {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--ink-2);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.preview__row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.86rem;
+}
+
+.preview__row:last-child {
+  border-bottom: none;
+}
+
+.preview__num {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.preview__name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview__email {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview__row--error .preview__name {
+  color: var(--danger);
+}
+
+.import-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.85rem 0;
+}
+
+/* ---------------------------------------------------------- Credenciales */
+
+.credentials {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--ink-2);
+  max-height: 320px;
+  overflow: auto;
+}
+
+.credentials table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.credentials th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.credentials td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.credentials tr:last-child td {
+  border-bottom: none;
+}
+
+.credentials .pass {
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  color: var(--brand);
+}
+
+/* --------------------------------------------------------- Lista usuarios */
+
+.user-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem 0.85rem;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.user-row:last-child {
+  border-bottom: none;
+}
+
+.user-row__main {
+  min-width: 0;
+}
+
+.user-row__name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.user-row__name > a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-row__name > a:hover {
+  color: var(--brand);
+}
+
+.user-row__email {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.user-row__points {
+  min-width: 2.5rem;
+  text-align: right;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.25rem;
+}
+
+/* --------------------------------------------------------------- Registro */
+
+.log-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.log-row:last-child {
+  border-bottom: none;
+}
+
+.log-row__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--text-faint);
+  font-size: 0.7rem;
+}
+
+.log-row--create .log-row__icon { background: var(--mint-soft); color: var(--mint); }
+.log-row--destroy .log-row__icon { background: var(--danger-soft); color: var(--danger); }
+.log-row--points .log-row__icon { background: var(--brand-soft); color: var(--brand); }
+.log-row--role .log-row__icon { background: var(--accent-soft); color: var(--accent); }
+
+.log-row__text {
+  font-size: 0.87rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.log-row__meta {
+  font-size: 0.76rem;
+  color: var(--text-faint);
+}
+
+.log-row__time {
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.1rem;
+}
+
+/* ---------------------------------------------------------- Fin de curso */
+
+.danger-panel {
+  border-color: rgba(248, 81, 73, 0.3);
+}
+
+.danger-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--ink-2);
+}
+
+.danger-card + .danger-card {
+  margin-top: 0.75rem;
+}
+
+.danger-card__text {
+  min-width: 200px;
+  flex: 1;
+}
+
+.danger-card__title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.1rem;
+}
+
+.danger-card__desc {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.confirm-word {
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  background: var(--surface-3);
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--r-sm);
+  color: var(--brand);
+}
+
+@media (max-width: 560px) {
+  .user-row {
+    grid-template-columns: 1fr;
+  }
+
+  .user-row__actions {
+    justify-content: flex-end;
+  }
+
+  .danger-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .danger-card .btn {
+    width: 100%;
+  }
+}

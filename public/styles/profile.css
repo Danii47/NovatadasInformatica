@@ -1,0 +1,135 @@
+/* ============================== Perfil ==================================== */
+
+.profile-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  border: 1px solid var(--line-strong);
+  color: var(--text-dim);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.profile-name {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  margin-bottom: 0.5rem;
+}
+
+.profile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+/* ------------------------------------------------------------- Actividad */
+
+.entry {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.entry:last-child {
+  border-bottom: none;
+}
+
+.entry__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  font-size: 0.72rem;
+}
+
+.entry--done .entry__icon {
+  background: var(--mint-soft);
+  color: var(--mint);
+}
+
+.entry--pending .entry__icon {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.entry--extra .entry__icon {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.entry__title {
+  font-size: 0.92rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.entry__sub {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.entry__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.entry__points {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry__actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+/* --------------------------------------------------------------- Acciones */
+
+.danger-zone {
+  margin-top: 1.25rem;
+  border-color: rgba(248, 81, 73, 0.3);
+}
+
+@media (max-width: 560px) {
+  .profile-head {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .entry {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    gap: 0.6rem;
+  }
+
+  .entry__icon {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+}

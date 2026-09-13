@@ -1,93 +1,251 @@
-:root {
-  line-height: 1.5;
-  font-weight: 400;
+/* =============================================================================
+   Cabecera de escritorio + barra de pestañas inferior en móvil.
+   El mismo marcado sirve para ambas: solo cambia la disposición.
+   ========================================================================== */
 
-  color-scheme: light dark;
-  color: #333;
-  background-color: #1B1B1B;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  font-family: "DM Sans", Helvetica, Inter, system-ui, Avenir, Arial, sans-serif;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-nav {
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--nav-h);
   display: flex;
-  justify-content: center;
+  align-items: center;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  background: rgba(13, 15, 18, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
 }
 
-ul {
+.appbar__inner {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
   display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  background-color: #fff;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  border: 1px solid black;
-  border-top: none;
-  font-weight: bold;
+  align-items: center;
+  gap: 1rem;
 }
 
-li {
-  font-size: 1.2rem;
+/* ------------------------------------------------------------------ Marca */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-shrink: 0;
 }
 
-
-li a {
-  display: block;
-  padding: 1.1rem;
-  text-decoration: none;
-  color: #222;
-  transition: background-color .2s ease-in-out;
-  width: 150px;
-  text-align: center;
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
-ul li:first-child a {
-  border-bottom-left-radius: 9px;
+.brand__text {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
 }
 
-ul li:last-child a {
-  border-bottom-right-radius: 9px;
+.brand__name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-li a:hover {
-  color: black;
-  background-color: #fdf5bc;
+.brand__edition {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
 }
 
-#a-selected {
-  background-color: #eed000;
-  color: #000;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+/* --------------------------------------------------------------- Pestañas */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  margin-inline: auto;
 }
 
-@media (max-width: 700px) {
+.nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--r-md);
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  transition: color 0.15s, background 0.15s;
+}
 
-  li {
-    font-size: .8rem;
+.nav__link:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.nav__link[aria-current='page'] {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+/* Un subrayado fino marca la sección; sin rellenos de color. */
+.nav__link[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 0.8rem;
+  right: 0.8rem;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--brand);
+}
+
+.nav__link i {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+}
+
+.nav__link[aria-current='page'] i {
+  color: var(--brand);
+}
+
+/* --------------------------------------------------------------- Usuario */
+
+.appbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 200px;
+}
+
+.user-chip__name {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-chip__avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 1px solid var(--line-strong);
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.logout-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.logout-btn:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+/* ----------------------------------------------------------------- Móvil */
+
+@media (max-width: 860px) {
+  .appbar {
+    height: 52px;
+    /* `backdrop-filter` convierte a la cabecera en bloque contenedor de sus
+       descendientes `position: fixed`, y la barra de pestañas de abajo es uno
+       de ellos: con el filtro puesto se ancla a la cabecera, no a la ventana. */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--ink-2);
   }
 
-  li a {
-    padding: .8rem;
-    width: 100px;
+  .appbar__inner {
+    justify-content: space-between;
   }
-  
+
+  /* La navegación baja al alcance del pulgar. */
+  .nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    margin: 0;
+    height: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 0;
+    background: var(--ink-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .nav__link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.4rem 0.25rem;
+    border-radius: 0;
+    font-size: 0.68rem;
+    background: transparent;
+  }
+
+  .nav__link i {
+    font-size: 1rem;
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current='page'] {
+    background: transparent;
+  }
+
+  .nav__link[aria-current='page'],
+  .nav__link[aria-current='page'] i {
+    color: var(--brand);
+  }
+
+  .nav__link[aria-current='page']::after {
+    display: none;
+  }
+
+  .user-chip__name {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav__link {
+    font-size: 0.62rem;
+  }
 }

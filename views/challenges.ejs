@@ -1,462 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retos - Novatadas Informática</title>
-  <link href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap' rel='stylesheet'>
-
-  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
-  <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
-  <script type="text/javascript" src="/js/notify.js"></script>
-  <style>
-    html::-webkit-scrollbar {
-      display: none;
-    }
-
-    html {
-
-      -ms-overflow-style: none;
-      /* IE y Edge */
-      scrollbar-width: none;
-      /* Firefox */
-
-    }
-
-    body {
-      background-color: #000;
-    }
-
-    .challenges {
-      padding: 2rem;
-      display: flex;
-
-      flex-wrap: wrap;
-
-      gap: 1.3rem;
-      justify-content: center;
-
-    }
-
-    .challenge-card {
-      flex: 1 1 50%;
-      padding: .85rem;
-      background-color: #fff;
-      border: 3px solid #eed000;
-      max-width: 500px;
-      scale: 1;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
-      transition: box-shadow .2s ease, background-color .2s ease, scale .15s ease, transform .15s ease;
-    }
-
-    .challenge-card::before {
-      content: "";
-      position: absolute;
-      top: 0px;
-      border-radius: calc(.85rem - 8px);
-      left: 0px;
-      right: 0px;
-      bottom: 0px;
-      border: 1px solid #000;
-      pointer-events: none;
-    }
-
-    .challenge-card.pending {
-      background-color: #b3a6a6;
-      scale: 0.99;
-    }
-
-    .challenge-card.completed {
-      background-color: #c8dcc7;
-      scale: 0.99;
-    }
-
-    .challenge-card:hover:not(.pending):not(.completed) {
-      scale: 1.02;
-      transform: rotate(-.5deg);
-      box-shadow: 3px 3px 20px rgba(0, 0, 0, .4);
-    }
-
-    .challenge-card div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: .5rem;
-      user-select: none;
-    }
-
-    .challenge-card>p {
-      margin-bottom: 1rem;
-      user-select: none;
-    }
-
-    .challenge-card h2 {
-      max-width: 70%;
-    }
-
-    .challenge-card .request-challenge-button {
-      background-color: #35a850;
-      color: white;
-      padding: .5rem 1rem;
-      border: 1px solid #2e7c3e;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background-color .2s ease;
-    }
-
-    .challenge-card .delete-challenge-button {
-      background-color: #8b2c2c;
-      color: white;
-      padding: .5rem 1rem;
-      border: 1px solid #551818;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background-color .2s ease;
-    }
-
-    .challenge-card .delete-challenge-button:hover {
-      background-color: #551818;
-    }
-
-    .challenge-card:not(.pending):not(.completed) .request-challenge-button:hover {
-      background-color: #2e7c3e;
-    }
-
-    .challenge-card .request-challenge-button.pending {
-      background-color: #8b2c2c;
-      border: none;
-      cursor: not-allowed;
-    }
-
-    .challenge-card .request-challenge-button.completed {
-      background-color: #367142;
-      border: none;
-      cursor: not-allowed;
-    }
-
-    .challenge-card form {
-      display: flex;
-      justify-content: center;
-      margin-top: auto;
-    }
-
-    .challenge-options {
-      display: flex;
-      justify-content: center;
-      gap: .5rem;
-    }
-
-    .points {
-      position: relative;
-      background: #eed000;
-      color: #000;
-      padding: .25rem .6rem;
-      font-size: 1.1rem;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      box-shadow: 1px 1px 3px rgba(0, 0, 0, .2);
-      overflow: hidden;
-      font-weight: bold;
-    }
-
-    .points::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
-      transform: rotate(45deg);
-      transition: opacity .2s ease-in-out;
-      opacity: 0;
-      filter: blur(10px);
-    }
-
-    .challenge-card:hover:not(.completed):not(.pending) .points::before {
-      animation: points-reflection 2s ease-in-out forwards;
-      opacity: 1;
-    }
-
-    .challenge-dialog {
-      border-radius: 8px;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
-      padding: 1rem;
-      text-align: center;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      min-width: 300px;
-      max-width: 90vw;
-      background-color: #fff;
-      border: 3px solid #eed000;
-      color: #000;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #f1f1f1;
-      padding: .5rem;
-      text-align: center;
-      font-size: .9rem;
-      color: #333;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
-    }
-
-    .confirm-text-dialog {
-      margin-bottom: 1rem;
-    }
-
-    @keyframes points-reflection {
-      0% {
-        transform: rotate(45deg) translateX(-100%);
-      }
-
-      50% {
-        transform: rotate(45deg) translateX(100%);
-      }
-
-      100% {
-        transform: rotate(45deg) translateX(-100%);
-      }
-    }
-
-    @media (max-width: 650px) {
-      .challenges {
-        padding: 1rem;
-      }
-
-      .challenge-card {
-        max-width: 100%;
-      }
-
-      .challenge-card h2 {
-        max-width: 50%;
-      }
-    }
-  </style>
+  <%- include('partials/head', { title: 'Retos · Novatadas Informática', extraStyles: ['/styles/navigation.css', '/styles/challenges.css'] }) %>
 </head>
 
 <body>
-  <div class='notify-container'>
-    <i id='notify-icon'></i>
-    <div class='notify-text'></div>
-  </div>
+  <%- include('partials/toast') %>
+  <%- include('partials/appbar', { active: 'challenges' }) %>
 
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/challenges" id="a-selected">RETOS</a></li>
-        <li><a href="/scoreboard">MARCADOR</a></li>
-        <% if (loggedUser.isAdmin) { %>
-        <li><a href="/admin-page">ADMIN</a></li>
-        <% } %>
-        <% if (loggedUser.isSuperAdmin) { %>
-        <li><a href="/super-admin-page">AVANZADAS</a></li>
-        <% } %>
-      </ul>
-    </nav>
-  </header>
+  <%
+    const isStaff = loggedUser.isAdmin || loggedUser.isSuperAdmin
+    const completedSet = new Set(completedChallenges || [])
+    const pendingSet = new Set(pendingChallenges || [])
 
-  <div class="challenges">
-    <% allChallenges.forEach((challenge, index)=> { %>
-    <% if (loggedUser.isAdmin || loggedUser.isSuperAdmin) { %>
-    <div class="challenge-card" id="challenge-card-<%= challenge._id %>">
+    const stateOf = (challenge) => {
+      if (isStaff) return 'staff'
+      if (completedSet.has(challenge._id)) return 'done'
+      if (pendingSet.has(challenge._id)) return 'pending'
+      return 'open'
+    }
+
+    const doneCount = allChallenges.filter((c) => completedSet.has(c._id)).length
+    const pendingCount = allChallenges.filter((c) => pendingSet.has(c._id)).length
+    const openCount = allChallenges.length - doneCount - pendingCount
+    const percent = allChallenges.length > 0 ? Math.round(doneCount / allChallenges.length * 100) : 0
+  %>
+
+  <main class="page">
+    <div class="page-head">
       <div>
-        <h2>
-          <%= challenge.title %>
-        </h2>
-        <p class="points">
-          <%= challenge.points %> puntos
-        </p>
+        <p class="eyebrow">Curso <%= edition %></p>
+        <h1 class="display display--lg">Retos</h1>
       </div>
-      <p>
-        <%= challenge.description %>
-      </p>
 
-      <% if (loggedUser.isSuperAdmin) { %>
-      <div class="challenge-options">
-        <button class="delete-challenge-button" onclick="document.getElementById('delete-challenge-dialog-<%= challenge._id %>').showModal()">Eliminar</button>
-        <dialog class="challenge-dialog" id="delete-challenge-dialog-<%= challenge._id %>" closedby="any">
-          <h3 class="confirm-text-dialog">¿Estas seguro de que quieres eliminar el reto <%= challenge.title %>?</h3>
-          <form class="delete-challenge-form">
-            <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-            <button type="submit" class="delete-challenge-button">
-              Eliminar
-            </button>
-          </form>
-        </dialog>
+      <% if (!isStaff) { %>
+      <div class="progress">
+        <div class="progress__top">
+          <span class="progress__label">Tu progreso</span>
+          <span class="progress__value num"><%= doneCount %>/<%= allChallenges.length %></span>
+        </div>
+        <div class="progress__track" role="progressbar" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress__bar" style="width: <%= percent %>%"></div>
+        </div>
       </div>
       <% } %>
     </div>
 
-    <% } else if (completedChallenges.includes(challenge._id)) { %>
-    <div class="challenge-card completed">
-      <div>
-        <h2>
-          <%= challenge.title %>
-        </h2>
-        <p class="points">
-          <%= challenge.points %> puntos
-        </p>
-      </div>
-      <p>
-        <%= challenge.description %>
-      </p>
-
-      <!-- <div class="challenge-options">
-        <form class="request-completed-challenge-form">
-          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-          <button type="submit" class="request-challenge-button completed" disabled>
-            Completado
-          </button>
-        </form>
-      </div> -->
-
-    </div>
-    <% } else if (pendingChallenges.includes(challenge._id)) { %>
-    <div class="challenge-card pending">
-      <div>
-        <h2>
-          <%= challenge.title %>
-        </h2>
-        <p class="points">
-          <%= challenge.points %> puntos
-        </p>
-      </div>
-      <p>
-        <%= challenge.description %>
-      </p>
-
-      <!-- <div class="challenge-options">
-        <form class="request-completed-challenge-form">
-          <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-          <button type="submit" class="request-challenge-button pending" disabled>
-            Ya solicitado
-          </button>
-        </form>
-      </div> -->
-
-    </div>
+    <% if (allChallenges.length === 0) { %>
+    <div class="panel empty-state">Todavía no hay retos publicados.</div>
     <% } else { %>
-    <div id="challenge-card-<%= challenge._id %>" class="challenge-card" onclick="document.getElementById('request-completed-challenge-dialog-<%= challenge._id %>').showModal()">
-      <div>
-        <h2>
-          <%= challenge.title %>
-        </h2>
-        <p class="points">
-          <%= challenge.points %> puntos
-        </p>
-      </div>
-      <p>
-        <%= challenge.description %>
-      </p>
 
-      <div class="challenge-options">
-        <dialog class="challenge-dialog" id="request-completed-challenge-dialog-<%= challenge._id %>" closedby="any">
-          <h3 class="confirm-text-dialog">¿Estas seguro de que quieres solicitar el reto <%= challenge.title %>?</h3>
-          <form class="request-completed-challenge-form">
-            <input type="hidden" name="challengeId" value="<%= challenge._id %>">
-            <button type="submit" class="request-challenge-button">
-              Confirmar
-            </button>
-          </form>
-        </dialog>
-      </div>
-
+    <% if (!isStaff) { %>
+    <div class="filters" role="group" aria-label="Filtrar retos">
+      <button class="filter" data-filter="all" aria-pressed="true">Todos <span class="filter__count"><%= allChallenges.length %></span></button>
+      <button class="filter" data-filter="open" aria-pressed="false">Disponibles <span class="filter__count"><%= openCount %></span></button>
+      <button class="filter" data-filter="pending" aria-pressed="false">Pendientes <span class="filter__count"><%= pendingCount %></span></button>
+      <button class="filter" data-filter="done" aria-pressed="false">Completados <span class="filter__count"><%= doneCount %></span></button>
     </div>
     <% } %>
-    <% }) %>
-  </div>
-  <% if (loggedUser.isAdmin || loggedUser.isSuperAdmin) { %>
-  <footer>
-    <p>Estas desde la vista de administrador.</p>
-  </footer>
-  <% } %>
+
+    <section class="grid grid--cards" id="challenge-grid">
+      <% allChallenges.forEach((challenge) => { %>
+      <% const state = stateOf(challenge) %>
+      <article
+        class="challenge<%= state === 'staff' ? '' : ' challenge--' + state %>"
+        id="challenge-card-<%= challenge._id %>"
+        data-state="<%= state %>"
+        <%= state === 'open' ? 'tabindex=0 role=button' : '' %>>
+
+        <div class="challenge__top">
+          <h2 class="challenge__title"><%= challenge.title %></h2>
+          <span class="points-chip num"><%= challenge.points %> pts</span>
+        </div>
+
+        <p class="challenge__desc"><%= challenge.description %></p>
+
+        <div class="challenge__foot">
+          <% if (state === 'open') { %>
+          <span class="challenge__hint">Pulsa para solicitarlo</span>
+          <% } else if (state === 'pending') { %>
+          <span class="badge badge--accent">Pendiente de validar</span>
+          <% } else if (state === 'done') { %>
+          <span class="badge badge--mint">Completado</span>
+          <% } else { %>
+          <span class="badge">Vista de administrador</span>
+          <% } %>
+
+          <% if (loggedUser.isSuperAdmin) { %>
+          <button class="btn btn--danger btn--sm delete-challenge-trigger" data-challenge-id="<%= challenge._id %>"
+            data-challenge-title="<%= challenge.title %>" type="button">Eliminar</button>
+          <% } %>
+        </div>
+      </article>
+      <% }) %>
+    </section>
+    <% } %>
+
+    <% if (isStaff) { %>
+    <p class="admin-note">Estás viendo la lista como administrador.</p>
+    <% } %>
+  </main>
+
+  <!-- Diálogo único reutilizado por todas las tarjetas. -->
+  <dialog class="modal" id="confirm-dialog">
+    <div class="modal__body">
+      <h3 class="modal__title" id="confirm-title">Confirmar</h3>
+      <p class="modal__text" id="confirm-text"></p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn--primary" type="button" id="confirm-accept">Confirmar</button>
+      </div>
+    </div>
+  </dialog>
 
   <script>
-    const $$ = (selector) => document.querySelectorAll(selector)
     const $ = (selector) => document.querySelector(selector)
+    const $$ = (selector) => document.querySelectorAll(selector)
+
+    const dialog = $('#confirm-dialog')
+    const dialogTitle = $('#confirm-title')
+    const dialogText = $('#confirm-text')
+    const acceptButton = $('#confirm-accept')
+
+    let onAccept = null
+
+    /** Abre el diálogo con un texto y una acción concretos. */
+    function confirmAction ({ title, text, acceptLabel, variant = 'primary', action }) {
+      dialogTitle.textContent = title
+      dialogText.textContent = text
+      acceptButton.textContent = acceptLabel
+      acceptButton.className = `btn btn--${variant}`
+      onAccept = action
+      dialog.showModal()
+    }
+
+    acceptButton.addEventListener('click', async () => {
+      const action = onAccept
+      dialog.close()
+      if (action) await action()
+    })
+
+    $$('#confirm-dialog [data-close]').forEach((button) => {
+      button.addEventListener('click', () => dialog.close())
+    })
+
+    // Clic fuera del cuadro para cerrar.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close()
+    })
   </script>
 
-  <% if (!loggedUser.isAdmin) { %>
+  <% if (!isStaff) { %>
   <script>
-    const requestCompletedChallengeForms = $$('.request-completed-challenge-form')
+    const filterButtons = $$('.filter')
+    const cards = $$('#challenge-grid .challenge')
 
-    requestCompletedChallengeForms.forEach((requestCompletedChallengeForm) => {
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach((other) => other.setAttribute('aria-pressed', String(other === button)))
 
-      requestCompletedChallengeForm.addEventListener('submit', (event) => {
-        event.preventDefault()
-        const challengeId = requestCompletedChallengeForm.querySelector('input[name="challengeId"]').value
+        const filter = button.dataset.filter
+        cards.forEach((card) => {
+          card.classList.toggle('hidden', filter !== 'all' && card.dataset.state !== filter)
+        })
+      })
+    })
 
-        fetch(`/challenges/request-complete-challenge`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              challengeId,
-              userId: '<%= loggedUser.id %>'
-            })
-          }).then((res) => res.json())
-          .then((data) => {
-            if (data.err) {
-              notify(data.err, 1000)
-            } else {
-              $(`#challenge-card-${challengeId}`).classList.add('pending')
-              $(`#request-completed-challenge-dialog-${challengeId}`).close()
+    async function requestChallenge (card) {
+      const challengeId = card.id.replace('challenge-card-', '')
 
-              requestCompletedChallengeForm.querySelector('.request-challenge-button').textContent = 'Ya solicitado'
+      try {
+        const res = await fetch('/challenges/request-complete-challenge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ challengeId })
+        })
 
-              requestCompletedChallengeForm.querySelector('.request-challenge-button').classList.add('pending')
-              requestCompletedChallengeForm.querySelector('.request-challenge-button').disabled = true
+        const data = await res.json()
 
-              notify(`${data.pendingChallengeAdded.title} - Reto solicitado correctamente.`, 1000, 'success')
-            }
-          })
+        if (!res.ok || data.err) return notify(data.err || 'No se ha podido solicitar el reto.')
 
+        card.classList.remove('challenge--open')
+        card.classList.add('challenge--pending')
+        card.dataset.state = 'pending'
+        card.removeAttribute('tabindex')
+        card.removeAttribute('role')
+        card.querySelector('.challenge__hint').outerHTML =
+          '<span class="badge badge--accent">Pendiente de validar</span>'
+
+        notify(`${data.pendingChallengeAdded.title} · solicitado correctamente.`, 2200, 'success')
+      } catch (error) {
+        notify('No hay conexión con el servidor.')
+      }
+    }
+
+    cards.forEach((card) => {
+      const open = () => {
+        if (card.dataset.state !== 'open') return
+
+        confirmAction({
+          title: 'Solicitar reto',
+          text: `¿Seguro que quieres solicitar "${card.querySelector('.challenge__title').textContent}"? Un veterano tendrá que validarlo.`,
+          acceptLabel: 'Solicitar',
+          action: () => requestChallenge(card)
+        })
+      }
+
+      card.addEventListener('click', open)
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          open()
+        }
       })
     })
   </script>
   <% } %>
+
   <% if (loggedUser.isSuperAdmin) { %>
   <script>
-    const deleteChallengeForms = $$('.delete-challenge-form')
+    $$('.delete-challenge-trigger').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.stopPropagation()
 
-    deleteChallengeForms.forEach((deleteChallengeForm) => {
-      deleteChallengeForm.addEventListener('submit', (event) => {
-        event.preventDefault()
-        const challengeId = deleteChallengeForm.querySelector('input[name="challengeId"]').value
+        const { challengeId, challengeTitle } = button.dataset
 
-        fetch(`/challenges/delete-challenge`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              challengeId
-            })
-          }).then((res) => res.json())
-          .then((data) => {
-            if (data.err) {
-              notify(data.err, 1000)
-            } else {
-              $(`#challenge-card-${challengeId}`).remove()
+        confirmAction({
+          title: 'Eliminar reto',
+          text: `Se borrará "${challengeTitle}" y dejará de contar para todos los usuarios. Esta acción no se puede deshacer.`,
+          acceptLabel: 'Eliminar',
+          variant: 'danger',
+          action: async () => {
+            try {
+              const res = await fetch('/challenges/delete-challenge', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ challengeId })
+              })
 
-              notify('Reto eliminado correctamente.', 1000, 'success')
+              const data = await res.json()
+
+              if (!res.ok || data.err) return notify(data.err || 'No se ha podido eliminar el reto.')
+
+              document.getElementById(`challenge-card-${challengeId}`)?.remove()
+              notify('Reto eliminado correctamente.', 2200, 'success')
+            } catch (error) {
+              notify('No hay conexión con el servidor.')
             }
-          })
-
+          }
+        })
       })
     })
   </script>

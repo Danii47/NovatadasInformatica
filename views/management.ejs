@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <%- include('partials/head', { title: 'Gestión · Novatadas Informática', extraStyles: ['/styles/navigation.css', '/styles/management.css'] }) %>
+</head>
+
+<body>
+  <%- include('partials/toast') %>
+  <%- include('partials/appbar', { active: 'management' }) %>
+
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">Solo super administradores</p>
+        <h1 class="display display--lg">Gestión</h1>
+      </div>
+      <span class="badge"><%= loggedUser.name %></span>
+    </div>
+
+    <section class="grid grid--stats mb-1">
+      <div class="stat">
+        <p class="stat__value num"><%= stats.total %></p>
+        <p class="stat__label">Cuentas</p>
+      </div>
+      <div class="stat">
+        <p class="stat__value num"><%= stats.rookies %></p>
+        <p class="stat__label">Novatos</p>
+      </div>
+      <div class="stat">
+        <p class="stat__value num"><%= stats.admins %></p>
+        <p class="stat__label">Veteranos</p>
+      </div>
+      <div class="stat">
+        <p class="stat__value num"><%= challengeCount %></p>
+        <p class="stat__label">Retos</p>
+      </div>
+    </section>
+
+    <div class="mgmt-tabs" role="tablist">
+      <button class="mgmt-tab" role="tab" aria-selected="true" data-tab="import">
+        Importar
+      </button>
+      <button class="mgmt-tab" role="tab" aria-selected="false" data-tab="users">
+        Usuarios
+      </button>
+      <button class="mgmt-tab" role="tab" aria-selected="false" data-tab="log">
+        Registro
+      </button>
+      <button class="mgmt-tab" role="tab" aria-selected="false" data-tab="danger">
+        Fin de curso
+      </button>
+    </div>
+
+    <!-- ====================================================== IMPORTAR ==== -->
+    <section class="stack" data-panel="import">
+      <div class="panel">
+        <div class="panel-head">
+          <h2><i class="fa-solid fa-file-import" aria-hidden="true"></i> Alta masiva de usuarios</h2>
+        </div>
+        <p class="panel-note">
+          Pega una línea por persona. Vale lo que copies de Excel o Sheets, y también
+          <span class="mono">Nombre;correo</span> o <span class="mono">Nombre,correo,admin</span>.
+          Si no pones nombre, se deduce del correo. Las contraseñas se generan solas.
+        </p>
+
+        <div class="field">
+          <label for="import-text">Lista de usuarios</label>
+          <textarea class="textarea textarea--code" id="import-text" spellcheck="false"
+            placeholder="Ana Pérez;ana.perez@ejemplo.com&#10;Luis Gómez;luis@ejemplo.com&#10;marta.ruiz@ejemplo.com&#10;Carlos Vega;carlos@ejemplo.com;admin"></textarea>
+        </div>
+
+        <label class="checkbox mb-1">
+          <input type="checkbox" id="import-as-admin">
+          Dar de alta a todos como <strong>veteranos</strong> (administradores)
+        </label>
+
+        <div class="import-summary" id="import-summary" hidden></div>
+
+        <div class="preview" id="import-preview" hidden></div>
+
+        <div class="row mt-1">
+          <button class="btn btn--primary" type="button" id="import-submit" disabled>
+            Crear usuarios
+          </button>
+          <button class="btn btn--ghost" type="button" id="import-clear">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="import-results">
+        <div class="panel-head">
+          <h2>Credenciales generadas</h2>
+          <div class="row">
+            <button class="btn btn--sm" type="button" id="copy-credentials">
+              Copiar
+            </button>
+            <button class="btn btn--sm" type="button" id="download-credentials">Descargar CSV</button>
+          </div>
+        </div>
+        <p class="panel-note">
+          <strong>Guárdalas ahora.</strong> Las contraseñas se muestran una sola vez; después
+          solo se pueden regenerar desde el perfil de cada usuario.
+        </p>
+        <div class="credentials" id="credentials-table"></div>
+        <div id="import-skipped" class="mt-2"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================= USUARIOS ==== -->
+    <section class="stack hidden" data-panel="users">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Todas las cuentas</h2>
+          <span class="badge" id="users-count"><%= allUsers.length %></span>
+        </div>
+
+        <div class="field">
+          <input class="input" type="search" id="user-search" placeholder="Buscar por nombre o correo…" autocomplete="off">
+        </div>
+
+        <div class="row mb-1">
+          <button class="filter" type="button" data-role="all" aria-pressed="true">Todos</button>
+          <button class="filter" type="button" data-role="rookie" aria-pressed="false">Novatos</button>
+          <button class="filter" type="button" data-role="admin" aria-pressed="false">Veteranos</button>
+        </div>
+
+        <div id="user-list">
+          <% allUsers.forEach((user) => { %>
+          <%
+            const role = user.isSuperAdmin ? 'super' : (user.isAdmin ? 'admin' : 'rookie')
+            const protectedAccount = user.isSuperAdmin || user.id === loggedUser.id
+          %>
+          <div class="user-row" data-user-id="<%= user.id %>" data-role="<%= role %>"
+            data-search="<%= (user.name + ' ' + (user.email || '')).toLowerCase() %>">
+            <div class="user-row__main">
+              <div class="user-row__name">
+                <a href="/user/<%= user.id %>"><%= user.name %></a>
+                <% if (user.isSuperAdmin) { %><span class="badge badge--accent">Super</span>
+                <% } else if (user.isAdmin) { %><span class="badge badge--mint">Veterano</span><% } %>
+                <% if (user.id === loggedUser.id) { %><span class="badge badge--brand">Tú</span><% } %>
+              </div>
+              <p class="user-row__email"><%= user.email || '—' %></p>
+            </div>
+
+            <div class="user-row__actions">
+              <span class="user-row__points num"><%= user.points %></span>
+              <button class="icon-btn" type="button" data-action="reset-password"
+                title="Nueva contraseña" aria-label="Nueva contraseña para <%= user.name %>">
+                <i class="fa-solid fa-key" aria-hidden="true"></i>
+              </button>
+              <% if (!protectedAccount) { %>
+              <button class="icon-btn" type="button" data-action="<%= user.isAdmin ? 'revoke' : 'promote' %>"
+                title="<%= user.isAdmin ? 'Quitar administrador' : 'Hacer administrador' %>"
+                aria-label="Cambiar rol de <%= user.name %>">
+                <i class="fa-solid <%= user.isAdmin ? 'fa-user-minus' : 'fa-user-shield' %>" aria-hidden="true"></i>
+              </button>
+              <button class="icon-btn icon-btn--reject" type="button" data-action="delete"
+                title="Eliminar" aria-label="Eliminar a <%= user.name %>">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </button>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+
+        <div class="empty-state hidden" id="users-empty">Ningún usuario coincide con la búsqueda.</div>
+      </div>
+    </section>
+
+    <!-- ======================================================== REGISTRO === -->
+    <section class="stack hidden" data-panel="log">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Registro de actividad</h2>
+          <div class="row">
+            <button class="btn btn--sm" type="button" id="refresh-log">
+              Actualizar
+            </button>
+            <button class="btn btn--danger btn--sm" type="button" id="clear-log">Vaciar</button>
+          </div>
+        </div>
+        <p class="panel-note">Últimas 150 acciones de administración. Se guarda quién, qué y cuándo.</p>
+        <div id="log-list"></div>
+      </div>
+    </section>
+
+    <!-- ==================================================== FIN DE CURSO === -->
+    <section class="stack hidden" data-panel="danger">
+      <div class="panel danger-panel">
+        <div class="panel-head">
+          <h2>Fin de curso</h2>
+        </div>
+        <p class="panel-note">
+          Operaciones irreversibles para cerrar la edición y dejar la web lista para la siguiente.
+          Tu cuenta y la del resto de super administradores nunca se borran.
+        </p>
+
+        <div class="danger-card">
+          <div class="danger-card__text">
+            <p class="danger-card__title">Reiniciar el progreso</p>
+            <p class="danger-card__desc">
+              Pone a cero puntos, retos completados, pendientes y premios extra. Las cuentas se conservan.
+            </p>
+          </div>
+          <button class="btn btn--danger" type="button" id="reset-progress">Reiniciar progreso</button>
+        </div>
+
+        <div class="danger-card">
+          <div class="danger-card__text">
+            <p class="danger-card__title">Borrar a todos los novatos</p>
+            <p class="danger-card__desc">
+              Elimina todas las cuentas de novato. Los veteranos y tú os quedáis.
+            </p>
+          </div>
+          <button class="btn btn--danger" type="button" id="delete-rookies">Borrar novatos</button>
+        </div>
+
+        <div class="danger-card">
+          <div class="danger-card__text">
+            <p class="danger-card__title">Borrar todas las cuentas menos la mía</p>
+            <p class="danger-card__desc">
+              Novatos y veteranos incluidos. Solo sobreviven tu cuenta y los demás super administradores.
+            </p>
+          </div>
+          <button class="btn btn--danger" type="button" id="delete-everyone">Borrar todo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Diálogo de confirmación con palabra de seguridad. -->
+  <dialog class="modal" id="confirm-dialog">
+    <div class="modal__body">
+      <h3 class="modal__title" id="confirm-title">Confirmar</h3>
+      <p class="modal__text" id="confirm-text"></p>
+      <div class="field hidden" id="confirm-word-field">
+        <label class="field-label" for="confirm-input">Escribe <span class="confirm-word" id="confirm-word"></span> para continuar</label>
+        <input class="input" type="text" id="confirm-input" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn--danger" type="button" id="confirm-accept">Confirmar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="/js/parseUsers.js"></script>
+  <script>
+    const $ = (selector) => document.querySelector(selector)
+    const $$ = (selector) => document.querySelectorAll(selector)
+
+    const ACTION_LABELS = <%- jsonForScript({
+      USER_CREATED: ['create', 'fa-user-plus', 'creó el usuario'],
+      USERS_IMPORTED: ['create', 'fa-file-import', 'importó usuarios'],
+      USER_DELETED: ['destroy', 'fa-user-slash', 'eliminó a'],
+      USERS_PURGED: ['destroy', 'fa-bomb', 'ejecutó una limpieza masiva'],
+      USER_PROMOTED: ['role', 'fa-user-shield', 'hizo administrador a'],
+      USER_DEMOTED: ['role', 'fa-user-minus', 'quitó permisos a'],
+      PASSWORD_RESET: ['role', 'fa-key', 'regeneró la contraseña de'],
+      CHALLENGE_CREATED: ['create', 'fa-bolt', 'creó el reto'],
+      CHALLENGE_DELETED: ['destroy', 'fa-trash', 'eliminó el reto'],
+      POINTS_ADDED: ['points', 'fa-plus', 'sumó puntos a'],
+      EXTRA_POINTS_ADDED: ['points', 'fa-wand-magic-sparkles', 'dio puntos extra a'],
+      CHALLENGE_ACCEPTED: ['points', 'fa-check', 'validó un reto de'],
+      CHALLENGE_REJECTED: ['destroy', 'fa-xmark', 'rechazó un reto de'],
+      EXTRA_PRIZE_SPUN: ['points', 'fa-gift', 'sorteó el premio extra para']
+    }) %>
+
+    const INITIAL_LOGS = <%- jsonForScript(logs) %>
+
+    async function post (url, body) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      return { ok: res.ok, data: await res.json() }
+    }
+
+    /* ------------------------------------------------------------ Pestañas */
+
+    $$('.mgmt-tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        $$('.mgmt-tab').forEach((other) => other.setAttribute('aria-selected', String(other === tab)))
+        $$('[data-panel]').forEach((panel) => {
+          panel.classList.toggle('hidden', panel.dataset.panel !== tab.dataset.tab)
+        })
+      })
+    })
+
+    /* --------------------------------------------------------- Confirmación */
+
+    const dialog = $('#confirm-dialog')
+    const confirmInput = $('#confirm-input')
+    const acceptButton = $('#confirm-accept')
+    let onAccept = null
+    let requiredWord = null
+
+    function confirmAction ({ title, text, word, acceptLabel = 'Confirmar', action }) {
+      $('#confirm-title').textContent = title
+      $('#confirm-text').textContent = text
+      acceptButton.textContent = acceptLabel
+
+      requiredWord = word || null
+      onAccept = action
+
+      $('#confirm-word-field').classList.toggle('hidden', !word)
+      confirmInput.value = ''
+
+      if (word) {
+        $('#confirm-word').textContent = word
+        acceptButton.disabled = true
+      } else {
+        acceptButton.disabled = false
+      }
+
+      dialog.showModal()
+      if (word) setTimeout(() => confirmInput.focus(), 50)
+    }
+
+    confirmInput.addEventListener('input', () => {
+      acceptButton.disabled = confirmInput.value !== requiredWord
+    })
+
+    acceptButton.addEventListener('click', async () => {
+      const action = onAccept
+      const word = requiredWord
+      dialog.close()
+      if (action) await action(word)
+    })
+
+    $$('#confirm-dialog [data-close]').forEach((b) => b.addEventListener('click', () => dialog.close()))
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close() })
+
+    /* --------------------------------------------------------- Importación */
+
+    const importText = $('#import-text')
+    const importPreview = $('#import-preview')
+    const importSummary = $('#import-summary')
+    const importSubmit = $('#import-submit')
+    const asAdminCheckbox = $('#import-as-admin')
+
+    let parsedRows = []
+
+    function refreshPreview () {
+      parsedRows = parseUserList(importText.value)
+
+      if (parsedRows.length === 0) {
+        importPreview.hidden = true
+        importSummary.hidden = true
+        importSubmit.disabled = true
+        return
+      }
+
+      const valid = parsedRows.filter((row) => !row.error)
+      const invalid = parsedRows.length - valid.length
+
+      importSummary.hidden = false
+      importSummary.innerHTML = `
+        <span class="badge badge--mint">${valid.length} listos</span>
+        ${invalid > 0 ? `<span class="badge badge--danger">${invalid} con problemas</span>` : ''}
+        ${asAdminCheckbox.checked ? '<span class="badge badge--accent">Se crearán como veteranos</span>' : ''}
+      `
+
+      importPreview.hidden = false
+      importPreview.innerHTML = parsedRows.map((row) => `
+        <div class="preview__row${row.error ? ' preview__row--error' : ''}">
+          <span class="preview__num">${row.line}</span>
+          <div>
+            <p class="preview__name">${escapeHtml(row.name || '—')}</p>
+            <p class="preview__email">${escapeHtml(row.email || 'sin correo')}</p>
+          </div>
+          ${row.error
+            ? `<span class="badge badge--danger">${escapeHtml(row.error)}</span>`
+            : (row.isAdmin || asAdminCheckbox.checked ? '<span class="badge badge--mint">Veterano</span>' : '<span class="badge">Novato</span>')}
+        </div>
+      `).join('')
+
+      importSubmit.disabled = valid.length === 0
+    }
+
+    importText.addEventListener('input', refreshPreview)
+    asAdminCheckbox.addEventListener('change', refreshPreview)
+
+    $('#import-clear').addEventListener('click', () => {
+      importText.value = ''
+      refreshPreview()
+      $('#import-results').classList.add('hidden')
+    })
+
+    let lastCredentials = []
+
+    importSubmit.addEventListener('click', async () => {
+      const users = parsedRows
+        .filter((row) => !row.error)
+        .map((row) => ({
+          name: row.name,
+          email: row.email,
+          isAdmin: row.isAdmin || asAdminCheckbox.checked
+        }))
+
+      confirmAction({
+        title: 'Crear usuarios',
+        text: `Se van a dar de alta ${users.length} cuentas${asAdminCheckbox.checked ? ' como veteranos' : ''}. Las contraseñas se mostrarán una única vez.`,
+        acceptLabel: 'Crear',
+        action: async () => {
+          importSubmit.disabled = true
+          importSubmit.textContent = 'Creando…'
+
+          try {
+            const { ok, data } = await post('/users/bulk-create', { users })
+
+            if (!ok || data.err) return notify(data.err || 'No se han podido crear los usuarios.')
+
+            lastCredentials = data.created
+            renderCredentials(data.created, data.skipped)
+
+            notify(`${data.created.length} usuarios creados · ${data.skipped.length} descartados.`, 4000, 'success')
+            loadLog()
+          } catch (error) {
+            notify('No hay conexión con el servidor.')
+          } finally {
+            importSubmit.disabled = false
+            importSubmit.textContent = 'Crear usuarios'
+          }
+        }
+      })
+    })
+
+    function renderCredentials (created, skipped) {
+      const panel = $('#import-results')
+      panel.classList.remove('hidden')
+
+      $('#credentials-table').innerHTML = created.length === 0
+        ? '<div class="empty-state">No se ha creado ninguna cuenta.</div>'
+        : `
+          <table>
+            <thead><tr><th>Nombre</th><th>Correo</th><th>Contraseña</th><th>Rol</th></tr></thead>
+            <tbody>
+              ${created.map((user) => `
+                <tr>
+                  <td>${escapeHtml(user.name)}</td>
+                  <td>${escapeHtml(user.email)}</td>
+                  <td class="pass">${escapeHtml(user.password)}</td>
+                  <td>${user.isAdmin ? 'Veterano' : 'Novato'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `
+
+      $('#import-skipped').innerHTML = skipped.length === 0
+        ? ''
+        : `
+          <p class="eyebrow mb-1">Descartados</p>
+          <div class="preview">
+            ${skipped.map((row) => `
+              <div class="preview__row preview__row--error">
+                <span class="preview__num">${row.line}</span>
+                <div>
+                  <p class="preview__name">${escapeHtml(row.name || '—')}</p>
+                  <p class="preview__email">${escapeHtml(row.email || 'sin correo')}</p>
+                </div>
+                <span class="badge badge--danger">${escapeHtml(row.reason)}</span>
+              </div>
+            `).join('')}
+          </div>
+        `
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+
+    function credentialsCsv () {
+      const header = 'name;email;password;status'
+      const rows = lastCredentials.map((user) =>
+        [user.name, user.email, user.password, user.isAdmin ? 'admin' : 'novato'].map(csvCell).join(';'))
+
+      return [header, ...rows].join('\n')
+    }
+
+    $('#download-credentials').addEventListener('click', () => {
+      if (lastCredentials.length === 0) return notify('No hay credenciales que descargar.')
+
+      const stamp = new Date().toISOString().slice(0, 10)
+      downloadText(`credenciales-novatadas-${stamp}.csv`, credentialsCsv())
+    })
+
+    $('#copy-credentials').addEventListener('click', async () => {
+      if (lastCredentials.length === 0) return notify('No hay credenciales que copiar.')
+
+      try {
+        await navigator.clipboard.writeText(credentialsCsv())
+        notify('Credenciales copiadas al portapapeles.', 2200, 'success')
+      } catch (error) {
+        notify('El navegador ha bloqueado el portapapeles. Usa la descarga.')
+      }
+    })
+
+    /* ------------------------------------------------------------ Usuarios */
+
+    const userSearch = $('#user-search')
+    const userRows = () => $$('#user-list .user-row')
+    let roleFilter = 'all'
+
+    function applyUserFilters () {
+      const needle = userSearch.value.trim().toLowerCase()
+      let visible = 0
+
+      userRows().forEach((row) => {
+        const matchesRole = roleFilter === 'all' ||
+          (roleFilter === 'admin' && row.dataset.role !== 'rookie') ||
+          (roleFilter === 'rookie' && row.dataset.role === 'rookie')
+        const matchesText = needle === '' || row.dataset.search.includes(needle)
+        const show = matchesRole && matchesText
+
+        row.classList.toggle('hidden', !show)
+        if (show) visible++
+      })
+
+      $('#users-count').textContent = visible
+      $('#users-empty').classList.toggle('hidden', visible > 0)
+    }
+
+    userSearch.addEventListener('input', applyUserFilters)
+
+    $$('.filter[data-role]').forEach((button) => {
+      button.addEventListener('click', () => {
+        roleFilter = button.dataset.role
+        $$('.filter[data-role]').forEach((other) => other.setAttribute('aria-pressed', String(other === button)))
+        applyUserFilters()
+      })
+    })
+
+    $('#user-list').addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-action]')
+      if (!button) return
+
+      const row = button.closest('.user-row')
+      const userId = row.dataset.userId
+      const name = row.querySelector('.user-row__name a').textContent
+
+      const actions = {
+        'reset-password': {
+          title: 'Nueva contraseña',
+          text: `Se invalidará la contraseña actual de ${name}.`,
+          acceptLabel: 'Generar',
+          run: async () => {
+            const { ok, data } = await post('/users/reset-password', { userId })
+            if (!ok || data.err) return notify(data.err || 'No se ha podido cambiar la contraseña.')
+
+            try {
+              await navigator.clipboard.writeText(data.password)
+              notify(`Contraseña de ${name}: ${data.password} (copiada)`, 9000, 'success')
+            } catch (error) {
+              notify(`Contraseña de ${name}: ${data.password}`, 12000, 'success')
+            }
+            loadLog()
+          }
+        },
+        promote: {
+          title: 'Hacer administrador',
+          text: `${name} podrá validar retos y saldrá del marcador.`,
+          acceptLabel: 'Ascender',
+          run: async () => {
+            const { ok, data } = await post('/users/become-administrator', { userId })
+            if (!ok || data.err) return notify(data.err || 'No se ha podido ascender al usuario.')
+            notify(`${name} ahora es administrador.`, 2400, 'success')
+            setTimeout(() => window.location.reload(), 900)
+          }
+        },
+        revoke: {
+          title: 'Quitar administrador',
+          text: `${name} volverá a ser un novato y reaparecerá en el marcador.`,
+          acceptLabel: 'Quitar permisos',
+          run: async () => {
+            const { ok, data } = await post('/users/revoke-administrator', { userId })
+            if (!ok || data.err) return notify(data.err || 'No se ha podido degradar al usuario.')
+            notify(`${name} ya no es administrador.`, 2400, 'success')
+            setTimeout(() => window.location.reload(), 900)
+          }
+        },
+        delete: {
+          title: 'Eliminar usuario',
+          text: `Se borrará la cuenta de ${name} con todos sus puntos y retos.`,
+          acceptLabel: 'Eliminar',
+          run: async () => {
+            const { ok, data } = await post('/users/delete-user', { userId })
+            if (!ok || data.err) return notify(data.err || 'No se ha podido eliminar al usuario.')
+            row.remove()
+            applyUserFilters()
+            notify(`${name} eliminado.`, 2400, 'success')
+            loadLog()
+          }
+        }
+      }
+
+      const config = actions[button.dataset.action]
+      if (!config) return
+
+      confirmAction({
+        title: config.title,
+        text: config.text,
+        acceptLabel: config.acceptLabel,
+        action: config.run
+      })
+    })
+
+    /* ------------------------------------------------------------ Registro */
+
+    function renderLog (entries) {
+      const list = $('#log-list')
+
+      if (entries.length === 0) {
+        list.innerHTML = '<div class="empty-state">Todavía no hay nada registrado.</div>'
+        return
+      }
+
+      const formatter = new Intl.DateTimeFormat('es-ES', {
+        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+      })
+
+      list.innerHTML = entries.map((entry) => {
+        const [kind, icon, verb] = ACTION_LABELS[entry.action] || ['', 'fa-circle-info', entry.action]
+        const target = entry.targetName ? ` <strong>${escapeHtml(entry.targetName)}</strong>` : ''
+        const detail = entry.detail ? escapeHtml(entry.detail) : ''
+        const amount = typeof entry.amount === 'number' ? ` <span class="text-brand">(${entry.amount})</span>` : ''
+
+        return `
+          <div class="log-row log-row--${kind}">
+            <span class="log-row__icon"><i class="fa-solid ${icon}"></i></span>
+            <div>
+              <p class="log-row__text"><strong>${escapeHtml(entry.actorName)}</strong> ${verb}${target}${amount}</p>
+              ${detail ? `<p class="log-row__meta">${detail}</p>` : ''}
+            </div>
+            <span class="log-row__time">${formatter.format(new Date(entry.createdAt))}</span>
+          </div>
+        `
+      }).join('')
+    }
+
+    async function loadLog () {
+      try {
+        const res = await fetch('/audit-log')
+        const data = await res.json()
+        if (data.logs) renderLog(data.logs)
+      } catch (error) {
+        // El registro es informativo: si falla, no interrumpimos nada.
+      }
+    }
+
+    renderLog(INITIAL_LOGS)
+
+    $('#refresh-log').addEventListener('click', loadLog)
+
+    $('#clear-log').addEventListener('click', () => confirmAction({
+      title: 'Vaciar el registro',
+      text: 'Se borrará todo el historial de acciones de administración.',
+      word: 'VACIAR',
+      acceptLabel: 'Vaciar',
+      action: async () => {
+        const { ok, data } = await post('/audit-log/clear', {})
+        if (!ok || data.err) return notify(data.err || 'No se ha podido vaciar el registro.')
+        renderLog([])
+        notify(`${data.deletedCount} entradas borradas.`, 2400, 'success')
+      }
+    }))
+
+    /* --------------------------------------------------------- Fin de curso */
+
+    $('#reset-progress').addEventListener('click', () => confirmAction({
+      title: 'Reiniciar el progreso',
+      text: 'Todos los usuarios se quedan a cero puntos y sin retos. Las cuentas se mantienen.',
+      word: 'REINICIAR',
+      acceptLabel: 'Reiniciar',
+      action: async (confirmation) => {
+        const { ok, data } = await post('/users/reset-progress', { confirmation })
+        if (!ok || data.err) return notify(data.err || 'No se ha podido reiniciar el progreso.')
+        notify(`${data.modifiedCount} usuarios reiniciados.`, 3000, 'success')
+        setTimeout(() => window.location.reload(), 1200)
+      }
+    }))
+
+    function purge ({ keepAdmins, title, text }) {
+      confirmAction({
+        title,
+        text,
+        word: 'BORRAR TODO',
+        acceptLabel: 'Borrar',
+        action: async (confirmation) => {
+          const { ok, data } = await post('/users/delete-all', { confirmation, keepAdmins })
+          if (!ok || data.err) return notify(data.err || 'No se ha podido completar el borrado.')
+          notify(`${data.deletedCount} cuentas eliminadas.`, 3000, 'success')
+          setTimeout(() => window.location.reload(), 1200)
+        }
+      })
+    }
+
+    $('#delete-rookies').addEventListener('click', () => purge({
+      keepAdmins: true,
+      title: 'Borrar a todos los novatos',
+      text: 'Se eliminan todas las cuentas que no sean administradoras. Tú y los veteranos os quedáis.'
+    }))
+
+    $('#delete-everyone').addEventListener('click', () => purge({
+      keepAdmins: false,
+      title: 'Borrar todas las cuentas menos la mía',
+      text: 'Se eliminan novatos y veteranos. Solo sobreviven tu cuenta y el resto de super administradores.'
+    }))
+  </script>
+</body>
+
+</html>

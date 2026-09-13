@@ -88,3 +88,17 @@ export class ConnectionError extends Error {
     this.name = 'ConnectionError'
   }
 }
+
+export class ForbiddenActionError extends Error {
+  constructor (message) {
+    super(message)
+    this.name = 'ForbiddenActionError'
+  }
+}
+
+export class TooManyAttemptsError extends Error {
+  constructor (message) {
+    super(message)
+    this.name = 'TooManyAttemptsError'
+  }
+}

@@ -1,0 +1,42 @@
+<header class="appbar">
+  <div class="appbar__inner">
+    <a class="brand" href="/scoreboard" aria-label="Novatadas Informática">
+      <span class="brand__mark" aria-hidden="true">N</span>
+      <span class="brand__text">
+        <span class="brand__name">Novatadas</span>
+        <span class="brand__edition"><%= edition %></span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Secciones">
+      <a class="nav__link" href="/challenges" <%= active === 'challenges' ? 'aria-current=page' : '' %>>
+        <i class="fa-solid fa-list-check" aria-hidden="true"></i><span>Retos</span>
+      </a>
+      <a class="nav__link" href="/scoreboard" <%= active === 'scoreboard' ? 'aria-current=page' : '' %>>
+        <i class="fa-solid fa-ranking-star" aria-hidden="true"></i><span>Marcador</span>
+      </a>
+      <% if (loggedUser.isAdmin) { %>
+      <a class="nav__link" href="/admin-page" <%= active === 'admin' ? 'aria-current=page' : '' %>>
+        <i class="fa-solid fa-sliders" aria-hidden="true"></i><span>Admin</span>
+      </a>
+      <% } %>
+      <% if (loggedUser.isSuperAdmin) { %>
+      <a class="nav__link" href="/gestion" <%= active === 'management' ? 'aria-current=page' : '' %>>
+        <i class="fa-solid fa-users-gear" aria-hidden="true"></i><span>Gestión</span>
+      </a>
+      <% } %>
+    </nav>
+
+    <div class="appbar__user">
+      <div class="user-chip">
+        <span class="user-chip__name"><%= loggedUser.name %></span>
+        <span class="user-chip__avatar" aria-hidden="true"><%= loggedUser.name.trim().charAt(0).toUpperCase() %></span>
+      </div>
+      <form action="/logout" method="POST">
+        <button class="logout-btn" type="submit" title="Cerrar sesión" aria-label="Cerrar sesión">
+          <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>

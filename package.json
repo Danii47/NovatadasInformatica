@@ -1,17 +1,20 @@
 {
-  "name": "septimo-ejercicio-autenticacion",
-  "version": "1.0.0",
+  "name": "novatadas-informatica",
+  "version": "2.0.0",
   "main": "index.js",
   "type": "module",
+  "description": "Plataforma de retos y marcador de las novatadas de Ingeniería Informática.",
   "scripts": {
     "dev": "node --watch --env-file=.env .",
+    "start": "node .",
     "send-credentials": "node --env-file=.env scripts/sendCredentials/sendCredentials.js",
+    "lint": "standard \"*.js\" \"utils/*.js\" \"middlewares/*.js\" \"schemas/*.js\" \"scripts/**/*.js\" \"public/js/*.js\"",
+    "lint:fix": "npm run lint -- --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "5.1.1",
     "cookie-parser": "1.4.6",

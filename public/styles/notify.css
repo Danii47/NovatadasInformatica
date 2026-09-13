@@ -1,56 +1,77 @@
 .notify-container {
   position: fixed;
-  top: 1rem;
-  right: 10px;
-
-  border-radius: 7px;
+  top: calc(var(--nav-h) + 0.75rem);
+  right: clamp(0.75rem, 3vw, 1.5rem);
+  z-index: 100;
 
   display: flex;
-  opacity: 0;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
+  gap: 0.6rem;
 
-  z-index: 10;
-  padding: 0.7rem;
-  background: rgba(0 0 0 / .76);
-  font-weight: bold;
-  font-size: 1rem;
-  max-width: 500px;
+  max-width: min(400px, calc(100vw - 1.5rem));
+  padding: 0.7rem 0.95rem;
+
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lg);
+
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text);
+
+  opacity: 0;
+  pointer-events: none;
   animation: none;
 }
 
+.notify-container #notify-icon {
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
 .notify-container.error {
-  border: solid 2px rgb(245, 97, 97);
-  color: rgb(245, 97, 97);
+  border-color: rgba(248, 81, 73, 0.5);
+}
+
+.notify-container.error #notify-icon {
+  color: var(--danger);
 }
 
 .notify-container.success {
-  border: solid 2px rgb(148, 245, 148);
-  color: rgb(148, 245, 148);
+  border-color: rgba(63, 185, 80, 0.5);
+}
+
+.notify-container.success #notify-icon {
+  color: var(--mint);
 }
 
 @keyframes showNotify {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0%);
-    opacity: 1;
-  }
+  from { transform: translateY(-12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes hideNotify {
-  from {
-    transform: translateY(0%);
-    opacity: 1;
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-12px); opacity: 0; }
+}
+
+@media (max-width: 860px) {
+  .notify-container {
+    top: auto;
+    bottom: calc(var(--tabbar-h) + 0.75rem + env(safe-area-inset-bottom, 0px));
+    left: 0.75rem;
+    right: 0.75rem;
+    max-width: none;
   }
 
-  to {
-    transform: translateY(-100%);
-    opacity: 0;
+  @keyframes showNotify {
+    from { transform: translateY(12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes hideNotify {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(12px); opacity: 0; }
   }
 }

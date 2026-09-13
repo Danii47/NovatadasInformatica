@@ -1,0 +1,86 @@
+.picker {
+  position: relative;
+}
+
+.picker__input {
+  padding-right: 2.2rem;
+}
+
+/* Flecha dibujada con bordes: no depende de que cargue la fuente de iconos. */
+.picker::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  right: 14px;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--text-faint);
+  border-bottom: 1.5px solid var(--text-faint);
+  transform: rotate(45deg);
+  pointer-events: none;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.picker.is-open::after {
+  top: 19px;
+  transform: rotate(-135deg);
+}
+
+.picker.has-value::after {
+  border-color: var(--mint);
+}
+
+.picker__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+
+  max-height: 240px;
+  overflow-y: auto;
+  list-style: none;
+
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lg);
+}
+
+.picker__option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+}
+
+.picker__option:last-child {
+  border-bottom: none;
+}
+
+.picker__option:hover,
+.picker__option.is-active {
+  background: var(--surface-3);
+}
+
+.picker__label {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.picker__hint {
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker__empty {
+  padding: 0.8rem;
+  text-align: center;
+  font-size: 0.84rem;
+  color: var(--text-faint);
+}

@@ -1,452 +1,284 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <%= userToShow.name %>
-  </title>
-  <link rel='stylesheet' href='https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css'>
-  <link href="/styles/navigation.css" rel="stylesheet" type="text/css">
-  <link href="/styles/table.css" rel="stylesheet" type="text/css">
-  <link href='/styles/notify.css' rel='stylesheet' type='text/css'>
-  <script type="text/javascript" src="/js/notify.js"></script>
-  <style>
-    body {
-      background-color: #000;
-      height: 100vh;
-    }
-    h1 {
-      display: flex;
-      justify-content: center;
-      padding: 2rem 0 1rem 0;
-    }
-
-    h1 div {
-      width: max-content;
-      padding: .5rem 1rem;
-      border-radius: 8px;
-      background-color: #ececec;
-      position: relative;
-      color: #333;
-    }
-
-    h1 div::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      width: 100%;
-      height: 100%;
-      border-radius: 4px;
-      background: linear-gradient(45deg,
-          white, black, white);
-      background-size: 800%;
-      filter: blur(6px);
-      animation: glowing 20s linear infinite;
-    }
-
-    @keyframes glowing {
-      0% {
-        background-position: 0 0;
-      }
-
-      50% {
-        background-position: 400% 0;
-      }
-
-      100% {
-        background-position: 0 0;
-      }
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-    }
-
-    h2 {
-      text-align: center;
-      margin: 1rem 0;
-    }
-
-    .pending-row:nth-child(odd):hover {
-      background-color: rgb(230 230 230 / .7);
-    }
-
-    .pending-row:nth-child(even):hover {
-      background-color: rgb(230 230 230 / .7);
-    }
-
-    .pending-row {
-      cursor: pointer;
-    }
-
-    .submenu {
-      display: none;
-      position: absolute;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .submenu button {
-      border: none;
-      outline: none;
-      border-radius: 0px;
-      background-color: transparent;
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 0.2rem;
-      transition: background-color 0.2s;
-    }
-
-    .submenu button:first-child {
-      border-right: .5px solid #ccc;
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
-    }
-
-    .submenu button:last-child {
-      border-left: .5px solid #ccc;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-    }
-
-
-    .submenu button:hover {
-      background-color: rgb(215, 215, 215);
-    }
-
-    .pending-row.active .submenu {
-      display: flex;
-    }
-
-    tbody tr td:last-child {
-      font-weight: 600;
-    }
-
-    .challenge-completed {
-      color: rgb(36, 165, 36);
-    }
-
-    .challenge-pending {
-      color: rgb(143, 24, 24);
-    }
-
-    .return-page {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      font-size: 1.3rem;
-      cursor: pointer;
-      border-radius: 8px;
-      background-color: #ededed;
-      width: 35px;
-      height: 35px;
-      color: #333;
-      border: 1px solid #b3b3b3;
-
-      transition: background-color 0.2s;
-    }
-
-    .return-page:hover {
-      background-color: #d5d5d5;
-    }
-
-    .return-page a {
-      width: 100%;
-      height: 100%;
-      /* background-color: red; */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-
-    .bottom-left-buttons {
-      position: fixed;
-      bottom: 1rem;
-      left: 1rem;
-      display: flex;
-      gap: 1rem;
-    }
-
-    .become-administrator,
-    .delete-user {
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 8px;
-      background-color: #ededed;
-      padding: .5rem 1rem;
-      color: #333;
-      border: 1px solid #b3b3b3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: background-color 0.2s;
-    }
-
-    .delete-user {
-      padding: 0;
-      width: 35px;
-      height: 35px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .become-administrator:hover,
-    .delete-user:hover {
-      background-color: #d5d5d5;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    @media (max-width: 600px) {
-      .return-page {
-        top: 0rem;
-        left: 0rem;
-        border-radius: 0;
-        border-bottom-right-radius: 8px;
-        border-top: none;
-        border-left: none;
-      }
-    }
-  </style>
+  <%- include('partials/head', { title: userToShow.name + ' · Novatadas Informática', extraStyles: ['/styles/navigation.css', '/styles/profile.css'] }) %>
 </head>
 
 <body>
-  <div class='notify-container'>
-    <i id='notify-icon'></i>
-    <div class='notify-text'></div>
-  </div>
+  <%- include('partials/toast') %>
+  <%- include('partials/appbar', { active: 'scoreboard' }) %>
 
-  <div class="return-page">
-    <a href="/scoreboard">
-      <i class="fas fa-arrow-left"></i>
+  <%
+    const extraPoints = userToShow.extraPoints || []
+    const totalActivities = completedChalleges.length + extraPoints.length + pendingChallenges.length
+    const isSelf = userToShow._id === loggedUser.id
+  %>
+
+  <main class="page">
+    <a class="btn btn--ghost btn--sm mb-1" href="/scoreboard">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Volver al marcador
     </a>
-  </div>
 
-  <% if (loggedUser.isSuperAdmin && !userToShow.isAdmin) { %>
-  <div class="bottom-left-buttons">
-    <button class="become-administrator">
-      Convertir en administrador
-    </button>
-    <button class="delete-user">
-      <i class="fa-solid fa-trash"></i>
-    </button>
-  </div>
-  <% } %>
+    <section class="profile-head">
+      <div class="profile-avatar" aria-hidden="true"><%= userToShow.name.trim().charAt(0).toUpperCase() %></div>
+      <div>
+        <p class="eyebrow">Perfil</p>
+        <h1 class="profile-name"><%= userToShow.name %></h1>
+        <div class="profile-tags">
+          <span class="badge badge--brand"><%= userToShow.points %> puntos</span>
+          <span class="badge"><%= completedChalleges.length + extraPoints.length %> completados</span>
+          <% if (pendingChallenges.length > 0) { %>
+          <span class="badge badge--accent"><%= pendingChallenges.length %> pendientes</span>
+          <% } %>
+          <% if (userToShow.isSuperAdmin) { %>
+          <span class="badge badge--accent">Super admin</span>
+          <% } else if (userToShow.isAdmin) { %>
+          <span class="badge badge--mint">Veterano</span>
+          <% } %>
+          <% if (isSelf) { %><span class="badge badge--brand">Tú</span><% } %>
+        </div>
+      </div>
+    </section>
 
-  <h1>
-    <div>
-      <%= userToShow.name %>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Actividad</h2>
+        <span class="badge"><%= totalActivities %></span>
+      </div>
+
+      <% if (totalActivities === 0) { %>
+      <div class="empty-state">
+        Todavía no hay actividad registrada.
+      </div>
+      <% } else { %>
+
+      <% pendingChallenges.forEach((challenge) => { %>
+      <div class="entry entry--pending" data-challenge-id="<%= challenge._id %>">
+        <span class="entry__icon"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></span>
+        <div>
+          <p class="entry__title"><%= challenge.title %></p>
+          <p class="entry__sub">Pendiente de validar</p>
+        </div>
+        <div class="entry__right">
+          <span class="entry__points num">+<%= challenge.points %></span>
+          <% if (loggedUser.isAdmin) { %>
+          <div class="entry__actions">
+            <button class="icon-btn icon-btn--accept" type="button" data-action="accept"
+              title="Validar reto" aria-label="Validar reto">
+              <i class="fa-solid fa-check" aria-hidden="true"></i>
+            </button>
+            <button class="icon-btn icon-btn--reject" type="button" data-action="reject"
+              title="Rechazar reto" aria-label="Rechazar reto">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+
+      <% completedChalleges.forEach((challenge) => { %>
+      <div class="entry entry--done">
+        <span class="entry__icon"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+        <div>
+          <p class="entry__title"><%= challenge.title %></p>
+          <p class="entry__sub">Reto completado</p>
+        </div>
+        <div class="entry__right">
+          <span class="entry__points num">+<%= challenge.points %></span>
+        </div>
+      </div>
+      <% }) %>
+
+      <% extraPoints.forEach((extra) => { %>
+      <div class="entry entry--extra">
+        <span class="entry__icon"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+        <div>
+          <p class="entry__title"><%= extra.name %></p>
+          <p class="entry__sub">Puntos extra</p>
+        </div>
+        <div class="entry__right">
+          <span class="entry__points num">+<%= extra.points %></span>
+        </div>
+      </div>
+      <% }) %>
+      <% } %>
+    </section>
+
+    <% if (loggedUser.isSuperAdmin && !userToShow.isSuperAdmin && !isSelf) { %>
+    <section class="panel danger-zone">
+      <div class="panel-head">
+        <h2>Acciones de super admin</h2>
+      </div>
+      <div class="row">
+        <% if (userToShow.isAdmin) { %>
+        <button class="btn" type="button" id="revoke-admin">
+          Quitar administrador
+        </button>
+        <% } else { %>
+        <button class="btn" type="button" id="become-admin">
+          Hacer administrador
+        </button>
+        <% } %>
+        <button class="btn" type="button" id="reset-password">
+          Nueva contraseña
+        </button>
+        <button class="btn btn--danger" type="button" id="delete-user">
+          Eliminar usuario
+        </button>
+      </div>
+    </section>
+    <% } %>
+  </main>
+
+  <dialog class="modal" id="confirm-dialog">
+    <div class="modal__body">
+      <h3 class="modal__title" id="confirm-title">Confirmar</h3>
+      <p class="modal__text" id="confirm-text"></p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn--primary" type="button" id="confirm-accept">Confirmar</button>
+      </div>
     </div>
-  </h1>
+  </dialog>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Reto</th>
-          <th>Puntos</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% completedChalleges.forEach((challenge, index) => { %>
-        <tr>
-          <td>
-            <%= challenge.title %>
-          </td>
-          <td>
-            <%= challenge.points %>
-          </td>
-          <td class="challenge-completed">
-            Completado
-          </td>
-        </tr>
-        <% }) %>
-        <% userToShow.extraPoints?.forEach((extraPoint) => { %>
-        <tr>
-          <td>
-            <%= extraPoint.name %>
-          </td>
-          <td>
-            <%= extraPoint.points %>
-          </td>
-          <td class="challenge-completed">
-            Completado
-          </td>
-        </tr>
-        <% }) %>
-
-        <% pendingChallenges.forEach((challenge, index) => { %>
-        <tr <%= loggedUser.isAdmin ? 'id=' + challenge._id + ' class=pending-row' : '' %>>
-          <td>
-            <%= challenge.title %>
-          </td>
-          <td>
-            <%= challenge.points %>
-          </td>
-
-
-          <td class="challenge-pending">
-            Pendiente
-
-            <% if (loggedUser.isAdmin) { %>
-            <div class="submenu">
-              <button class="accept-button">✅</button>
-              <button class="reject-button">❌</button>
-            </div>
-            <% } %>
-          </td>
-        </tr>
-        <% }) %>
-
-      </tbody>
-    </table>
-  </div>
-  <% if (loggedUser.isAdmin) { %>
   <script>
     const $ = (selector) => document.querySelector(selector)
     const $$ = (selector) => document.querySelectorAll(selector)
 
-    let rowSelected
+    const USER_ID = <%- jsonForScript(userToShow._id) %>
 
-    document.addEventListener('DOMContentLoaded', function() {
-      const pendingRows = $$('.pending-row')
+    const dialog = $('#confirm-dialog')
+    const acceptButton = $('#confirm-accept')
+    let onAccept = null
 
-      pendingRows.forEach(row => {
-        row.addEventListener('click', function() {
-          const isActive = row.classList.contains('active')
+    function confirmAction ({ title, text, acceptLabel, variant = 'primary', action }) {
+      $('#confirm-title').textContent = title
+      $('#confirm-text').textContent = text
+      acceptButton.textContent = acceptLabel
+      acceptButton.className = `btn btn--${variant}`
+      onAccept = action
+      dialog.showModal()
+    }
 
-          pendingRows.forEach(r => r.classList.remove('active'))
+    acceptButton.addEventListener('click', async () => {
+      const action = onAccept
+      dialog.close()
+      if (action) await action()
+    })
 
-          if (!isActive) {
-            row.classList.add('active')
-            const submenu = $('.submenu')
-            submenu.style.left = `${event.clientX}px`
-            submenu.style.top = `${event.clientY}px`
+    $$('#confirm-dialog [data-close]').forEach((b) => b.addEventListener('click', () => dialog.close()))
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close() })
 
-            rowSelected = row
+    async function post (url, body) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      return { ok: res.ok, data: await res.json() }
+    }
+  </script>
+
+  <% if (loggedUser.isAdmin) { %>
+  <script>
+    // Validar / rechazar retos pendientes.
+    $$('.entry--pending [data-action]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const entry = button.closest('.entry')
+        const challengeId = entry.dataset.challengeId
+        const accept = button.dataset.action === 'accept'
+        const url = accept
+          ? '/challenges/accept-challenge-completed'
+          : '/challenges/reject-challenge-completed'
+
+        entry.querySelectorAll('button').forEach((b) => { b.disabled = true })
+
+        try {
+          const { ok, data } = await post(url, { userId: USER_ID, challengeId })
+
+          if (!ok || data.err) {
+            entry.querySelectorAll('button').forEach((b) => { b.disabled = false })
+            return notify(data.err || 'No se ha podido completar la acción.')
           }
-        })
-      })
 
-      $$('.accept-button').forEach(button => {
-        button.addEventListener('click', function(event) {
-          event.stopPropagation()
-
-          fetch('/challenges/accept-challenge-completed', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                userId: '<%= userToShow._id %>',
-                challengeId: rowSelected.id
-              })
-            })
-            .then(res => res.json())
-            .then(data => {
-              if (data.err) {
-                notify(data.err, 1000)
-              } else {
-                $$('.pending-row').forEach(row => row.classList.remove('active'))
-
-                const pendingCell = rowSelected.querySelector('.challenge-pending')
-
-                pendingCell.innerHTML = 'Completado'
-                pendingCell.classList.remove('challenge-pending')
-                pendingCell.style.color = 'rgb(36, 165, 36)'
-                rowSelected.classList.remove('pending-row')
-
-                notify('Reto confirmado correctamente', 1000, 'success')
-              }
-            })
-        })
-      })
-
-      $$('.reject-button').forEach(button => {
-        button.addEventListener('click', function(event) {
-          event.stopPropagation()
-
-          fetch('/challenges/reject-challenge-completed', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                userId: '<%= userToShow._id %>',
-                challengeId: rowSelected.id
-              })
-            })
-            .then(res => res.json())
-            .then(data => {
-              if (data.err) {
-                notify(data.err, 1000)
-              } else {
-                $$('.pending-row').forEach(row => row.classList.remove('active'))
-
-                rowSelected.remove()
-
-                notify('Reto rechazado correctamente', 1000, 'success')
-              }
-            })
-        })
-      })
-
-      $('.become-administrator').addEventListener('click', function() {
-        fetch('/users/become-administrator', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              userId: '<%= userToShow._id %>'
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.err) {
-              notify(data.err, 1000)
-            } else {
-              $('.become-administrator').remove()
-              notify('Usuario convertido en administrador correctamente', 1000, 'success')
-            }
-          })
-      })
-
-      $('.delete-user').addEventListener('click', function() {
-        fetch('/users/delete-user', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              userId: '<%= userToShow._id %>'
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.err) {
-              notify(data.err, 1000)
-            } else {
-              window.location.href = '/scoreboard'
-            }
-          })
+          if (accept) {
+            entry.classList.replace('entry--pending', 'entry--done')
+            entry.querySelector('.entry__icon').innerHTML = '<i class="fa-solid fa-check"></i>'
+            entry.querySelector('.entry__sub').textContent = 'Reto completado'
+            entry.querySelector('.entry__actions').remove()
+            notify('Reto validado correctamente.', 2200, 'success')
+          } else {
+            entry.remove()
+            notify('Reto rechazado.', 2200, 'success')
+          }
+        } catch (error) {
+          entry.querySelectorAll('button').forEach((b) => { b.disabled = false })
+          notify('No hay conexión con el servidor.')
+        }
       })
     })
+  </script>
+  <% } %>
+
+  <% if (loggedUser.isSuperAdmin && !userToShow.isSuperAdmin && !isSelf) { %>
+  <script>
+    const userName = <%- jsonForScript(userToShow.name) %>
+
+    $('#become-admin')?.addEventListener('click', () => confirmAction({
+      title: 'Hacer administrador',
+      text: `${userName} podrá validar retos y dejará de aparecer en el marcador.`,
+      acceptLabel: 'Hacer administrador',
+      action: async () => {
+        const { ok, data } = await post('/users/become-administrator', { userId: USER_ID })
+        if (!ok || data.err) return notify(data.err || 'No se ha podido ascender al usuario.')
+        notify('Usuario convertido en administrador.', 2200, 'success')
+        setTimeout(() => window.location.reload(), 900)
+      }
+    }))
+
+    $('#revoke-admin')?.addEventListener('click', () => confirmAction({
+      title: 'Quitar administrador',
+      text: `${userName} volverá a ser un usuario normal y reaparecerá en el marcador.`,
+      acceptLabel: 'Quitar permisos',
+      variant: 'danger',
+      action: async () => {
+        const { ok, data } = await post('/users/revoke-administrator', { userId: USER_ID })
+        if (!ok || data.err) return notify(data.err || 'No se ha podido degradar al usuario.')
+        notify('Permisos retirados.', 2200, 'success')
+        setTimeout(() => window.location.reload(), 900)
+      }
+    }))
+
+    $('#reset-password')?.addEventListener('click', () => confirmAction({
+      title: 'Generar nueva contraseña',
+      text: `Se invalidará la contraseña actual de ${userName} y se generará una nueva que tendrás que pasarle tú.`,
+      acceptLabel: 'Generar',
+      action: async () => {
+        const { ok, data } = await post('/users/reset-password', { userId: USER_ID })
+        if (!ok || data.err) return notify(data.err || 'No se ha podido cambiar la contraseña.')
+
+        try {
+          await navigator.clipboard.writeText(data.password)
+          notify(`Nueva contraseña: ${data.password} (copiada al portapapeles)`, 9000, 'success')
+        } catch (error) {
+          notify(`Nueva contraseña: ${data.password}`, 12000, 'success')
+        }
+      }
+    }))
+
+    $('#delete-user')?.addEventListener('click', () => confirmAction({
+      title: 'Eliminar usuario',
+      text: `Se borrará la cuenta de ${userName} junto con todos sus puntos y retos. No se puede deshacer.`,
+      acceptLabel: 'Eliminar',
+      variant: 'danger',
+      action: async () => {
+        const { ok, data } = await post('/users/delete-user', { userId: USER_ID })
+        if (!ok || data.err) return notify(data.err || 'No se ha podido eliminar al usuario.')
+        window.location.href = '/scoreboard'
+      }
+    }))
   </script>
   <% } %>
 </body>

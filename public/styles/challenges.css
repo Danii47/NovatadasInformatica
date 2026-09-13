@@ -1,0 +1,127 @@
+/* =============================== Retos ==================================== */
+
+.progress {
+  min-width: 220px;
+}
+
+.progress__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.progress__label {
+  color: var(--text-faint);
+}
+
+.progress__value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress__track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.progress__bar {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  transition: width 0.4s var(--ease);
+}
+
+.filters {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+/* -------------------------------------------------------------- Tarjeta */
+
+.challenge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.challenge--open {
+  cursor: pointer;
+}
+
+.challenge--open:hover,
+.challenge--open:focus-visible {
+  border-color: var(--line-strong);
+  background: var(--surface-2);
+}
+
+.challenge--pending,
+.challenge--done {
+  background: var(--ink-2);
+}
+
+.challenge__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.challenge__title {
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.challenge__desc {
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.challenge__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+}
+
+.challenge__hint {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+.admin-note {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-faint);
+}
+
+@media (max-width: 700px) {
+  .progress {
+    min-width: 0;
+    width: 100%;
+  }
+}

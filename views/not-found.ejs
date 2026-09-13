@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <%- include('partials/head', { title: 'Página no encontrada · Novatadas Informática' }) %>
+  <style>
+    .nf {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .nf__title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0.35rem 0 0.5rem;
+    }
+
+    .nf__text {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      max-width: 40ch;
+      margin: 0 auto 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="nf">
+    <div>
+      <p class="eyebrow">Error 404</p>
+      <h1 class="nf__title">Página no encontrada</h1>
+      <p class="nf__text">La dirección a la que has llegado no existe o ya no está disponible.</p>
+      <a class="btn btn--primary" href="<%= loggedUser ? '/scoreboard' : '/' %>">
+        <%= loggedUser ? 'Volver al marcador' : 'Ir al inicio' %>
+      </a>
+    </div>
+  </main>
+</body>
+
+</html>
