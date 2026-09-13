@@ -293,6 +293,26 @@ app.post('/challenges/create-challenge', isAdminMessage, async (req, res) => {
   }
 })
 
+app.post('/challenges/edit-challenge', isAdminMessage, async (req, res) => {
+  const { challengeId, title, description, points } = req.body
+
+  try {
+    const result = await ChallengeRepository.update({ challengeId, title, description, points })
+    res.send(result)
+
+    await AuditRepository.record({
+      action: AUDIT_ACTIONS.CHALLENGE_UPDATED,
+      actor: req.session.user,
+      detail: result.pointsDelta === 0
+        ? result.title
+        : `${result.title} · ${result.pointsDelta > 0 ? '+' : ''}${result.pointsDelta} puntos a ${result.affectedUsers} usuarios`,
+      amount: result.points
+    })
+  } catch (error) {
+    sendError(res, error)
+  }
+})
+
 app.post('/challenges/delete-challenge', isSuperAdminMessage, async (req, res) => {
   const { challengeId } = req.body
 

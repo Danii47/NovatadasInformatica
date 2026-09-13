@@ -112,6 +112,12 @@
   color: var(--text-faint);
 }
 
+.challenge__actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
 .admin-note {
   margin-top: 1.5rem;
   text-align: center;

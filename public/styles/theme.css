@@ -342,6 +342,12 @@ h1, h2, h3, h4 {
   color: var(--text-dim);
 }
 
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  line-height: 1.4;
+}
+
 .input,
 .textarea {
   width: 100%;

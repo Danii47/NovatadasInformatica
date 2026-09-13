@@ -67,6 +67,7 @@
         class="challenge<%= state === 'staff' ? '' : ' challenge--' + state %>"
         id="challenge-card-<%= challenge._id %>"
         data-state="<%= state %>"
+        data-points="<%= challenge.points %>"
         <%= state === 'open' ? 'tabindex=0 role=button' : '' %>>
 
         <div class="challenge__top">
@@ -87,9 +88,14 @@
           <span class="badge">Vista de administrador</span>
           <% } %>
 
-          <% if (loggedUser.isSuperAdmin) { %>
-          <button class="btn btn--danger btn--sm delete-challenge-trigger" data-challenge-id="<%= challenge._id %>"
-            data-challenge-title="<%= challenge.title %>" type="button">Eliminar</button>
+          <% if (isStaff) { %>
+          <div class="challenge__actions">
+            <button class="btn btn--sm edit-challenge-trigger" type="button">Editar</button>
+            <% if (loggedUser.isSuperAdmin) { %>
+            <button class="btn btn--danger btn--sm delete-challenge-trigger" data-challenge-id="<%= challenge._id %>"
+              data-challenge-title="<%= challenge.title %>" type="button">Eliminar</button>
+            <% } %>
+          </div>
           <% } %>
         </div>
       </article>
@@ -101,6 +107,37 @@
     <p class="admin-note">Estás viendo la lista como administrador.</p>
     <% } %>
   </main>
+
+  <% if (isStaff) { %>
+  <dialog class="modal" id="edit-dialog">
+    <form class="modal__body" id="edit-form" novalidate>
+      <h3 class="modal__title mb-1">Editar reto</h3>
+
+      <div class="field">
+        <label for="edit-title">Título</label>
+        <input class="input" type="text" id="edit-title" maxlength="120" autocomplete="off" required>
+      </div>
+
+      <div class="field">
+        <label for="edit-description">Descripción</label>
+        <textarea class="textarea" id="edit-description" maxlength="600" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="edit-points">Puntos</label>
+        <input class="input" type="number" id="edit-points" min="0" required>
+        <p class="field-hint">
+          Si cambias los puntos, se ajusta también la puntuación de quien ya tenga el reto validado.
+        </p>
+      </div>
+
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn--primary" type="submit" id="edit-submit">Guardar cambios</button>
+      </div>
+    </form>
+  </dialog>
+  <% } %>
 
   <!-- Diálogo único reutilizado por todas las tarjetas. -->
   <dialog class="modal" id="confirm-dialog">
@@ -214,6 +251,91 @@
           open()
         }
       })
+    })
+  </script>
+  <% } %>
+
+  <% if (isStaff) { %>
+  <script>
+    const editDialog = $('#edit-dialog')
+    const editForm = $('#edit-form')
+    const editSubmit = $('#edit-submit')
+
+    let editingCard = null
+
+    $$('.edit-challenge-trigger').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        // La tarjeta de un novato es pulsable entera; en la de administrador no,
+        // pero paramos el evento igual por si algún día vuelve a serlo.
+        event.stopPropagation()
+
+        editingCard = button.closest('.challenge')
+
+        $('#edit-title').value = editingCard.querySelector('.challenge__title').textContent.trim()
+        $('#edit-description').value = editingCard.querySelector('.challenge__desc').textContent.trim()
+        $('#edit-points').value = editingCard.dataset.points
+
+        editDialog.showModal()
+      })
+    })
+
+    editForm.addEventListener('submit', async (event) => {
+      event.preventDefault()
+      if (!editingCard) return
+
+      const challengeId = editingCard.id.replace('challenge-card-', '')
+      const title = $('#edit-title').value.trim()
+      const description = $('#edit-description').value.trim()
+      const points = $('#edit-points').value
+
+      if (!title || !description || points === '') return notify('Rellena todos los campos.')
+
+      editSubmit.disabled = true
+      editSubmit.textContent = 'Guardando…'
+
+      try {
+        const res = await fetch('/challenges/edit-challenge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ challengeId, title, description, points: Number(points) })
+        })
+
+        const data = await res.json()
+
+        if (!res.ok || data.err) return notify(data.err || 'No se ha podido guardar el reto.')
+
+        // Actualizamos la tarjeta en el sitio, sin recargar.
+        editingCard.querySelector('.challenge__title').textContent = data.title
+        editingCard.querySelector('.challenge__desc').textContent = data.description
+        editingCard.querySelector('.points-chip').textContent = `${data.points} pts`
+        editingCard.dataset.points = data.points
+
+        const deleteButton = editingCard.querySelector('.delete-challenge-trigger')
+        if (deleteButton) deleteButton.dataset.challengeTitle = data.title
+
+        editDialog.close()
+
+        notify(
+          data.pointsDelta === 0
+            ? 'Reto actualizado.'
+            : `Reto actualizado · ${data.affectedUsers} usuario(s) reajustados.`,
+          2600,
+          'success'
+        )
+      } catch (error) {
+        notify('No hay conexión con el servidor.')
+      } finally {
+        editSubmit.disabled = false
+        editSubmit.textContent = 'Guardar cambios'
+      }
+    })
+
+    $$('#edit-dialog [data-close]').forEach((button) => {
+      button.addEventListener('click', () => editDialog.close())
+    })
+
+    editDialog.addEventListener('click', (event) => {
+      if (event.target === editDialog) editDialog.close()
     })
   </script>
   <% } %>
