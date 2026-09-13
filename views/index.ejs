@@ -47,6 +47,22 @@
   </main>
 
   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const emailUrl = params.get("email");
+      const passwordUrl = params.get("password");
+
+      if (emailUrl) {
+        document.getElementById("email").value = emailUrl;
+      }
+
+      if (passwordUrl) {
+        document.getElementById("password").value = passwordUrl;
+      }
+    });
+  </script>
+
+  <script>
     const $ = (selector) => document.querySelector(selector)
 
     const loginForm = $('#login-form')
